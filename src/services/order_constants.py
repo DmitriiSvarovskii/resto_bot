@@ -1,5 +1,3 @@
-
-
 ORDER_TYPES = {
     'takeaway': {'id': 1, 'name': 'Самовывоз'},
     'delivery': {'id': 2, 'name': 'Доставка'},
