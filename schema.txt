@@ -1,0 +1,12 @@
+
+marcello_new/
+|-- alembic/
+|   |-- env.py
+|   |-- script.py.mako
+|   |-- versions/
+|   |   |-- ... (ваша миграция)
+|-- src/
+|   |-- config.py
+|   |-- database.py
+|-- alembic.ini
+|-- ...
