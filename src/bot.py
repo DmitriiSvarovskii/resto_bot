@@ -1,10 +1,15 @@
-import logging
-import asyncio
-from aiogram import Bot, Dispatcher
-
-from src.keyboards import set_main_menu
-from src.handlers import register_user_commands, register_admin_commands
 from src.config import BOT_TOKEN
+from src.handlers import register_user_commands, register_admin_commands
+from src.keyboards import set_main_menu
+from aiogram import Bot, Dispatcher
+import asyncio
+import logging
+import sys
+import os
+
+
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..")))
 
 
 logger = logging.getLogger(__name__)
