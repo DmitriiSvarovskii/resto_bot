@@ -6,8 +6,8 @@ import os
 from aiogram import Bot, Dispatcher
 
 from config import BOT_TOKEN
-from src.handlers import register_user_commands, register_admin_commands
-from src.keyboards import set_main_menu
+from handlers import register_user_commands, register_admin_commands
+from keyboards import set_main_menu
 
 
 sys.path.insert(0, os.path.abspath(
