@@ -1,18 +1,18 @@
 from aiogram import Bot
 from aiogram.types import CallbackQuery
 
-from src.utils import create_new_orders, create_text, get_status_name_by_id
-from src.crud import update_order_status
+from ..utils import create_new_orders, create_text, get_status_name_by_id
+from ..crud import update_order_status
 from src.database import get_async_session
-from src.config import ADMINT_CHAT
-from src.services import ORDER_TYPES, ORDER_STATUSES
-from src.callbacks import (
+from ..config import ADMINT_CHAT
+from ..services import ORDER_TYPES, ORDER_STATUSES
+from ..callbacks import (
     CreateOrderCallbackFactory,
     CheckOrdersCallbackFactory,
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,
 )
-from src.keyboards import (
+from ..keyboards import (
     create_keyboard_main,
     create_keyboard_check_order,
     create_keyboard_time_cooking,
@@ -20,7 +20,7 @@ from src.keyboards import (
     create_order_status_delivery_keyboard,
     create_status_redy_order_keyboard,
 )
-from src.lexicons import (
+from ..lexicons import (
     generate_order_info_text,
     generate_order_info_time_text,
 )

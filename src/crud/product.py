@@ -2,8 +2,8 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
-from src.models import Product
-from src.schemas import ReadProduct
+from ..models import Product
+from ..schemas import ReadProduct
 
 
 async def crud_get_all_products(

@@ -6,10 +6,10 @@ from aiogram.types import (
     InlineKeyboardButton,
 )
 
-from src.callbacks import DeliveryIdCallbackFactory, CreateOrderCallbackFactory
-from src.schemas import ReadDelivery
-from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.services import ORDER_STATUSES, ORDER_TYPES
+from ..callbacks import DeliveryIdCallbackFactory, CreateOrderCallbackFactory
+from ..schemas import ReadDelivery
+from ..lexicons import LEXICON_KEYBOARDS_RU
+from ..services import ORDER_STATUSES, ORDER_TYPES
 
 
 async def create_keyboard_delivery(delivery_districts: List[ReadDelivery]):

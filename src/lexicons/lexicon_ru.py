@@ -1,12 +1,12 @@
 from typing import Optional, Union
 from datetime import datetime
 
-from src.schemas import (
+from ..schemas import (
     ReadDelivery,
     ReadCustomerInfo,
     CreateOrderInfo,
 )
-from src.callbacks import (
+from ..callbacks import (
     TimeOrdersCallbackFactory,
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory

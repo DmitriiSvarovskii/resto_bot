@@ -2,8 +2,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
-from src.schemas import ReadCustomerInfo, CustomerBase
-from src.models import Customer
+from ..schemas import ReadCustomerInfo, CustomerBase
+from ..models import Customer
 
 
 async def get_user(

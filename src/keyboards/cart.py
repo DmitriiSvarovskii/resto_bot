@@ -1,11 +1,11 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.lexicons import LEXICON_KEYBOARDS_RU, LEXICON_RU
-from src.callbacks import CartEditCallbackFactory, CreateOrderCallbackFactory
-from src.crud import read_cart_items_and_totals
+from ..lexicons import LEXICON_KEYBOARDS_RU, LEXICON_RU
+from ..callbacks import CartEditCallbackFactory, CreateOrderCallbackFactory
+from ..crud import read_cart_items_and_totals
 from src.database import get_async_session
-from src.services import ORDER_TYPES, ORDER_STATUSES
+from ..services import ORDER_TYPES, ORDER_STATUSES
 from .main_keyboard import create_keyboard_main
 
 

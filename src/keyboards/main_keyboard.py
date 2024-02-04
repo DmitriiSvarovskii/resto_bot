@@ -2,9 +2,9 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Optional
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
+from ..lexicons import LEXICON_KEYBOARDS_RU
 from src.database import get_async_session
-from src.crud import get_user
+from ..crud import get_user
 
 my_dict = {'menu': {'text': 'menu', 'callback_data': 'press_menu'},
            'contact': {'text': 'contact', 'callback_data': 'press_contact'},

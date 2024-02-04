@@ -1,19 +1,19 @@
 from aiogram.types import CallbackQuery
 
-from src.callbacks import ProductIdCallbackFactory
+from ..callbacks import ProductIdCallbackFactory
 from src.database import get_async_session
-from src.lexicons import LEXICON_RU
-from src.schemas import CartCreate
-from src.crud import (
+from ..lexicons import LEXICON_RU
+from ..schemas import CartCreate
+from ..crud import (
     crud_get_all_products,
     crud_change_avail_roducts,
     crud_change_avail_categories,
 )
-from src.keyboards import (
+from ..keyboards import (
     create_keyboard_product,
     create_keyboard_product_admin,
 )
-from src.crud import (
+from ..crud import (
     add_to_cart,
     decrease_cart_item,
     get_one_product,

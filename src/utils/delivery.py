@@ -1,5 +1,5 @@
 from src.database import get_async_session
-from src.crud import read_delivery_districts
+from ..crud import read_delivery_districts
 
 
 async def get_delivery_districts():

@@ -2,12 +2,12 @@ from sqlalchemy import BIGINT, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import (
+from ..database import (
     Base, intpk, created_at
 )
 
 if TYPE_CHECKING:
-    from src.models import Order, OrderInfo  # noqa: F401
+    from ..models import Order, OrderInfo  # noqa: F401
 
 
 class Customer(Base):

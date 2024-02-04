@@ -2,7 +2,7 @@ from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
-from src.schemas import (
+from ..schemas import (
     CreateOrder,
     CreateOrderDetail,
     CreateOrderInfo,
@@ -10,7 +10,7 @@ from src.schemas import (
     CartItem,
     OrderDetailTest
 )
-from src.models import (
+from ..models import (
     Category,
     Product,
     Order,

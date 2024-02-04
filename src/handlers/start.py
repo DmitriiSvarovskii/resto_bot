@@ -3,10 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.types import Message
 
 from src.database import get_async_session
-from src.models import Customer
-from src.schemas import CustomerCreate
-from src.keyboards import create_keyboard_main
-from src.lexicons import LEXICON_RU
+from ..models import Customer
+from ..schemas import CustomerCreate
+from ..keyboards import create_keyboard_main
+from ..lexicons import LEXICON_RU
 
 
 async def process_start_command(message: Message):

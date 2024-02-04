@@ -2,8 +2,8 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
-from src.models import Store
-from src.schemas import GetStore
+from ..models import Store
+from ..schemas import GetStore
 
 
 async def crud_get_store_info(session: AsyncSession) -> Optional[GetStore]:
