@@ -1,9 +1,9 @@
-from sqlalchemy import insert, select, delete, update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-# from src.database import get_async_session
+from typing import Optional
+
 from src.models import Store
 from src.schemas import GetStore
-from typing import List, Optional
 
 
 async def crud_get_store_info(session: AsyncSession) -> Optional[GetStore]:

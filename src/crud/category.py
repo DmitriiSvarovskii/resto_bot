@@ -1,10 +1,9 @@
-from sqlalchemy import insert, select, delete, update
-from sqlalchemy.orm import Query
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-# from src.database import get_async_session
+from typing import List, Optional
+
 from src.models import Category
 from src.schemas import GetCategory
-from typing import List, Optional
 
 
 async def crud_get_all_categories(

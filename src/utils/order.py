@@ -9,7 +9,6 @@ from src.schemas import (
     CartItem,
     ReadCustomerInfo,
     CreateOrderInfo,
-    ReadDelivery,
 )
 from src.callbacks import (
     CheckOrdersCallbackFactory,
@@ -27,8 +26,8 @@ from src.crud import (
     get_user,
 )
 from src.fsm_state import user_dict_comment, user_dict
+from services.order_constants import ORDER_TYPES
 from .cart import get_comment_value, get_user_info
-from ..services.order_constants import ORDER_TYPES
 
 
 async def create_new_orders(
@@ -154,7 +153,9 @@ async def create_order_text(cart_items: List[CartItem]):
     order_text = ""
     for cart_item in cart_items:
         order_text += (
-            f'- {cart_item.category_name} - {cart_item.name} x {cart_item.quantity} - '
+            f'- {cart_item.category_name} - '
+            f'{cart_item.name} x '
+            f'{cart_item.quantity} - '
             f'{cart_item.unit_price} ₹\n'
         )
     return order_text

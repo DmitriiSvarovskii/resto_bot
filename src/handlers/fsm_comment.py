@@ -2,7 +2,6 @@
 from aiogram.fsm.context import FSMContext
 # from aiogram.fsm.storage.redis import RedisStorage, Redis
 from aiogram.fsm.storage.memory import MemoryStorage
-
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
 from src.keyboards import create_keyboard_fsm_comment

@@ -1,5 +1,5 @@
 from sqlalchemy import BIGINT, text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
 from src.database import (
@@ -7,7 +7,7 @@ from src.database import (
 )
 
 if TYPE_CHECKING:
-    from src.models import Order, OrderInfo
+    from src.models import Order, OrderInfo  # noqa: F401
 
 
 class Customer(Base):

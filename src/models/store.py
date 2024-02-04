@@ -1,6 +1,7 @@
 import datetime
 from sqlalchemy import BIGINT, text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from src.database import Base, intpk, str_4048
 
 

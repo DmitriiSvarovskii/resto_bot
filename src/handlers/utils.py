@@ -1,9 +1,18 @@
-from src.crud import get_user
-from src.callbacks import ProductIdCallbackFactory
 from aiogram.types import CallbackQuery
+
+from src.callbacks import ProductIdCallbackFactory
 from src.database import get_async_session
-from src.crud import crud_get_all_products, crud_change_avail_roducts, crud_change_avail_categories
-from src.keyboards import create_keyboard_product, create_keyboard_product_admin
+from src.lexicons import LEXICON_RU
+from src.schemas import CartCreate
+from src.crud import (
+    crud_get_all_products,
+    crud_change_avail_roducts,
+    crud_change_avail_categories,
+)
+from src.keyboards import (
+    create_keyboard_product,
+    create_keyboard_product_admin,
+)
 from src.crud import (
     add_to_cart,
     decrease_cart_item,
@@ -11,8 +20,6 @@ from src.crud import (
     delete_cart_item,
     crud_change_is_active_bot,
 )
-from src.lexicons import LEXICON_RU
-from src.schemas import CartCreate
 
 
 async def get_products_by_category(category_id):
@@ -135,6 +142,3 @@ async def process_cart_action(
             #         session=session,
             #     )
         break
-
-
-

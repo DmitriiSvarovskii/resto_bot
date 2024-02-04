@@ -9,6 +9,8 @@ __all__ = [
     'FSMDeliveryInfo',
     'FSMComment',
     'FSMCheckOrder',
+    'FSMAdReport',
+    'FSMSalesPeriodCustom',
     'user_dict_comment',
     'user_dict',
     'admin_check_order',

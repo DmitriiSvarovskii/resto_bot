@@ -1,14 +1,22 @@
-from sqlalchemy import insert, select, delete, update
-from sqlalchemy.sql import func
+from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from aiogram.types import InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from src.database import get_async_session
-from src.callbacks import ProductIdCallbackFactory, CartEditCallbackFactory
-from src.schemas import CreateOrder, CreateOrderDetail, CreateOrderInfo, GetOrder, CartItem, OrderDetailTest
-from src.lexicons import cart_text, LEXICON_RU
 from typing import List, Optional
-from src.models import Category, Product, Order, OrderDetail, OrderInfo
+
+from src.schemas import (
+    CreateOrder,
+    CreateOrderDetail,
+    CreateOrderInfo,
+    GetOrder,
+    CartItem,
+    OrderDetailTest
+)
+from src.models import (
+    Category,
+    Product,
+    Order,
+    OrderDetail,
+    OrderInfo
+)
 
 
 async def create_orders(

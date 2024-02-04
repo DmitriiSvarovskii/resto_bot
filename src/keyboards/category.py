@@ -1,12 +1,10 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from typing import Optional, List
+from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import GetCategory
-from src.callbacks import (
-    CategoryIdCallbackFactory,
-)
+from src.callbacks import CategoryIdCallbackFactory
 from src.crud import read_cart_items_and_totals
 
 

@@ -1,15 +1,25 @@
-from sqlalchemy import desc
-from sqlalchemy import insert, select, delete, update
+from datetime import datetime
+from sqlalchemy import desc, select, cast, Date
+from sqlalchemy.orm import Query
+from sqlalchemy.sql import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from sqlalchemy.orm import Query
 
-# from src.database import get_async_session
-from src.models import Product, Order, OrderDetail, OrderInfo, Category, Delivery, Customer
-from src.schemas import SalesSummary, SalesSummaryList, OrderList, DeliveryReport, CustomerAdResourse
-from sqlalchemy.sql import func
-from datetime import datetime
-from sqlalchemy import cast, Date
+from src.models import (
+    Product,
+    Order,
+    OrderDetail,
+    OrderInfo,
+    Delivery,
+    Customer,
+)
+from src.schemas import (
+    SalesSummary,
+    SalesSummaryList,
+    OrderList,
+    DeliveryReport,
+    CustomerAdResourse,
+)
 
 
 async def create_main_query():
@@ -150,7 +160,14 @@ async def apply_date_filters(
     return query, query_total_price
 
 
-async def apply_filters(query, query_total_price, canceled, filter, start_date, end_date):
+async def apply_filters(
+    query,
+    query_total_price,
+    canceled,
+    filter,
+    start_date,
+    end_date
+):
     if canceled:
         query = query.where(Order.order_status == canceled)
         query_total_price = query_total_price.where(
@@ -184,12 +201,18 @@ async def crud_get_daily_sales(
 ) -> List[SalesSummary]:
     query = await create_main_query()
     query_total_price = await create_total_price_query()
-    query, query_total_price = await apply_filters(query, query_total_price, canceled, filter, start_date, end_date)
+    query, query_total_price = await apply_filters(
+        query,
+        query_total_price,
+        canceled,
+        filter,
+        start_date,
+        end_date
+    )
 
     result = await session.execute(query)
     result_total_price = await session.execute(query_total_price)
     total_price = result_total_price.scalar()
-
 
     sales_summary = [SalesSummary(**row._asdict()) for row in result]
     if sales_summary and total_price:
@@ -243,7 +266,9 @@ async def crud_get_daily_sales(
 #         )
 
 #     if start_date and end_date:
-#         converted_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+#         converted_start_date = datetime.strptime(
+    # start_date, '%Y-%m-%d'
+    # ).date()
 #         converted_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 #         date_condition = (
 #             (cast(OrderDetail.created_at, Date) >= converted_start_date) &
@@ -285,4 +310,3 @@ async def crud_get_ad_report(
     result = await session.execute(query)
     response = result.scalar()
     return response
-

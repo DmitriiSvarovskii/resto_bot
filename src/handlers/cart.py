@@ -3,15 +3,14 @@ from aiogram.types import CallbackQuery
 from src.database import get_async_session
 from src.crud import delete_cart_items_by_user_id
 from src.callbacks import ProductIdCallbackFactory, CartEditCallbackFactory
+from src.lexicons import LEXICON_RU
+from src.utils import update_cart_message, get_comment_value
+from src.fsm_state import user_dict_comment
 from src.keyboards import (
     create_keyboard_product,
     create_keyboard_main,
     create_keyboards_products_cart,
 )
-from src.lexicons import LEXICON_RU
-from src.utils import update_cart_message, get_comment_value
-from src.services import ORDER_TYPES
-from src.fsm_state import user_dict_comment
 from .utils import get_products_by_category, process_cart_action
 
 

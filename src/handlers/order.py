@@ -2,6 +2,10 @@ from aiogram import Bot
 from aiogram.types import CallbackQuery
 
 from src.utils import create_new_orders, create_text, get_status_name_by_id
+from src.crud import update_order_status
+from src.database import get_async_session
+from src.config import ADMINT_CHAT
+from src.services import ORDER_TYPES, ORDER_STATUSES
 from src.callbacks import (
     CreateOrderCallbackFactory,
     CheckOrdersCallbackFactory,
@@ -20,10 +24,6 @@ from src.lexicons import (
     generate_order_info_text,
     generate_order_info_time_text,
 )
-from src.crud import update_order_status
-from src.database import get_async_session
-from src.config import ADMINT_CHAT
-from src.services import ORDER_TYPES, ORDER_STATUSES
 
 
 async def create_orders_takeaway(

@@ -1,9 +1,9 @@
 from aiogram.types import CallbackQuery
 
-from src.lexicons import LEXICON_RU, LEXICON_KEYBOARDS_RU
+from src.lexicons import LEXICON_RU
 from src.database import get_async_session
 from src.crud import crud_get_all_categories, crud_get_store_info
-from src.keyboards import create_keyboard_category, create_keyboard_product, create_keyboard_main
+from src.keyboards import create_keyboard_category, create_keyboard_main
 from src.services import is_valid_time_warning
 from src.callbacks import CategoryIdCallbackFactory
 from .utils import get_products_by_category, get_keyboard_products_by_category

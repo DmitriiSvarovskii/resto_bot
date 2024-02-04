@@ -1,15 +1,22 @@
-from typing import Union, Optional
-from aiogram.types import CallbackQuery, Message
+from typing import Optional
 from datetime import datetime
 
-from src.crud import (
-    crud_get_all_categories, crud_get_all_products, crud_get_sales_period_summary,
-    get_order_detail_test, )
-
 from src.database import get_async_session
-from src.crud import crud_get_stop_list, crud_get_store_info, crud_get_all_categories, crud_get_pending_orders_list, crud_get_delivery_report, crud_get_ad_report
-from src.keyboards import create_keyboard_cart, create_keyboard_toggle_bot, create_keyboard_category_avail_admin, create_keyboard_category_admin
-from src.lexicons import cart_text, LEXICON_RU
+from src.crud import (
+    get_order_detail_test,
+    crud_get_sales_period_summary,
+    crud_get_stop_list,
+    crud_get_store_info,
+    crud_get_all_categories,
+    crud_get_pending_orders_list,
+    crud_get_delivery_report,
+    crud_get_ad_report,
+)
+from src.keyboards import (
+    create_keyboard_toggle_bot,
+    create_keyboard_category_avail_admin,
+    create_keyboard_category_admin,
+)
 
 
 async def get_stop_list() -> None:
@@ -126,7 +133,10 @@ async def generate_view_order_text(order_id: int) -> str:
         message_text = f"Заказ № {order_id}:\n"
         for items in order_text:
             message_text += (
-                f'{items.category_name} - {items.name} х {items.quantity} шт - {items.unit_price} ₹\n'
+                f'{items.category_name} - '
+                f'{items.name} х '
+                f'{items.quantity} шт - '
+                f'{items.unit_price} ₹\n'
             )
 
     else:

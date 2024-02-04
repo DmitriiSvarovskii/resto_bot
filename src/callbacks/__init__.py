@@ -1,10 +1,10 @@
+from .cart import CartEditCallbackFactory
+from .product import ProductIdCallbackFactory, ProductIdAdminCallbackFactory
 from .category import (
     CategoryIdCallbackFactory,
     CategoryAdminCallbackFactory,
     CategoryAdminAvailCallbackFactory
 )
-from .product import ProductIdCallbackFactory, ProductIdAdminCallbackFactory
-from .cart import CartEditCallbackFactory
 from .order import (
     CreateOrderCallbackFactory,
     CheckOrdersCallbackFactory,

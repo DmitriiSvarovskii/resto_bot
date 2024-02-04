@@ -1,17 +1,33 @@
-from datetime import datetime
-from aiogram.types import CallbackQuery
 from aiogram import Bot
-
-from src.lexicons import LEXICON_RU, LEXICON_KEYBOARDS_RU
-from src.database import get_async_session
-from src.crud import crud_get_all_categories, crud_get_all_products, crud_get_sales_period_summary
-from src.keyboards import create_keyboard_report, create_keyboard_toggle_bot, create_keyboard_admin_main, create_keyboard_product, create_keyboard_edit_menu
-from src.services import is_valid_time_warning
-from src.callbacks import CategoryIdCallbackFactory, CategoryAdminCallbackFactory, ProductIdAdminCallbackFactory
-from src.utils import get_stop_list, get_store_info, generate_categories_avail_admin, generate_sales_summary_text, generate_pending_orders_text, generate_delivery_report_text, generate_categories_admin
+from aiogram.types import CallbackQuery
 from aiogram.exceptions import TelegramBadRequest
-from .utils import (get_products_by_category, change_is_active_bot, change_avail_roducts,
-                    get_admin_keyboard_products_by_category, change_avail_category)
+
+from src.lexicons import LEXICON_RU
+from src.keyboards import (
+    create_keyboard_report,
+    create_keyboard_admin_main,
+    create_keyboard_edit_menu,
+)
+from src.callbacks import (
+    CategoryAdminCallbackFactory,
+    ProductIdAdminCallbackFactory,
+)
+from src.utils import (
+    get_stop_list,
+    get_store_info,
+    generate_categories_avail_admin,
+    generate_sales_summary_text,
+    generate_pending_orders_text,
+    generate_delivery_report_text,
+    generate_categories_admin,
+)
+from .utils import (
+    get_products_by_category,
+    change_is_active_bot,
+    change_avail_roducts,
+    get_admin_keyboard_products_by_category,
+    change_avail_category,
+)
 
 
 async def press_admin_menu(callback: CallbackQuery):

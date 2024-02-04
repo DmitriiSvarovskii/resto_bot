@@ -5,8 +5,8 @@ from src.lexicons import LEXICON_KEYBOARDS_RU, LEXICON_RU
 from src.callbacks import CartEditCallbackFactory, CreateOrderCallbackFactory
 from src.crud import read_cart_items_and_totals
 from src.database import get_async_session
-from .main_keyboard import create_keyboard_main
 from src.services import ORDER_TYPES, ORDER_STATUSES
+from .main_keyboard import create_keyboard_main
 
 
 def create_keyboard_cart(mess_id: int):

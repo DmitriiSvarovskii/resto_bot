@@ -2,17 +2,6 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 
-# class OrderBase(BaseModel):
-#     model_config = ConfigDict(from_attributes=True)
-
-#     user_id: int
-#     delivery_village: Optional[str] = None
-#     delivery_address: Optional[str] = None
-#     customer_name: Optional[str] = None
-#     customer_phone: Optional[str] = None
-#     customer_comment: Optional[str] = None
-
-
 class CreateOrder(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

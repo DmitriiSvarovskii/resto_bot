@@ -2,13 +2,12 @@
 from aiogram.fsm.context import FSMContext
 # from aiogram.fsm.storage.redis import RedisStorage, Redis
 from aiogram.fsm.storage.memory import MemoryStorage
-
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
-from src.keyboards import create_keyboard_fsm_comment, create_keyboard_report
+from src.keyboards import create_keyboard_report
 from src.fsm_state import FSMSalesPeriodCustom, admin_check_order
-from src.utils import update_cart_message, generate_sales_summary_text, generate_custom_sales_summary_text
-from src.lexicons import get_comments_prompt_message, LEXICON_RU
+from src.utils import update_cart_message, generate_custom_sales_summary_text
+from src.lexicons import LEXICON_RU
 
 
 storage: MemoryStorage = MemoryStorage()

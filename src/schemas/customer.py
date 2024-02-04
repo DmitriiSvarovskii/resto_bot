@@ -23,5 +23,4 @@ class CustomerInfo(CustomerBase):
 class CustomerAdResourse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    # resourse: str
     customer_count: int

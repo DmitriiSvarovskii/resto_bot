@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.filters import Command, CommandStart  # noqa: F401
+from aiogram.filters import Command, CommandStart
 
 from .start import process_start_command
 from .commands import get_my_id
@@ -10,7 +10,6 @@ from .main_menu import (
     get_delivery_info,
     press_main_menu,
     press_back_main_menu,
-    # press_test,
 )
 from .menu import get_menu_category, get_menu_products
 from .cart import (
@@ -43,12 +42,12 @@ from .fsm_comment import (
     process_cancel_command_state,
     process_comment_sent,
 )
-from .fsm_check_order import (
+from .fsm_check_order import (  # noqa: F401
     process_view_order,
     process_cancel_command_state_order,
     process_waiting_order_id,
 )
-from .fsm_ad_report import (
+from .fsm_ad_report import (  # noqa: F401
     process_ad_report,
     process_cancel_command_state_resourse,
     process_waiting_resourser,
@@ -68,7 +67,6 @@ from .admin import (
     process_sales_period,
     process_pending_orders,
     process_delivery_report,
-    # process_ad_report,
     process_modify_availability_products,
     process_modify_availability_categories,
     process_add_product,

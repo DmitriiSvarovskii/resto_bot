@@ -1,16 +1,16 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship  # noqa: F401
+from typing import TYPE_CHECKING
+
 from src.database import (
     Base, intpk, str_64,
     str_256, created_at, updated_at,
     deleted_at, deleted_flag
 )
 
-
-from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from src.models import (
+    from src.models import (  # noqa: F401
         Category,
         Cart,
         OrderDetail,

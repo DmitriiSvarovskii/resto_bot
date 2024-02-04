@@ -1,13 +1,14 @@
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship, Mapped  # noqa: F401
+from typing import TYPE_CHECKING
+
 from src.database import (
     Base, intpk, str_64,
     created_at, updated_at,
     deleted_at, deleted_flag
 )
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.models import Product
+    from src.models import Product  # noqa: F401
 
 
 class Category(Base):

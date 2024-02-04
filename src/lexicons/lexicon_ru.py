@@ -1,9 +1,9 @@
 from typing import Optional, Union
 from datetime import datetime
+
 from src.schemas import (
     ReadDelivery,
     ReadCustomerInfo,
-    ReadDeliveryInfo,
     CreateOrderInfo,
 )
 from src.callbacks import (
@@ -11,7 +11,7 @@ from src.callbacks import (
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory
 )
-from src.services import get_status_name_by_id, get_order_type_name_by_id
+from services import get_status_name_by_id
 
 LEXICON_RU: dict[str, str] = {
     'start':

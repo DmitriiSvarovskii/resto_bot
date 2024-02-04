@@ -1,7 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.schemas import ReadCustomerInfo, CustomerBase
 from typing import Optional
+
+from src.schemas import ReadCustomerInfo, CustomerBase
 from src.models import Customer
 
 

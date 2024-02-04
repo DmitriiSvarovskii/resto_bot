@@ -6,8 +6,6 @@ from src.keyboards import (
     create_keyboard_back,
     create_keyboard_main
 )
-from src.database import get_async_session
-from src.crud import crud_get_daily_sales, get_user_info
 
 
 async def press_get_location(callback: CallbackQuery):

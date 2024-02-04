@@ -1,9 +1,7 @@
-from sqlalchemy import insert, select, delete, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-# from src.database import get_async_session
+
 from src.models import Delivery
-# from .schemas import CategoryCreate, CategoryUpdate
-# from typing import List
 
 
 async def read_delivery_districts(session: AsyncSession):
