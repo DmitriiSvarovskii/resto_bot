@@ -1,12 +1,12 @@
 import os
 import sys
 from logging.config import fileConfig
-from ..config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
-from ..database import metadata, Base
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from src.database import metadata, Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from ..models import *  # noqa: F401, F403
+from src.models import *  # noqa: F401, F403
 
 from alembic import context
 
@@ -37,7 +37,7 @@ target_metadata = [metadata, Base.metadata]
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+# src.. etc.
 
 
 def run_migrations_offline() -> None:

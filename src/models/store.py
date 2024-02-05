@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import BIGINT, text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..database import Base, intpk, str_4048
+from src.database import Base, intpk, str_4048
 
 
 class Store(Base):

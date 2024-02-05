@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Mapped, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from ..database import Base, intpk, str_64
+from src.database import Base, intpk, str_64
 
 if TYPE_CHECKING:
-    from ..models import Product  # noqa: F401
+    from src.models import Product  # noqa: F401
 
 
 class Delivery(Base):

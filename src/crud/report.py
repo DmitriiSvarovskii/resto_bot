@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
-from ..models import (
+from src.models import (
     Product,
     Order,
     OrderDetail,
@@ -13,7 +13,7 @@ from ..models import (
     Delivery,
     Customer,
 )
-from ..schemas import (
+from src.schemas import (
     SalesSummary,
     SalesSummaryList,
     OrderList,

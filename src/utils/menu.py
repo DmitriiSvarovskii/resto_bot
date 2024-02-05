@@ -1,5 +1,5 @@
-from ..database import get_async_session
-from ..crud import get_user
+from src.database import get_async_session
+from src.crud import get_user
 
 
 async def get_user_info(user_id: int,):

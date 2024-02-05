@@ -3,12 +3,12 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from ..fsm_state import FSMDeliveryInfo, user_dict
-from ..callbacks import DeliveryIdCallbackFactory
-from ..lexicons import LEXICON_RU
-from ..services import is_valid_time
-from ..utils import get_delivery_districts
-from ..keyboards import (
+from src.fsm_state import FSMDeliveryInfo, user_dict
+from src.callbacks import DeliveryIdCallbackFactory
+from src.lexicons import LEXICON_RU
+from src.services import is_valid_time
+from src.utils import get_delivery_districts
+from src.keyboards import (
     create_keyboard_delivery,
     create_keyboard_main,
     create_keyboard_delivery_fsm,
