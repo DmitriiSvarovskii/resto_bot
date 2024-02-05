@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models import Delivery
+from ..models import Delivery
 
 
 async def read_delivery_districts(session: AsyncSession):

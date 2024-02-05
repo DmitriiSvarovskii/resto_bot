@@ -1,6 +1,6 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
+from ..lexicons import LEXICON_KEYBOARDS_RU
 
 
 def create_keyboard_fsm_comment() -> ReplyKeyboardMarkup:

@@ -1,12 +1,12 @@
 from typing import Optional, Union
 from datetime import datetime
 
-from src.schemas import (
+from ..schemas import (
     ReadDelivery,
     ReadCustomerInfo,
     CreateOrderInfo,
 )
-from src.callbacks import (
+from ..callbacks import (
     TimeOrdersCallbackFactory,
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory
@@ -57,7 +57,7 @@ LEXICON_RU: dict[str, str] = {
     'category': 'Что хотите купить?',
     'closing_time_reminder': 'Внимание, в 23:00 мы закрываемся, но у вас ещё '
                              'есть время) не затягивайте с выбором)',
-    'closing_time': 'Упсsrc..((\n\nИзвините, оформить заказ не получится.\n'
+    'closing_time': 'Упс...((\n\nИзвините, оформить заказ не получится.\n'
                     'Мы работаем с 15:00 до 23:00.\n'
                     'Будем рады накормить вас в рабочие часы)',
     'finish_category': 'Извините, блюда из данной категории сейчас закончились'
@@ -98,7 +98,7 @@ LEXICON_RU: dict[str, str] = {
                              'нажмите "Пропустить шаг" и свяжитесь с нашим '
                              'менеджером, для уточнения деталей заказа '
                              '@AyratZiganshin59',
-    'error_comment': 'Произошла какая-то ошибкаsrc..\n\n'
+    'error_comment': 'Произошла какая-то ошибка...\n\n'
                      'Пожалуйста повторите коментария для курьера\n\n'
                      'Или нажмите кнопку "Пропустить шаг"',
     'error_location': 'То, что вы отправили не похоже на локацию\n\n'

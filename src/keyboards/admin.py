@@ -3,9 +3,9 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Optional, List
 
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.schemas import ReadProduct, GetCategory, GetStore
-from src.callbacks import (
+from ..lexicons import LEXICON_KEYBOARDS_RU
+from ..schemas import ReadProduct, GetCategory, GetStore
+from ..callbacks import (
     CategoryAdminCallbackFactory,
     ProductIdAdminCallbackFactory,
     CategoryAdminAvailCallbackFactory,

@@ -1,9 +1,9 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.services import ORDER_STATUSES
-from src.callbacks import (
+from ..lexicons import LEXICON_KEYBOARDS_RU
+from ..services import ORDER_STATUSES
+from ..callbacks import (
     CheckOrdersCallbackFactory,
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,

@@ -2,10 +2,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import Base, intpk
+from ..database import Base, intpk
 
 if TYPE_CHECKING:
-    from src.models import Order  # noqa: F401
+    from ..models import Order  # noqa: F401
 
 
 class OrderInfo(Base):

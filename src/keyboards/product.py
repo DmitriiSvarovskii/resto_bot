@@ -3,10 +3,10 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.callbacks import ProductIdCallbackFactory
-from src.crud import read_cart_items_and_totals
-from src.schemas import ReadProduct
+from ..lexicons import LEXICON_KEYBOARDS_RU
+from ..callbacks import ProductIdCallbackFactory
+from ..crud import read_cart_items_and_totals
+from ..schemas import ReadProduct
 
 
 async def create_keyboard_product(

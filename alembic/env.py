@@ -1,12 +1,12 @@
 import os
 import sys
 from logging.config import fileConfig
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
-from src.database import metadata, Base
+from ..config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from ..database import metadata, Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from src.models import *  # noqa: F401, F403
+from ..models import *  # noqa: F401, F403
 
 from alembic import context
 

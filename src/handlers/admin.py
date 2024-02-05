@@ -2,17 +2,17 @@ from aiogram import Bot
 from aiogram.types import CallbackQuery
 from aiogram.exceptions import TelegramBadRequest
 
-from src.lexicons import LEXICON_RU
-from src.keyboards import (
+from ..lexicons import LEXICON_RU
+from ..keyboards import (
     create_keyboard_report,
     create_keyboard_admin_main,
     create_keyboard_edit_menu,
 )
-from src.callbacks import (
+from ..callbacks import (
     CategoryAdminCallbackFactory,
     ProductIdAdminCallbackFactory,
 )
-from src.utils import (
+from ..utils import (
     get_stop_list,
     get_store_info,
     generate_categories_avail_admin,

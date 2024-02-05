@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 
-from src.lexicons import LEXICON_RU
-from src.keyboards import (
+from ..lexicons import LEXICON_RU
+from ..keyboards import (
     create_keyboard_del,
     create_keyboard_back,
     create_keyboard_main

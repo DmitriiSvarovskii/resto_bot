@@ -2,8 +2,8 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
-from src.models import Category
-from src.schemas import GetCategory
+from ..models import Category
+from ..schemas import GetCategory
 
 
 async def crud_get_all_categories(

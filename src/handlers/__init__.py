@@ -79,7 +79,7 @@ from .admin import (
     process_press_availability_categories,
     process_toggle_working_bot,
 )
-from src.callbacks import (
+from ..callbacks import (
     CategoryIdCallbackFactory,
     ProductIdCallbackFactory,
     CartEditCallbackFactory,
@@ -92,14 +92,14 @@ from src.callbacks import (
     ProductIdAdminCallbackFactory,
     CategoryAdminAvailCallbackFactory,
 )
-from src.fsm_state import (
+from ..fsm_state import (
     FSMDeliveryInfo,
     FSMComment,
     FSMCheckOrder,
     FSMSalesPeriodCustom,
     FSMAdReport,
 )
-from src.lexicons import LEXICON_KEYBOARDS_RU
+from ..lexicons import LEXICON_KEYBOARDS_RU
 
 
 def register_user_commands(router: Router) -> None:
