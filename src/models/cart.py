@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from src.database import Base, intpk
 
 if TYPE_CHECKING:
-    from src.models import Product  # noqa: F401
+    from . import Product  # noqa: F401
 
 
 class Cart(Base):

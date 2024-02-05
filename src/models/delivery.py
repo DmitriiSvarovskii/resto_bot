@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from src.database import Base, intpk, str_64
 
 if TYPE_CHECKING:
-    from src.models import Product  # noqa: F401
+    from . import Product  # noqa: F401
 
 
 class Delivery(Base):

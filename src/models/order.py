@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, List  # noqa: F401
 from src.database import Base, intpk, created_at, str_64, updated_at
 
 if TYPE_CHECKING:
-    from src.models import OrderInfo, OrderDetail, Customer  # noqa: F401
+    from . import OrderInfo, OrderDetail, Customer  # noqa: F401
 
 
 class Order(Base):

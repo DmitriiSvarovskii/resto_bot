@@ -8,7 +8,7 @@ from src.database import (
 )
 
 if TYPE_CHECKING:
-    from src.models import Product  # noqa: F401
+    from . import Product  # noqa: F401
 
 
 class Category(Base):

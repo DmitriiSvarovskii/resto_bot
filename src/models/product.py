@@ -10,7 +10,7 @@ from src.database import (
 )
 
 if TYPE_CHECKING:
-    from src.models import (  # noqa: F401
+    from . import (  # noqa: F401
         Category,
         Cart,
         OrderDetail,

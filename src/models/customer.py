@@ -7,7 +7,7 @@ from src.database import (
 )
 
 if TYPE_CHECKING:
-    from src.models import Order, OrderInfo  # noqa: F401
+    from . import Order, OrderInfo  # noqa: F401
 
 
 class Customer(Base):

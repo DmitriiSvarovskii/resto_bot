@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from src.database import Base, intpk, created_at
 
 if TYPE_CHECKING:
-    from src.models import Product, Order  # noqa: F401
+    from . import Product, Order  # noqa: F401
 
 
 class OrderDetail(Base):
