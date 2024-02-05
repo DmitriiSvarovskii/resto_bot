@@ -2,19 +2,19 @@ from typing import List, Optional, Union
 from aiogram.types import CallbackQuery
 
 from src.database import get_async_session
-from ..services import ORDER_STATUSES
-from ..lexicons import new_order_mess_text_order_chat
-from ..schemas import (
+from src.services import ORDER_STATUSES
+from src.lexicons import new_order_mess_text_order_chat
+from src.schemas import (
     CreateOrder,
     CartItem,
     ReadCustomerInfo,
     CreateOrderInfo,
 )
-from ..callbacks import (
+from src.callbacks import (
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory
 )
-from ..crud import (
+from src.crud import (
     create_orders,
     read_cart_items_and_totals,
     create_new_order_details,
@@ -25,7 +25,7 @@ from ..crud import (
     get_order_detail,
     get_user,
 )
-from ..fsm_state import user_dict_comment, user_dict
+from src.fsm_state import user_dict_comment, user_dict
 from services.order_constants import ORDER_TYPES
 from .cart import get_comment_value, get_user_info
 

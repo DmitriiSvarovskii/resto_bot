@@ -4,13 +4,13 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
-from ..keyboards import create_keyboard_report
-from ..fsm_state import FSMAdReport, admin_check_order
-from ..utils import (
+from src.keyboards import create_keyboard_report
+from src.fsm_state import FSMAdReport, admin_check_order
+from src.utils import (
     update_cart_message,
     generate_ad_report_text,
 )
-from ..lexicons import LEXICON_RU
+from src.lexicons import LEXICON_RU
 
 
 storage: MemoryStorage = MemoryStorage()

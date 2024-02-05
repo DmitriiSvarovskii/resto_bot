@@ -4,17 +4,17 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 from typing import Optional
 
-from ..models import (
+from src.models import (
     Product,
     Cart,
     Category,
 )
-from ..schemas import (
+from src.schemas import (
     CartResponse,
     CartCreate,
     CartItem
 )
-from ..lexicons import LEXICON_RU
+from src.lexicons import LEXICON_RU
 
 
 async def read_cart_items_and_totals(

@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from ..lexicons import LEXICON_KEYBOARDS_RU
+from src.lexicons import LEXICON_KEYBOARDS_RU
 
 
 def create_keyboard_del():
