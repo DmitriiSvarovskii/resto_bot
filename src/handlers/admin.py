@@ -12,6 +12,7 @@ from src.callbacks import (
     CategoryAdminCallbackFactory,
     ProductIdAdminCallbackFactory,
 )
+from src.db import product_db
 from src.utils import (
     get_stop_list,
     get_store_info,
@@ -220,7 +221,7 @@ async def get_admin_products(
     callback: CallbackQuery,
     callback_data: CategoryAdminCallbackFactory
 ):
-    products = await get_products_by_category(
+    products = await product_db.get_products_by_category_admin(
         category_id=callback_data.category_id
     )
 
@@ -240,7 +241,7 @@ async def get_admin_change_avail_products(
     try:
         await change_avail_roducts(callback_data.product_id)
 
-        products = await get_products_by_category(
+        products = await product_db.get_products_by_category_admin(
             category_id=callback_data.category_id
         )
 

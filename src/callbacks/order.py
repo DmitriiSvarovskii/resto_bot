@@ -1,13 +1,14 @@
 from aiogram.filters.callback_data import CallbackData
+from typing import Optional
 
 
 class CreateOrderCallbackFactory(
     CallbackData,
     prefix='order',
 ):
-    order_type: int
+    order_type: Optional[int] = None
     status: int
-    mess_id: int
+    mess_id: Optional[int] = None
 
 
 class CheckOrdersCallbackFactory(
@@ -25,6 +26,7 @@ class TimeOrdersCallbackFactory(
     sep='_'
 ):
     time: int
+    time_del: Optional[int] = None
 
 
 class OrderStatusCallbackFactory(

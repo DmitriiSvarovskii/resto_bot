@@ -24,6 +24,7 @@ from src.crud import (
     get_order_info,
     get_order_detail,
     get_user,
+    delete_cart_items_by_user_id,
 )
 from src.fsm_state import user_dict_comment, user_dict
 from services.order_constants import ORDER_TYPES
@@ -106,10 +107,10 @@ async def create_new_orders(
                               if user_info is not None else None),
         )
 
-        # await delete_cart_items_by_user_id(
-        #     user_id=data_order.user_id,
-        #     session=session
-        # )
+        await delete_cart_items_by_user_id(
+            user_id=data_order.user_id,
+            session=session
+        )
 
         await create_order_info(
             data=data_order_info,

@@ -1,10 +1,10 @@
-from .cart import CartItem, CartCreate, CartResponse
+from .cart import CartItem, CartCreate, CartResponse, CartItemTotal
 from .category import GetCategory
-from .order import CreateOrder, ReadCustomerInfo, ReadDeliveryInfo, GetOrder
+from .order import CreateOrder, ReadCustomerInfo, ReadDeliveryInfo, ReadOrder
 from .order_detail import CreateOrderDetail, OrderDetailTest
 from .delivery import ReadDelivery
 from .product import ReadProduct
-from .order_info import CreateOrderInfo, GetOrderInfo
+from .order_info import CreateOrderInfo, ReadOrderInfo
 from .report import SalesSummary, SalesSummaryList, OrderList, DeliveryReport
 from .store import GetStore
 from .customer import (
@@ -16,6 +16,7 @@ from .customer import (
 
 
 __all__ = [
+    'CartItemTotal',
     'CustomerBase',
     'CustomerCreate',
     'CustomerInfo',
@@ -27,13 +28,13 @@ __all__ = [
     'CreateOrder',
     'ReadCustomerInfo',
     'ReadDeliveryInfo',
-    'GetOrder',
+    'ReadOrder',
     'CreateOrderDetail',
     'OrderDetailTest',
     'ReadDelivery',
     'ReadProduct',
     'CreateOrderInfo',
-    'GetOrderInfo',
+    'ReadOrderInfo',
     'SalesSummary',
     'SalesSummaryList',
     'OrderList',

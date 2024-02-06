@@ -30,8 +30,10 @@ from .admin import (
     create_keyboard_product_admin,
 )
 
+from . import account_keyboards
 
 __all__ = [
+    'account_keyboards',
     'create_keyboard_main',
     'create_keyboard_delivery_fsm_location',
     'create_keyboard_del',

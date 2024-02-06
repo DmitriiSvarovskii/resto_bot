@@ -24,11 +24,11 @@ class CartGet(BaseModel):
 class CartItem(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    product_id: int
+    product_id: Optional[int] = None
     category_name: Optional[str] = None
-    name: str
-    quantity: int
-    unit_price: int
+    name: Optional[str] = None
+    quantity: Optional[int] = None
+    unit_price: Optional[int] = None
 
 
 class CartResponse(BaseModel):
@@ -41,7 +41,7 @@ class CartResponse(BaseModel):
 class CartItemTotal(CartItem):
     model_config = ConfigDict(from_attributes=True)
 
-    total_price: int
+    total_price: Optional[int] = None
 
 
 class CartItemsOrder(BaseModel):

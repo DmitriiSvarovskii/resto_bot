@@ -12,7 +12,8 @@ from src.models import (
 from src.schemas import (
     CartResponse,
     CartCreate,
-    CartItem
+    CartItem,
+    CartItemTotal,
 )
 from src.lexicons import LEXICON_RU
 
@@ -55,6 +56,27 @@ async def read_cart_items_and_totals(
     )
 
     return response_data
+
+
+async def crud_total_price_cart_by_id(
+    user_id: int,
+    session: AsyncSession
+) -> Optional[CartItemTotal]:
+    query = (
+        select(
+            func.sum(Cart.quantity * Product.price).over().label("total_price")
+        )
+        .join(Cart, Cart.product_id == Product.id)
+        .join(Category, Category.id == Product.category_id)
+        .where(
+            Cart.user_id == user_id,
+        )
+    )
+    result = await session.execute(query)
+    print(2)
+    response = result.one()
+    print(3)
+    return response
 
 
 async def add_to_cart(

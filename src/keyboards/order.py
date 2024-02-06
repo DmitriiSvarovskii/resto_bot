@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from typing import Optional
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.services import ORDER_STATUSES
@@ -58,6 +59,7 @@ def create_keyboard_time_cooking(
     order_id: int,
     user_id: int,
     mess_id: int,
+    time_del: Optional[int] = None,
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -88,6 +90,7 @@ def create_keyboard_time_cooking(
                 status=ORDER_STATUSES['accepted']['id'],
                 mess_id=mess_id,
                 time=time,
+                time_del=time_del,
             ).pack()
         )
         button_time_list.append(button_time)

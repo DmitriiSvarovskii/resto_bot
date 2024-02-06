@@ -6,7 +6,7 @@ from src.schemas import (
     CreateOrder,
     CreateOrderDetail,
     CreateOrderInfo,
-    GetOrder,
+    ReadOrder,
     CartItem,
     OrderDetailTest
 )
@@ -84,7 +84,7 @@ async def get_order(
     order_id: int,
     session: AsyncSession,
 
-) -> Optional[GetOrder]:
+) -> Optional[ReadOrder]:
     query = (
         select(Order).
         where(Order.id == order_id)
@@ -92,6 +92,21 @@ async def get_order(
     result = await session.execute(query)
     response = result.scalar()
     return response.total_price
+
+
+async def crud_get_order_list(
+    user_id: int,
+    session: AsyncSession,
+
+) -> List[ReadOrder]:
+    query = (
+        select(Order)
+        .where(Order.user_id == user_id)
+        .limit(5)
+    )
+    result = await session.execute(query)
+    response = result.scalars().all()
+    return response
 
 
 async def get_order_info(

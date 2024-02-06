@@ -4,6 +4,7 @@ from aiogram.types import CallbackQuery
 from src.utils import create_new_orders, create_text, get_status_name_by_id
 from src.crud import update_order_status
 from src.database import get_async_session
+from src.db import order_db
 from src.config import ADMINT_CHAT
 from src.services import ORDER_TYPES, ORDER_STATUSES
 from src.callbacks import (
@@ -19,6 +20,7 @@ from src.keyboards import (
     create_order_status_keyboard,
     create_order_status_delivery_keyboard,
     create_status_redy_order_keyboard,
+    account_keyboards,
 )
 from src.lexicons import (
     generate_order_info_text,
@@ -62,6 +64,7 @@ async def process_edit_status_order(
     bot: Bot
 ):
     order_status = await get_status_name_by_id(callback_data.status)
+    delivery_time = None
 
     async for session in get_async_session():
         await update_order_status(
@@ -69,6 +72,10 @@ async def process_edit_status_order(
             order_id=callback_data.order_id,
             session=session
         )
+        if callback_data.order_type == ORDER_TYPES['delivery']['id']:
+            delivery_time = await order_db.get_delivery_time(
+                order_id=callback_data.order_id,
+            )
         break
 
     await bot.edit_message_reply_markup(
@@ -91,6 +98,7 @@ async def process_edit_status_order(
         order_id=callback_data.order_id,
         user_id=callback_data.user_id,
         mess_id=message_id.message_id,
+        time_del=delivery_time,
     )
 
     if order_status == ORDER_STATUSES['cancelled']['name']:
@@ -196,3 +204,15 @@ async def process_edit_status_redy_order(
             text='❗️' + text,
             reply_markup=keyboard
         )
+
+
+async def process_open_account(callback: CallbackQuery,):
+
+    keyboard = await account_keyboards.create_keyboard_account(
+        user_id=callback.message.chat.id
+    )
+
+    await callback.message.answer(
+        text='Я тут',
+        reply_markup=keyboard
+    )

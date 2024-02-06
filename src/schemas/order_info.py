@@ -15,5 +15,5 @@ class CreateOrderInfo(BaseModel):
     delivery_comment: Optional[str] = None
 
 
-class GetOrderInfo(CreateOrderInfo):
+class ReadOrderInfo(CreateOrderInfo):
     id: int

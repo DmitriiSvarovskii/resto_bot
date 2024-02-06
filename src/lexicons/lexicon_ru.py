@@ -338,7 +338,7 @@ def generate_order_info_time_text(callback_data: TimeOrdersCallbackFactory):
     )
     if callback_data.order_type == 2:
         message += (
-            "Ориентировочное время поездки: 30 минут"
+            f"Ориентировочное время поездки: {callback_data.time_del} минут"
         )
     return message
 

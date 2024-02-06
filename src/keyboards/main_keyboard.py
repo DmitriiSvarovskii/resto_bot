@@ -52,7 +52,7 @@ async def create_keyboard_main(user_id: Optional[int] = None):
             callback_data='press_location'),
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['personal_account'],
-            callback_data='press_personal_account'),
+            callback_data='press_account'),
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['group_telegram'],
             url='https://t.me/PizzaGoaFood'),

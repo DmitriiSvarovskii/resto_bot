@@ -36,6 +36,7 @@ from .order import (
     process_edit_status_order,
     process_time_order,
     process_edit_status_redy_order,
+    process_open_account,
 )
 from .fsm_comment import (
     process_waiting_comment,
@@ -130,9 +131,9 @@ def register_user_commands(router: Router) -> None:
     router.callback_query.register(
         press_get_location, F.data == 'press_location'
     )
-    # router.callback_query.register(
-    #     open_personal_area, F.data == 'press_personal_area'
-    # )
+    router.callback_query.register(
+        process_open_account, F.data == 'press_account'
+    )
     router.callback_query.register(
         press_main_menu, F.data == 'press_main_menu'
     )
