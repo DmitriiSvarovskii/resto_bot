@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Optional, Union
 from datetime import datetime
 
@@ -332,7 +333,7 @@ def get_comments_prompt_message():
 def generate_order_info_time_text(callback_data: TimeOrdersCallbackFactory):
     message = (
         "--------------------\n"
-        f"Обновление информации по заказу № {callback_data.order_id} от "
+        f"Заказ № {callback_data.order_id} от "
         f"{datetime.now().strftime('%d.%m.%Y')}\n"
         f"Время приготовления: {callback_data.time} минут\n"
     )
@@ -353,7 +354,7 @@ async def generate_order_info_text(
 
     message = (
         "--------------------\n"
-        f"Обновление статуса заказа № {callback_data.order_id} от "
+        f"Заказ № {callback_data.order_id} от "
         f"{datetime.now().strftime('%d.%m.%Y')}\n"
         f"Статус заказа: {status}"
     )
