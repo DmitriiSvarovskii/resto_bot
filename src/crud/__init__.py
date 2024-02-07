@@ -1,4 +1,4 @@
-from . import cart_crud, category_crud, delivery, product_crud
+from . import cart_crud, category_crud, delivery, order_crud, product_crud
 from .category_crud import crud_get_all_categories, crud_change_avail_categories
 from .product_crud import (
     crud_get_all_products,
@@ -14,14 +14,14 @@ from .cart_crud import (
     crud_delete_cart_items_by_user_id,
     crud_delete_cart_item,
 )
-from .order import (
+from .order_crud import (
     create_orders,
     create_order_info,
     create_new_order_details,
     get_order,
     get_order_info,
     get_order_detail,
-    update_order_status,
+    # update_order_status,
     get_order_detail_test,
     crud_get_order_list,
 

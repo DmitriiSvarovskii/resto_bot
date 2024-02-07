@@ -8,6 +8,7 @@ from src.callbacks import (
     CheckOrdersCallbackFactory,
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,
+
 )
 
 
@@ -55,9 +56,7 @@ def create_keyboard_check_order(
 
 
 def create_keyboard_time_cooking(
-    order_type: int,
-    order_id: int,
-    user_id: int,
+    data: CheckOrdersCallbackFactory,
     mess_id: int,
     time_del: Optional[int] = None,
 ):
@@ -70,9 +69,9 @@ def create_keyboard_time_cooking(
     cancel_button = InlineKeyboardButton(
         text='Отменить',
         callback_data=CheckOrdersCallbackFactory(
-            order_type=order_type,
-            order_id=order_id,
-            user_id=user_id,
+            order_type=data.order_type,
+            order_id=data.order_id,
+            user_id=data.user_id,
             status=ORDER_STATUSES['cancelled']['id'],
             mess_id=mess_id,
         ).pack()
@@ -84,9 +83,9 @@ def create_keyboard_time_cooking(
         button_time = InlineKeyboardButton(
             text=f'{time} мин',
             callback_data=TimeOrdersCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['accepted']['id'],
                 mess_id=mess_id,
                 time=time,
@@ -104,9 +103,7 @@ def create_keyboard_time_cooking(
 
 
 def create_order_status_keyboard(
-    order_type: int,
-    order_id: int,
-    user_id: int,
+    data: TimeOrdersCallbackFactory,
     mess_id: int,
 ):
     keyboard = InlineKeyboardBuilder()
@@ -115,9 +112,9 @@ def create_order_status_keyboard(
         InlineKeyboardButton(
             text='Готов к выдачи',
             callback_data=OrderStatusCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['ready_for_pickup']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -125,9 +122,9 @@ def create_order_status_keyboard(
         InlineKeyboardButton(
             text='Отменить',
             callback_data=CheckOrdersCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['cancelled']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -135,9 +132,9 @@ def create_order_status_keyboard(
         InlineKeyboardButton(
             text='Выполнен',
             callback_data=OrderStatusCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['completed']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -194,9 +191,7 @@ def create_order_status_delivery_keyboard(
 
 
 def create_status_redy_order_keyboard(
-    order_type: int,
-    order_id: int,
-    user_id: int,
+    data: OrderStatusCallbackFactory,
     mess_id: int,
 ):
     keyboard = InlineKeyboardBuilder()
@@ -205,9 +200,9 @@ def create_status_redy_order_keyboard(
         InlineKeyboardButton(
             text='Отменить',
             callback_data=CheckOrdersCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['cancelled']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -215,9 +210,9 @@ def create_status_redy_order_keyboard(
         InlineKeyboardButton(
             text='Выполнен',
             callback_data=OrderStatusCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['completed']['id'],
                 mess_id=mess_id,
             ).pack()

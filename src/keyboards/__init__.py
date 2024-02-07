@@ -2,17 +2,17 @@ from .main_keyboards import create_keyboard_main
 from .del_keyboard import create_keyboard_del
 from .back_keyboard import create_keyboard_back
 from .set_menu import set_main_menu
-from . import category_keyboards, product_keyboards, main_keyboards
+from . import category_keyboards, order_keyboards, product_keyboards, main_keyboards
 from .category_keyboards import create_keyboard_category
 from .product_keyboards import create_keyboard_product
 from .cart_keyboards import create_keyboard_cart, create_keyboards_products_cart
-from .order import (
+from .order_keyboards import (
     create_keyboard_back_main,
-    create_keyboard_check_order,
-    create_keyboard_time_cooking,
-    create_order_status_keyboard,
-    create_order_status_delivery_keyboard,
-    create_status_redy_order_keyboard,
+    #     create_keyboard_check_order,
+    #     create_keyboard_time_cooking,
+    #     create_order_status_keyboard,
+    #     create_order_status_delivery_keyboard,
+    #     create_status_redy_order_keyboard,
 )
 from .fsm_delivery import (
     create_keyboard_delivery,

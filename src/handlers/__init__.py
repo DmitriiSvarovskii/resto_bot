@@ -31,7 +31,7 @@ from .fsm_delivery import (
     warning_not_location,
     process_cancel_command_delivery,
 )
-from .order import (
+from .order_handlers import (
     create_orders_takeaway,
     process_edit_status_order,
     process_time_order,

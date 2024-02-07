@@ -64,7 +64,7 @@ async def create_order_info(
     return {"status": "Order created successfully"}
 
 
-async def update_order_status(
+async def crud_update_order_status(
     order_id: int,
     order_status: int,
     session: AsyncSession,
