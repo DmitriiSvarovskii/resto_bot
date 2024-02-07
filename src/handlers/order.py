@@ -25,7 +25,9 @@ from src.keyboards import (
 from src.lexicons import (
     generate_order_info_text,
     generate_order_info_time_text,
+    LEXICON_RU,
 )
+from src.utils_new import time_utils
 
 
 async def create_orders_takeaway(
@@ -33,29 +35,35 @@ async def create_orders_takeaway(
     callback_data: CreateOrderCallbackFactory,
     bot: Bot
 ):
-    order_type = callback_data.order_type
+    if time_utils.is_valid_time:
+        order_type = callback_data.order_type
 
-    order_id, chat_text, user_text = await create_new_orders(
-        order_type=order_type,
-        status=callback_data.status,
-        callback=callback
-    )
-
-    await callback.message.edit_text(
-        text=user_text,
-        reply_markup=await create_keyboard_main(callback.message.chat.id)
-    )
-
-    await bot.send_message(
-        chat_id=ADMINT_CHAT,
-        text='❗️' + chat_text,
-        reply_markup=create_keyboard_check_order(
+        order_id, chat_text, user_text = await create_new_orders(
             order_type=order_type,
-            order_id=order_id,
-            user_id=callback.message.chat.id,
-            mess_id=callback.message.message_id,
+            status=callback_data.status,
+            callback=callback
         )
-    )
+
+        await callback.message.edit_text(
+            text=user_text,
+            reply_markup=await create_keyboard_main(callback.message.chat.id)
+        )
+
+        await bot.send_message(
+            chat_id=ADMINT_CHAT,
+            text='❗️' + chat_text,
+            reply_markup=create_keyboard_check_order(
+                order_type=order_type,
+                order_id=order_id,
+                user_id=callback.message.chat.id,
+                mess_id=callback.message.message_id,
+            )
+        )
+    else:
+        await callback.answer(
+            text=LEXICON_RU['non_working_hours'],
+            show_alert=True
+        )
 
 
 async def process_edit_status_order(
