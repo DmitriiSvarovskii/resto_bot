@@ -72,7 +72,7 @@ async def process_edit_status_order(
     bot: Bot
 ):
     order_status = await get_status_name_by_id(callback_data.status)
-
+    user_id = callback_data.user_id
     delivery_time = await order_db.update_order_status(
         order_status=order_status,
         order_id=callback_data.order_id,
@@ -80,7 +80,7 @@ async def process_edit_status_order(
     )
 
     await bot.edit_message_reply_markup(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
@@ -90,9 +90,11 @@ async def process_edit_status_order(
     user_text = await generate_order_info_text(callback_data=callback_data)
 
     message_id = await bot.send_message(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         text=user_text,
-        reply_markup=await main_keyboards.create_keyboard_main(callback_data.user_id)
+        reply_markup=await main_keyboards.create_keyboard_main(
+            user_id
+        )
     )
 
     keyboard = order_keyboards.create_keyboard_time_cooking(
@@ -122,9 +124,9 @@ async def process_time_order(
     callback_data: TimeOrdersCallbackFactory,
     bot: Bot
 ):
-
+    user_id = callback_data.user_id
     await bot.edit_message_reply_markup(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
@@ -132,9 +134,9 @@ async def process_time_order(
     text = generate_order_info_time_text(callback_data=callback_data)
 
     message_id = await bot.send_message(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         text=text,
-        reply_markup=await main_keyboards.create_keyboard_main(callback_data.user_id)
+        reply_markup=await main_keyboards.create_keyboard_main(user_id)
     )
 
     if callback_data.order_type == ORDER_TYPES['takeaway']['id']:
@@ -159,14 +161,14 @@ async def process_edit_status_redy_order(
     bot: Bot
 ):
     order_status = await get_status_name_by_id(callback_data.status)
-
+    user_id = callback_data.user_id
     await order_db.update_order_status(
         order_status=order_status,
         order_id=callback_data.order_id,
     )
 
     await bot.edit_message_reply_markup(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
@@ -176,9 +178,9 @@ async def process_edit_status_redy_order(
     user_text = await generate_order_info_text(callback_data=callback_data)
 
     message_id = await bot.send_message(
-        chat_id=callback_data.user_id,
+        chat_id=user_id,
         text=user_text,
-        reply_markup=await main_keyboards.create_keyboard_main(callback_data.user_id)
+        reply_markup=await main_keyboards.create_keyboard_main(user_id)
     )
 
     keyboard = order_keyboards.create_status_redy_order_keyboard(
