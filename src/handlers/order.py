@@ -28,6 +28,7 @@ from src.lexicons import (
     LEXICON_RU,
 )
 from src.utils_new import time_utils
+from src.fsm_state import user_dict_comment, user_dict
 
 
 async def create_orders_takeaway(
@@ -38,12 +39,13 @@ async def create_orders_takeaway(
     if time_utils.is_valid_time():
         order_type = callback_data.order_type
 
-        order_id, chat_text, user_text = await create_new_orders(
-            order_type=order_type,
-            status=callback_data.status,
-            callback=callback
+        order_id, chat_text, user_text, deliv_latitude, deliv_longitude = (
+            await create_new_orders(
+                order_type=order_type,
+                status=callback_data.status,
+                callback=callback
+            )
         )
-
         await callback.message.edit_text(
             text=user_text,
             reply_markup=await create_keyboard_main(callback.message.chat.id)
@@ -59,18 +61,13 @@ async def create_orders_takeaway(
                 mess_id=callback.message.message_id,
             )
         )
-        # if order_type == "Доставка":
-        #     if latitude and longitude:
-        #         await bot.send_location(
-        #             chat_id=ADMINT_CHAT,
-        #             longitude=longitude,
-        #             latitude=latitude
-        #         )
-        #     else:
-        #         await bot.send_message(
-        #             chat_id=ADMINT_CHAT,
-        #             text="longitude"
-        #         )
+        if order_type == ORDER_TYPES['delivery']['id']:
+            if deliv_latitude and deliv_longitude:
+                await bot.send_location(
+                    chat_id=ADMINT_CHAT,
+                    longitude=deliv_longitude,
+                    latitude=deliv_latitude
+                )
     else:
         await callback.answer(
             text=LEXICON_RU['non_working_hours'],

@@ -299,8 +299,23 @@ async def new_order_mess_text_order_chat(
         courier_info = (
             f"Индийский номер клиента: {data_order_info.customer_phone}\n"
             f"Комментарий для курьера: {data_order_info.delivery_comment}\n"
-            "Геолокация будет отправлена следующим сообщением\n"
+
         )
+        if (
+            data_order_info.delivery_latitude
+            and
+            data_order_info.delivery_longitude
+        ):
+            courier_info += (
+                "Геолокация будет отправлена следующим сообщением\n"
+            )
+        else:
+            courier_info += (
+                "--------------------\n"
+                "<b>Пользователь не прикрепил геолокацию. "
+                "Пожалуйста свяжитесь с клиентом для "
+                "уточнения деталей доставки\n</b>"
+            )
 
         chat_text += delivery_info + courier_info
 

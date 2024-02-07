@@ -42,7 +42,7 @@ async def create_keyboard_account(user_id: int):
             callback_data='press_main_menu'
         ),
         InlineKeyboardButton(
-            text=f'Корзина 🛒 {bill_data.total_price} ₹',
+            text=f'Корзина 🛒 {bill_data} ₹',
             callback_data='press_cart'
         ),
         width=2

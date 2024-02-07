@@ -92,8 +92,10 @@ async def create_new_orders(
                 delivery_id=user_info['delivery_id'],
                 session=session
             )
-            # latitude = user_info['latitude']
-            # longitude = user_info['longitude']
+            delivery_latitude = (user_info.get('latitude')
+                                 if user_info is not None else None)
+            delivery_longitude = (user_info.get('longitude')
+                                  if user_info is not None else None)
 
         data_order_info = await create_data_order_info(
             user_id=user_id,
@@ -103,10 +105,8 @@ async def create_new_orders(
                          if user_info is not None else None),
             customer_phone=(user_info.get('number_phone')
                             if user_info is not None else None),
-            delivery_latitude=(user_info.get('latitude')
-                               if user_info is not None else None),
-            delivery_longitude=(user_info.get('longitude')
-                                if user_info is not None else None),
+            delivery_latitude=delivery_latitude,
+            delivery_longitude=delivery_longitude,
             delivery_comment=(user_info.get('guide')
                               if user_info is not None else None),
         )
@@ -138,7 +138,13 @@ async def create_new_orders(
         data_order_info=data_order_info,
     )
 
-    return order_id, chat_text, user_text
+    return (
+        order_id,
+        chat_text,
+        user_text,
+        delivery_latitude,
+        delivery_longitude
+    )
 
 
 async def add_order_details(order_id: int, cart_items: List[CartItem]):
