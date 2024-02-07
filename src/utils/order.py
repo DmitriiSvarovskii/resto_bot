@@ -44,6 +44,8 @@ async def create_new_orders(
 
     async for session in get_async_session():
         delivery_village = None
+        # latitude = None
+        # longitude = None
 
         cart_items = await crud_read_cart_items_and_totals(
             user_id=user_id,
@@ -90,6 +92,8 @@ async def create_new_orders(
                 delivery_id=user_info['delivery_id'],
                 session=session
             )
+            # latitude = user_info['latitude']
+            # longitude = user_info['longitude']
 
         data_order_info = await create_data_order_info(
             user_id=user_id,

@@ -9,7 +9,7 @@ class CustomerBase(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     username: Optional[str] = None
-    admin: Optional[bool] = None
+    admin: Optional[bool] = False
 
 
 class CustomerCreate(CustomerBase):

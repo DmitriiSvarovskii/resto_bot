@@ -35,8 +35,7 @@ async def create_orders_takeaway(
     callback_data: CreateOrderCallbackFactory,
     bot: Bot
 ):
-    if time_utils.is_valid_time():
-        print('valid')
+    if time_utils.is_valid_time:
         order_type = callback_data.order_type
 
         order_id, chat_text, user_text = await create_new_orders(
@@ -60,6 +59,18 @@ async def create_orders_takeaway(
                 mess_id=callback.message.message_id,
             )
         )
+        # if order_type == "Доставка":
+        #     if latitude and longitude:
+        #         await bot.send_location(
+        #             chat_id=ADMINT_CHAT,
+        #             longitude=longitude,
+        #             latitude=latitude
+        #         )
+        #     else:
+        #         await bot.send_message(
+        #             chat_id=ADMINT_CHAT,
+        #             text="longitude"
+        #         )
     else:
         await callback.answer(
             text=LEXICON_RU['non_working_hours'],
