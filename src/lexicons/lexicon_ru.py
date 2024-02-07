@@ -202,7 +202,7 @@ LEXICON_KEYBOARDS_RU: dict[str, str] = {
 
 LEXICON_COMMANDS_RU: dict[str, str] = {
     '/start': 'Запуск бота',
-    '/admin_menu': 'Админ-панель',
+    # '/admin_menu': 'Админ-панель',
 }
 
 
