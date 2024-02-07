@@ -35,7 +35,7 @@ async def create_orders_takeaway(
     callback_data: CreateOrderCallbackFactory,
     bot: Bot
 ):
-    if time_utils.is_valid_time:
+    if time_utils.is_valid_time():
         order_type = callback_data.order_type
 
         order_id, chat_text, user_text = await create_new_orders(
