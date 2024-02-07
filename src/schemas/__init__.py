@@ -10,12 +10,15 @@ from .store import GetStore
 from .customer import (
     CustomerBase,
     CustomerCreate,
+    # CustomerUpdate,
     CustomerInfo,
     CustomerAdResourse,
 )
+from . import customer
 
 
 __all__ = [
+    'customer',
     'CartItemTotal',
     'CustomerBase',
     'CustomerCreate',

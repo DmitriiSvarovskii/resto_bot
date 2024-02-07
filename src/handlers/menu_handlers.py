@@ -1,41 +1,41 @@
 from aiogram.types import CallbackQuery
 
 from src.lexicons import LEXICON_RU
-from src.database import get_async_session
-from src.crud import crud_get_all_categories, crud_get_store_info
-from src.keyboards import create_keyboard_category, create_keyboard_main
-from src.services import is_valid_time_warning
+from src.keyboards import product_keyboards, category_keyboards, main_keyboards
+from src.utils_new import time_utils
 from src.callbacks import CategoryIdCallbackFactory
-from .utils import get_products_by_category, get_keyboard_products_by_category
+from src.db import category_db, store_db, product_db
 
 
 async def get_menu_category(callback: CallbackQuery):
-    if is_valid_time_warning():
+    user_id = callback.message.chat.id
+
+    if time_utils.is_valid_time_warning():
         await callback.answer(
             text=LEXICON_RU['closing_time_reminder'], show_alert=True)
+        await callback.message.edit_reply_markup(
+            reply_markup=await main_keyboards.create_keyboard_main(user_id)
+        )
+        return
 
-    async for session in get_async_session():
-        categories = await crud_get_all_categories(
-            filter=True,
-            session=session
-        )
-        keyboard = await create_keyboard_category(
+    store_info = await store_db.get_store_info()
+
+    if store_info.is_active:
+        categories = await category_db.get_all_categories()
+        keyboard = await category_keyboards.create_keyboard_category(
             categories=categories,
-            user_id=callback.message.chat.id,
-            session=session
+            user_id=user_id,
         )
-        check_working_bot = await crud_get_store_info(session=session)
-        break
-    if check_working_bot.is_active:
+
         await callback.message.edit_text(text=LEXICON_RU['category'],
                                          reply_markup=keyboard)
     else:
         await callback.answer(
-            text="В настоящий момент наше заведение не работает",
+            text=LEXICON_RU['store_not_active'],
             show_alert=True
         )
         await callback.message.edit_reply_markup(
-            reply_markup=await create_keyboard_main(callback.message.chat.id)
+            reply_markup=await main_keyboards.create_keyboard_main(user_id)
         )
 
 
@@ -43,11 +43,11 @@ async def get_menu_products(
     callback: CallbackQuery,
     callback_data: CategoryIdCallbackFactory
 ):
-    products = await get_products_by_category(
+    products = await product_db.get_products_by_category(
         category_id=callback_data.category_id
     )
 
-    keyboard = await get_keyboard_products_by_category(
+    keyboard = await product_keyboards.create_keyboard_product(
         products=products,
         user_id=callback.message.chat.id
     )

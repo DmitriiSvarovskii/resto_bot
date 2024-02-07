@@ -62,7 +62,7 @@ async def crud_get_stop_list(
     return products
 
 
-async def get_one_product(
+async def crud_get_one_product(
     product_id: int,
     session: AsyncSession
 ):

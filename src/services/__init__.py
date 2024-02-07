@@ -1,4 +1,4 @@
-from .time_utils import is_valid_time_warning, is_valid_time
+# from ..utils_new.time_utils import is_valid_time_warning, is_valid_time
 from .order_constants import (
     ORDER_STATUSES,
     ORDER_TYPES,
@@ -8,8 +8,6 @@ from .order_constants import (
 
 
 __all__ = [
-    'is_valid_time_warning',
-    'is_valid_time',
     'ORDER_STATUSES',
     'ORDER_TYPES',
     'get_status_name_by_id',

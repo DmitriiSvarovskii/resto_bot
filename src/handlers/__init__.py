@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
 
-from .start import process_start_command
+from .start_handlers import process_start_command
 from .commands import get_my_id
 from .main_menu import (
     press_get_location,
@@ -11,8 +11,8 @@ from .main_menu import (
     press_main_menu,
     press_back_main_menu,
 )
-from .menu import get_menu_category, get_menu_products
-from .cart import (
+from .menu_handlers import get_menu_category, get_menu_products
+from .cart_handlers import (
     adding_to_cart,
     press_cart,
     press_cart_edit,

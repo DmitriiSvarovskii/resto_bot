@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
-from typing import Optional, Union
 from datetime import datetime
+from typing import Optional, Union
 
 from src.schemas import (
     ReadDelivery,
@@ -12,7 +11,7 @@ from src.callbacks import (
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory
 )
-from services import get_status_name_by_id
+from src.services import get_status_name_by_id
 
 LEXICON_RU: dict[str, str] = {
     'start':
@@ -116,6 +115,7 @@ LEXICON_RU: dict[str, str] = {
     'good': 'Отлично!\n\n',
     'comment_input_cancelled': 'Вы отменили ввод комментария.\n\n',
     'error': 'Повторный запрос',
+    'store_not_active': 'В настоящий момент наше заведение не работает',
 }
 
 LEXICON_KEYBOARDS_RU: dict[str, str] = {

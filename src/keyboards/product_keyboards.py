@@ -1,26 +1,26 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from sqlalchemy.ext.asyncio import AsyncSession
+# from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.callbacks import ProductIdCallbackFactory
-from src.crud import read_cart_items_and_totals
+# from src.crud import crud_read_cart_items_and_totals
 from src.schemas import ReadProduct
+from src.db import cart_db
 
 
 async def create_keyboard_product(
     products: List[ReadProduct],
     user_id: int,
-    session: AsyncSession,
+    # session: AsyncSession,
 ):
-    bill_data = await read_cart_items_and_totals(
-        user_id=user_id,
-        session=session
+    cart_info = await cart_db.get_cart_items_and_totals(
+        user_id=user_id
     )
 
     cart_items_dict = {
-        item.product_id: item.quantity for item in bill_data.cart_items}
+        item.product_id: item.quantity for item in cart_info.cart_items}
 
     keyboard = InlineKeyboardBuilder()
 
@@ -81,7 +81,7 @@ async def create_keyboard_product(
             callback_data='press_menu'
         ),
         InlineKeyboardButton(
-            text=f'Корзина 🛒 {bill_data.total_price} ₹',
+            text=f'Корзина 🛒 {cart_info.total_price} ₹',
             callback_data='press_cart'
         )
     )

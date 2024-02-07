@@ -5,18 +5,22 @@ from typing import List
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import GetCategory
 from src.callbacks import CategoryIdCallbackFactory
-from src.crud import read_cart_items_and_totals
+from src.db import cart_db
 
 
 async def create_keyboard_category(
     categories: List[GetCategory],
     user_id: int,
-    session,
+    # session,
 ):
-    bill_data = await read_cart_items_and_totals(
-        user_id=user_id,
-        session=session
+    bill = await cart_db.get_total_price_cart(
+        user_id=user_id
     )
+
+    # bill = await crud_read_cart_items_and_totals(
+    #     user_id=user_id,
+    #     session=session
+    # )
 
     keyboard = InlineKeyboardBuilder()
 
@@ -36,9 +40,9 @@ async def create_keyboard_category(
             text=' ', callback_data='press_pass'))
 
     keyboard.row(*row_buttons, width=2)
-    bill = 0
-    if bill_data.total_price:
-        bill = bill_data.total_price
+    # bill = 0
+    # if bill_data.total_price:
+    #     bill = bill_data.total_price
 
     keyboard.row(
         InlineKeyboardButton(

@@ -18,7 +18,7 @@ from src.schemas import (
 from src.lexicons import LEXICON_RU
 
 
-async def read_cart_items_and_totals(
+async def crud_read_cart_items_and_totals(
     user_id: int,
     session: AsyncSession
 ) -> Optional[CartResponse]:
@@ -64,22 +64,20 @@ async def crud_total_price_cart_by_id(
 ) -> Optional[CartItemTotal]:
     query = (
         select(
-            func.sum(Cart.quantity * Product.price).over().label("total_price")
+            func.sum(Cart.quantity * Product.price).label("total_price")
         )
-        .join(Cart, Cart.product_id == Product.id)
+        .join(Product, Cart.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
         .where(
             Cart.user_id == user_id,
         )
     )
     result = await session.execute(query)
-    print(2)
-    response = result.one()
-    print(3)
+    response = result.scalar_one()
     return response
 
 
-async def add_to_cart(
+async def crud_add_to_cart(
     data: CartCreate,
     session: AsyncSession
 ):
@@ -113,7 +111,7 @@ async def add_to_cart(
     return {"status": 201, 'message': 'Добавил!'}
 
 
-async def decrease_cart_item(
+async def crud_decrease_cart_item(
     data: CartCreate,
     session: AsyncSession
 ):
@@ -131,7 +129,7 @@ async def decrease_cart_item(
         if cart_item.quantity:
             await update_cart_item_quantity(data, session)
         else:
-            await delete_cart_item(data, session)
+            await crud_delete_cart_item(data, session)
     else:
         return {"message": LEXICON_RU['cart_error']}
 
@@ -155,7 +153,7 @@ async def update_cart_item_quantity(
     return {"message": 'ok'}
 
 
-async def delete_cart_item(
+async def crud_delete_cart_item(
     data: CartCreate,
     session: AsyncSession
 ):
@@ -171,7 +169,8 @@ async def delete_cart_item(
     return {"message": 'ok'}
 
 
-async def delete_cart_items_by_user_id(
+# async def crud_delete_cart_items_by_user_id(
+async def crud_delete_cart_items_by_user_id(
     user_id: int,
     session: Session
 ):
@@ -181,7 +180,4 @@ async def delete_cart_items_by_user_id(
     )
     await session.execute(stmt)
     await session.commit()
-    return {
-        "status": "success",
-        "message": f"Корзина для пользователя №{user_id} очищена."
-    }
+    return {"status": "success"}

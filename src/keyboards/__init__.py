@@ -1,10 +1,11 @@
-from .main_keyboard import create_keyboard_main
+from .main_keyboards import create_keyboard_main
 from .del_keyboard import create_keyboard_del
 from .back_keyboard import create_keyboard_back
 from .set_menu import set_main_menu
-from .category import create_keyboard_category
-from .product import create_keyboard_product
-from .cart import create_keyboard_cart, create_keyboards_products_cart
+from . import category_keyboards, product_keyboards, main_keyboards
+from .category_keyboards import create_keyboard_category
+from .product_keyboards import create_keyboard_product
+from .cart_keyboards import create_keyboard_cart, create_keyboards_products_cart
 from .order import (
     create_keyboard_back_main,
     create_keyboard_check_order,

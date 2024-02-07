@@ -6,7 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from src.fsm_state import FSMDeliveryInfo, user_dict
 from src.callbacks import DeliveryIdCallbackFactory
 from src.lexicons import LEXICON_RU
-from src.services import is_valid_time
+from src.utils_new import time_utils
 from src.utils import get_delivery_districts
 from src.keyboards import (
     create_keyboard_delivery,
@@ -23,7 +23,7 @@ async def process_delivery_form_command(
     callback: CallbackQuery,
     state: FSMContext
 ):
-    if is_valid_time():
+    if time_utils.is_valid_time():
         delivery_disctricts = await get_delivery_districts()
 
         keyboard = await create_keyboard_delivery(delivery_disctricts)

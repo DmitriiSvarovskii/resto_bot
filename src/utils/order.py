@@ -16,7 +16,7 @@ from src.callbacks import (
 )
 from src.crud import (
     create_orders,
-    read_cart_items_and_totals,
+    crud_read_cart_items_and_totals,
     create_new_order_details,
     read_delivery_one_district,
     create_order_info,
@@ -24,7 +24,7 @@ from src.crud import (
     get_order_info,
     get_order_detail,
     get_user,
-    delete_cart_items_by_user_id,
+    crud_delete_cart_items_by_user_id,
 )
 from src.fsm_state import user_dict_comment, user_dict
 from services.order_constants import ORDER_TYPES
@@ -45,7 +45,7 @@ async def create_new_orders(
     async for session in get_async_session():
         delivery_village = None
 
-        cart_items = await read_cart_items_and_totals(
+        cart_items = await crud_read_cart_items_and_totals(
             user_id=user_id,
             session=session)
 
@@ -107,7 +107,7 @@ async def create_new_orders(
                               if user_info is not None else None),
         )
 
-        await delete_cart_items_by_user_id(
+        await crud_delete_cart_items_by_user_id(
             user_id=data_order.user_id,
             session=session
         )

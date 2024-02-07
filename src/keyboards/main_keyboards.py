@@ -3,8 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Optional
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.database import get_async_session
-from src.crud import get_user
+from src.db import customer_db
 
 my_dict = {'menu': {'text': 'menu', 'callback_data': 'press_menu'},
            'contact': {'text': 'contact', 'callback_data': 'press_contact'},
@@ -28,12 +27,9 @@ my_dict = {'menu': {'text': 'menu', 'callback_data': 'press_menu'},
 #     return keyboard.as_markup()
 
 async def create_keyboard_main(user_id: Optional[int] = None):
-    async for session in get_async_session():
-        response = await get_user(
-            user_id=user_id,
-            session=session
-        )
-        break
+    status_admin = await customer_db.get_admin_status_by_user_id(
+        user_id=user_id
+    )
 
     keyboard = InlineKeyboardBuilder()
 
@@ -65,7 +61,7 @@ async def create_keyboard_main(user_id: Optional[int] = None):
 
     keyboard.row(*buttons, width=2)
 
-    if response.admin:
+    if status_admin:
         keyboard.row(button_admin, width=1)
 
     return keyboard.as_markup()

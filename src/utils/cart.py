@@ -2,9 +2,10 @@ from typing import Union
 from aiogram.types import CallbackQuery, Message
 
 from src.database import get_async_session
-from src.crud import read_cart_items_and_totals
+from src.crud import crud_read_cart_items_and_totals
 from src.keyboards import create_keyboard_cart
 from src.lexicons import cart_text, LEXICON_RU
+from src.db import cart_db
 
 
 async def update_cart_message(
@@ -12,12 +13,9 @@ async def update_cart_message(
     message: Union[CallbackQuery, Message],
     comment=None
 ) -> None:
-    async for session in get_async_session():
-        response = await read_cart_items_and_totals(
-            user_id=user_id,
-            session=session
-        )
-        break
+    response = await cart_db.get_cart_items_and_totals(
+        user_id=user_id
+    )
 
     bill = response.total_price
     order_text = ''
