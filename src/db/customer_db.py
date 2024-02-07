@@ -26,4 +26,4 @@ async def get_admin_status_by_user_id(
             session=session
         )
         break
-    return response.admin
+    return response

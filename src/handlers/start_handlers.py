@@ -10,7 +10,6 @@ async def process_start_command(message: Message):
     customer_data = await customer_utils.create_customer_data_from_message(
         message=message
     )
-
     await customer_db.add_new_user_to_database(
         customer_data=customer_data
     )
