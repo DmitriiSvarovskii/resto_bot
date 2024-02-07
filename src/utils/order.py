@@ -44,8 +44,8 @@ async def create_new_orders(
 
     async for session in get_async_session():
         delivery_village = None
-        # latitude = None
-        # longitude = None
+        delivery_latitude = None
+        delivery_longitude = None
 
         cart_items = await crud_read_cart_items_and_totals(
             user_id=user_id,
@@ -137,6 +137,11 @@ async def create_new_orders(
         delivery_village=delivery_village,
         data_order_info=data_order_info,
     )
+
+    try:
+        user_dict_comment.pop(user_id)
+    except KeyError:
+        print(f"Ключ {user_id} не найден в словаре")
 
     return (
         order_id,
