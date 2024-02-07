@@ -4,6 +4,7 @@ import sys
 import os
 
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from config import BOT_TOKEN
 from handlers import register_user_commands, register_admin_commands
@@ -27,7 +28,9 @@ async def main():
     logger.info('Starting bot')
 
     bot: Bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
-    dp: Dispatcher = Dispatcher()
+    redis = Redis(host='localhost')
+    storage = RedisStorage(redis=redis)
+    dp: Dispatcher = Dispatcher(storage=storage)
 
     register_user_commands(dp)
     register_admin_commands(dp)

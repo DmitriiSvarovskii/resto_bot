@@ -28,7 +28,6 @@ from src.lexicons import (
     LEXICON_RU,
 )
 from src.utils_new import time_utils
-from src.fsm_state import user_dict_comment, user_dict
 
 
 async def create_orders_takeaway(

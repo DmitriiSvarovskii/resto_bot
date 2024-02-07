@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.memory import MemoryStorage
+# from aiogram.fsm.storage.memory import MemoryStorage
 
 from src.fsm_state import FSMDeliveryInfo, user_dict
 from src.callbacks import DeliveryIdCallbackFactory
@@ -16,7 +16,7 @@ from src.keyboards import (
     create_keyboard_delivery_fsm_location,
 )
 
-storage: MemoryStorage = MemoryStorage()
+# storage: MemoryStorage = MemoryStorage()
 
 
 async def process_delivery_form_command(
