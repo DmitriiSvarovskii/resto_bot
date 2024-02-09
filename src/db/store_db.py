@@ -5,5 +5,12 @@ from src.crud import store_crud
 async def get_store_info():
     async for session in get_async_session():
         response = await store_crud.crud_get_store_info(session=session)
-        break
-    return response
+        return response
+
+
+async def change_is_active_bot():
+    async for session in get_async_session():
+        await store_crud.crud_change_is_active_bot(
+            session=session
+        )
+        return {'status': 'ok'}

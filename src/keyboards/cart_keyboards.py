@@ -1,55 +1,32 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.lexicons import LEXICON_KEYBOARDS_RU, LEXICON_RU
-from src.callbacks import CartEditCallbackFactory, CreateOrderCallbackFactory
-# from src.crud import crud_read_cart_items_and_totals
-# from src.database import get_async_session
-from src.services import ORDER_TYPES, ORDER_STATUSES
+from src.lexicons import LEXICON_RU
+from src.callbacks import CartEditCallbackFactory
 from .main_keyboards import create_keyboard_main
 from src.db import cart_db
+from src.lexicons import cart_test_text
 
 
 def create_keyboard_cart(mess_id: int):
-    button_main_menu: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['menu'],
-        callback_data='press_menu')
-    button_empty: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['clear'],
-        callback_data='press_empty')
-    button_free_delivery: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['free_delivery'],
-        callback_data=CreateOrderCallbackFactory(
-            order_type=ORDER_TYPES['takeaway']['id'],
-            status=ORDER_STATUSES['new']['id'],
-            mess_id=mess_id,
-        ).pack())
-    button_delivery_pay: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['delivery_pay'],
-        callback_data='press_delivery_pay')
-    button_edit: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['edit'],
-        callback_data='press_edit_cart')
-    button_comment: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['comment'],
-        callback_data='press_comment')
+    my_dict = cart_test_text.my_func(mess_id=mess_id)
 
-    keyboard_cart_builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    keyboard = InlineKeyboardBuilder()
 
-    keyboard_cart_builder.row(button_comment)
+    buttons = [InlineKeyboardButton(
+        text=value['text'],
+        callback_data=value['callback_data']
+    ) for value in my_dict.values()]
 
-    keyboard_cart_builder.row(
-        button_free_delivery,
-        button_delivery_pay
-    )
-    keyboard_cart_builder.row(
-        button_main_menu,
-        button_empty,
-        button_edit,
-        width=3
-    )
+    row_lengths = [1, 2, 3]
 
-    return keyboard_cart_builder.as_markup()
+    current_index = 0
+    for row_length in row_lengths:
+        row_buttons = buttons[current_index:current_index + row_length]
+        keyboard.row(*row_buttons, width=row_length)
+        current_index += row_length
+
+    return keyboard.as_markup()
 
 
 async def create_keyboards_products_cart(callback, user_id):

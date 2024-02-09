@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import Delivery, OrderInfo
 
 
-async def read_delivery_districts(session: AsyncSession):
+async def crud_read_delivery_districts(session: AsyncSession):
     query = (
         select(Delivery).
         order_by(Delivery.id.desc())
@@ -14,7 +14,7 @@ async def read_delivery_districts(session: AsyncSession):
     return delivery_districts
 
 
-async def read_delivery_one_district(
+async def crud_read_delivery_one_district(
     delivery_id: int,
     session: AsyncSession
 ):

@@ -8,7 +8,7 @@ from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from config import BOT_TOKEN
 from handlers import register_user_commands, register_admin_commands
-from keyboards import set_main_menu
+from utils import set_menu
 
 
 sys.path.insert(0, os.path.abspath(
@@ -35,7 +35,7 @@ async def main():
     register_user_commands(dp)
     register_admin_commands(dp)
 
-    await set_main_menu(bot)
+    await set_menu.create_set_main_menu(bot)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

@@ -21,3 +21,13 @@ async def get_products_by_category_admin(category_id):
         )
         break
     return products
+
+
+async def change_avail_roducts(product_id):
+    async for session in get_async_session():
+        await product_crud.crud_change_avail_roducts(
+            product_id=product_id,
+            session=session
+        )
+        break
+    return {'status': 'ok'}

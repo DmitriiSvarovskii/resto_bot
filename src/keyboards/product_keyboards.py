@@ -1,11 +1,12 @@
+from typing import List
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-# from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.callbacks import ProductIdCallbackFactory
-# from src.crud import crud_read_cart_items_and_totals
+from src.callbacks import (
+    ProductIdCallbackFactory,
+    ProductIdAdminCallbackFactory
+)
 from src.schemas import ReadProduct
 from src.db import cart_db
 
@@ -13,7 +14,6 @@ from src.db import cart_db
 async def create_keyboard_product(
     products: List[ReadProduct],
     user_id: int,
-    # session: AsyncSession,
 ):
     cart_info = await cart_db.get_cart_items_and_totals(
         user_id=user_id
@@ -83,6 +83,57 @@ async def create_keyboard_product(
         InlineKeyboardButton(
             text=f'Корзина 🛒 {cart_info.total_price} ₹',
             callback_data='press_cart'
+        )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_keyboard_product_admin(
+    products: List[ReadProduct],
+):
+    keyboard = InlineKeyboardBuilder()
+
+    for product in products:
+        availability = "В наличии" if product.availability else "Отсутствует"
+        indicator = '✅' if product.availability else '❌'
+        action = "Убрать" if product.availability else "Добавить"
+
+        keyboard.row(
+            InlineKeyboardButton(
+                text=f'{product.name}',
+                callback_data=ProductIdAdminCallbackFactory(
+                    product_id=product.id,
+                    category_id=product.category_id
+                ).pack()))
+
+        keyboard.row(
+            InlineKeyboardButton(
+                text=availability,
+                callback_data=ProductIdAdminCallbackFactory(
+                    product_id=product.id,
+                    category_id=product.category_id
+                ).pack()),
+            InlineKeyboardButton(
+                text=indicator,
+                callback_data=ProductIdAdminCallbackFactory(
+                    product_id=product.id,
+                    category_id=product.category_id
+                ).pack()
+            ),
+            InlineKeyboardButton(
+                text=action,
+                callback_data=ProductIdAdminCallbackFactory(
+                    product_id=product.id,
+                    category_id=product.category_id
+                ).pack()),
+            width=3
+        )
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data='press_modify_avail_prod'
         )
     )
 

@@ -12,6 +12,32 @@ class CreateOrder(BaseModel):
     total_price: Optional[int] = None
 
 
+class CreateOrderDetails(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_id: int
+    product_id: int
+    quantity: int
+    unit_price: int
+
+
+class CreateOrderInfo(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    user_id: int
+    order_id: int
+    order_comment: Optional[str] = None
+    customer_phone: Optional[str] = None
+    delivery_id: Optional[int] = None
+    delivery_latitude: Optional[float] = None
+    delivery_longitude: Optional[float] = None
+    delivery_comment: Optional[str] = None
+
+
+class ReadOrderInfo(CreateOrderInfo):
+    id: int
+
+
 class ReadOrder(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -21,6 +47,13 @@ class ReadOrder(BaseModel):
 
     order_status: str
     total_price: int
+
+
+class ReadOrderList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    total_price: float
 
 
 class ReadCustomerInfo(BaseModel):

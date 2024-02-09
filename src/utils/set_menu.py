@@ -4,7 +4,7 @@ from aiogram.types import BotCommand
 from src.lexicons import LEXICON_COMMANDS_RU
 
 
-async def set_main_menu(bot: Bot):
+async def create_set_main_menu(bot: Bot):
     main_menu_commands = [
         BotCommand(
             command=command,

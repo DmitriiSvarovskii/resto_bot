@@ -10,3 +10,11 @@ class DeliveryBase(BaseModel):
 
 class ReadDelivery(DeliveryBase):
     id: int
+
+
+class ReadDeliveryReport(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    delivery_area: str
+    delivery_count: int
+    total_sales: float

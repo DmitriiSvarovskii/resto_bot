@@ -4,12 +4,9 @@ from aiogram.types import CallbackQuery, Message
 from src.callbacks import ProductIdCallbackFactory, CartEditCallbackFactory
 from src.lexicons import LEXICON_RU
 from src.fsm_state import user_dict_comment
-from src.keyboards import (
-    create_keyboards_products_cart, create_keyboard_cart
-)
-from src.keyboards import product_keyboards, main_keyboards
+from src.keyboards import product_keyboards, main_keyboards, cart_keyboards
 from src.db import product_db, cart_db
-from src.utils_new import cart_utils
+from src.utils import cart_utils
 
 
 async def adding_to_cart(
@@ -34,48 +31,82 @@ async def adding_to_cart(
 
 
 async def press_cart(message: Union[CallbackQuery, Message]):
-    if isinstance(message, CallbackQuery):
-        user_id = message.message.chat.id
-    else:
-        user_id = message.chat.id
 
-    comment_value = cart_utils.get_comment_value(
+    user_id = message.message.chat.id if isinstance(
+        message, CallbackQuery) else message.chat.id
+
+    order_comment = cart_utils.get_comment_value(
         user_id=user_id,
         user_dict_comment=user_dict_comment
     )
 
     message_text, bill = await cart_utils.update_cart_message(
         user_id=user_id,
-        message=message,
-        comment=comment_value
+        order_comment=order_comment
+    )
+
+    reply_markup = cart_keyboards.create_keyboard_cart(
+        mess_id=message.message.message_id if isinstance(
+            message, CallbackQuery) else message.message_id
     )
 
     if bill:
         if isinstance(message, CallbackQuery):
             await message.message.edit_text(
                 text=message_text,
-                reply_markup=create_keyboard_cart(
-                    mess_id=message.message.message_id
-                )
+                reply_markup=reply_markup
             )
         else:
             await message.answer(
                 text=message_text,
-                reply_markup=create_keyboard_cart(
-                    mess_id=message.message_id
-                )
+                reply_markup=reply_markup
             )
     else:
-        if isinstance(message, CallbackQuery):
-            await message.answer(
-                text=LEXICON_RU['empty_cart'],
-                show_alert=True
-            )
-        else:
-            await message.answer(
-                text=LEXICON_RU['empty_cart'],
-                show_alert=True
-            )
+        await message.answer(
+            text=LEXICON_RU['empty_cart'],
+            show_alert=True
+        )
+    # if isinstance(message, CallbackQuery):
+    #     user_id = message.message.chat.id
+    # else:
+    #     user_id = message.chat.id
+
+    # comment_value = cart_utils.get_comment_value(
+    #     user_id=user_id,
+    #     user_dict_comment=user_dict_comment
+    # )
+
+    # message_text, bill = await cart_utils.update_cart_message(
+    #     user_id=user_id,
+    #     order_comment=comment_value
+    # )
+
+    # if bill:
+    #     if isinstance(message, CallbackQuery):
+    #         await message.message.edit_text(
+    #             text=message_text,
+    #             reply_markup=cart_keyboards.create_keyboard_cart(
+    #                 mess_id=message.message.message_id
+    #             )
+    #         )
+    #     else:
+    #         await message.answer(
+    #             text=message_text,
+    #             reply_markup=cart_keyboards.create_keyboard_cart(
+    #                 mess_id=message.message_id
+    #             )
+    #         )
+    # else:
+    #     if isinstance(message, CallbackQuery):
+    #         await message.answer(
+    #             text=LEXICON_RU['empty_cart'],
+    #             show_alert=True
+    #         )
+    #     else:
+    #         await message.answer(
+    #             text=LEXICON_RU['empty_cart'],
+    #             show_alert=True
+    #         )
 
 
 async def empty_cart(callback: CallbackQuery):
@@ -90,7 +121,7 @@ async def empty_cart(callback: CallbackQuery):
 
 
 async def press_cart_edit(callback: CallbackQuery):
-    await create_keyboards_products_cart(
+    await cart_keyboards.create_keyboards_products_cart(
         callback=callback,
         user_id=callback.message.chat.id
     )
@@ -105,7 +136,7 @@ async def process_cart_edit(
         callback_data=callback_data,
     )
 
-    await create_keyboards_products_cart(
+    await cart_keyboards.create_keyboards_products_cart(
         callback=callback,
         user_id=callback.message.chat.id
     )

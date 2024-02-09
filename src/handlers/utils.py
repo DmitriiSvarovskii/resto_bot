@@ -10,9 +10,10 @@ from src.crud import (
     crud_change_avail_roducts,
     crud_change_avail_categories,
 )
+from src.keyboards import product_keyboards
 from src.keyboards import (
     create_keyboard_product,
-    create_keyboard_product_admin,
+    # create_keyboard_product_admin,
 )
 from src.crud import (
     # add_to_cart,
@@ -76,7 +77,7 @@ async def get_keyboard_products_by_category(products, user_id):
 
 
 async def get_admin_keyboard_products_by_category(products):
-    keyboard = await create_keyboard_product_admin(
+    keyboard = await product_keyboards.create_keyboard_product_admin(
         products=products
     )
     return keyboard

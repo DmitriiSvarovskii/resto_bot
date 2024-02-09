@@ -5,26 +5,6 @@ from typing import Optional
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.db import customer_db
 
-my_dict = {'menu': {'text': 'menu', 'callback_data': 'press_menu'},
-           'contact': {'text': 'contact', 'callback_data': 'press_contact'},
-           'menu_2': {'text': 'menu', 'callback_data': 'press_menu'},
-           'contact_3': {'text': 'contact', 'callback_data': 'press_contact'}}
-
-
-# def create_keyboard_main(check_admin: Optional[bool] = None):
-#     keyboard = InlineKeyboardBuilder()
-
-#     buttons = []
-
-#     for key, value in my_dict.items():
-#         buttons.append(
-#             InlineKeyboardButton(
-#                 text=value['text'], callback_data=value['callback_data'])
-#         )
-
-#     keyboard.row(*buttons, width=2)
-
-#     return keyboard.as_markup()
 
 async def create_keyboard_main(user_id: Optional[int] = None):
     status_admin = await customer_db.get_admin_status_by_user_id(

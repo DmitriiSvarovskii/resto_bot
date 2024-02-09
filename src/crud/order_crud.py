@@ -8,7 +8,8 @@ from src.schemas import (
     CreateOrderInfo,
     ReadOrder,
     CartItem,
-    OrderDetailTest
+    OrderDetailTest,
+    OrderList,
 )
 from src.models import (
     Category,
@@ -19,7 +20,7 @@ from src.models import (
 )
 
 
-async def create_orders(
+async def crud_create_orders(
     data_order: CreateOrder,
     session: AsyncSession,
 ):
@@ -29,15 +30,11 @@ async def create_orders(
         returning(Order.id)
     )
     result = await session.execute(stmt_order)
-
     await session.commit()
-
-    order_id = result.scalar()
-
-    return order_id
+    return result.scalar()
 
 
-async def create_new_order_details(
+async def crud_create_new_order_details(
     data: List[CreateOrderDetail],
     session: AsyncSession,
 ):
@@ -50,7 +47,7 @@ async def create_new_order_details(
     return {"status": "Order created successfully"}
 
 
-async def create_order_info(
+async def crud_create_order_info(
     data: CreateOrderInfo,
     session: AsyncSession,
 
@@ -80,7 +77,7 @@ async def crud_update_order_status(
     return {"status": "Order created successfully"}
 
 
-async def get_order(
+async def crud_get_order(
     order_id: int,
     session: AsyncSession,
 
@@ -91,7 +88,7 @@ async def get_order(
     )
     result = await session.execute(query)
     response = result.scalar()
-    return response.total_price
+    return response
 
 
 async def crud_get_order_list(
@@ -109,7 +106,7 @@ async def crud_get_order_list(
     return response
 
 
-async def get_order_info(
+async def crud_get_order_info(
     order_id: int,
     session: AsyncSession,
 ):
@@ -136,40 +133,34 @@ async def get_order_info(
 #     return response
 
 
-async def get_order_detail(
+async def crud_get_order_detail(
     order_id: int,
     session: AsyncSession
-):
+) -> List[CartItem]:
     query = (
         select(
-            Product.id,
-            Category.name,
-            Product.name,
-            OrderDetail.quantity,
-            OrderDetail.unit_price,
+            Product.id.label("product_id"),
+            Category.name.label("category_name"),
+            Product.name.label("name"),
+            OrderDetail.quantity.label("quantity"),
+            OrderDetail.unit_price.label("unit_price"),
         )
         .join(OrderDetail, OrderDetail.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
         .where(OrderDetail.order_id == order_id)
     )
     result = await session.execute(query)
-    # response = result.scalars().all()
-    cart_items = []
-    for row in result:
-        row.name
-        cart_item = CartItem(
-            product_id=row[0],
-            category_name=row[1],
-            name=row[2],
-            quantity=row[3],
-            unit_price=row[4],
-        )
-        cart_items.append(cart_item)
-
-    return cart_items
+    return [CartItem(**row._asdict()) for row in result]
 
 
 async def get_order_detail_test(
+    order_id: int,
+    session: AsyncSession
+) -> List[OrderDetailTest]:
+    pass
+
+
+async def crud_get_order_detail_report(
     order_id: int,
     session: AsyncSession
 ) -> List[OrderDetailTest]:
@@ -186,3 +177,17 @@ async def get_order_detail_test(
     )
     result = await session.execute(query)
     return result.all()
+
+
+async def crud_get_pending_orders_list(
+        session: AsyncSession,
+) -> List[OrderList]:
+    query = (
+        select(Order)
+        .where(Order.order_status != "Выполнен",
+               Order.order_status != "Отменён")
+        .order_by(Order.id)
+    )
+
+    result = await session.execute(query)
+    return result.scalars().all()

@@ -5,6 +5,7 @@ load_dotenv()
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 ADMINT_CHAT = os.environ.get("ADMINT_CHAT")
+SALE_GROUP = os.environ.get("SALE_GROUP")
 
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")

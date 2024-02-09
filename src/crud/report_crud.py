@@ -299,6 +299,13 @@ async def crud_get_ad_report(
         resourse: str,
         session: AsyncSession,
 ) -> List[CustomerAdResourse]:
+    pass
+
+
+async def crud_get_resourse_report(
+        resourse: str,
+        session: AsyncSession,
+) -> Optional[CustomerAdResourse]:
     query = (
         select(
             func.count(Customer.id).label('customer_count')

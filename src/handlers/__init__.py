@@ -2,8 +2,8 @@ from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
 
 from .start_handlers import process_start_command
-from .commands import get_my_id
-from .main_menu import (
+from .admin_handlers import get_my_id, create_mail_group
+from .main_menu_handlers import (
     press_get_location,
     press_del_location,
     get_contact,
@@ -19,7 +19,7 @@ from .cart_handlers import (
     process_cart_edit,
     empty_cart,
 )
-from .fsm_delivery import (
+from .fsm_delivery_handlers import (
     process_delivery_form_command,
     process_district_selection,
     warning_not_number,
@@ -48,17 +48,17 @@ from .fsm_check_order import (  # noqa: F401
     process_cancel_command_state_order,
     process_waiting_order_id,
 )
-from .fsm_ad_report import (  # noqa: F401
-    process_ad_report,
+from .fsm_resourse_report_handlers import (  # noqa: F401
+    process_resourse_report,
     process_cancel_command_state_resourse,
     process_waiting_resourser,
 )
-from .fsm_sales_period_custom import (
+from .fsm_custom_report_handlers import (
     process_waiting_start_date,
     process_waiting_end_date,
     process_sales_period_custom,
 )
-from .admin import (
+from .admin_handlers import (
     press_admin_menu,
     press_stop_list,
     process_reports,
@@ -285,7 +285,7 @@ def register_admin_commands(router: Router) -> None:
         F.text
     )
     router.callback_query.register(
-        process_ad_report, F.data == 'press_ad_report')
+        process_resourse_report, F.data == 'press_ad_report')
     router.message.register(
         process_waiting_resourser,
         FSMAdReport.resourse,
@@ -310,3 +310,4 @@ def register_admin_commands(router: Router) -> None:
         process_toggle_bot, F.data == 'press_toggle_bot')
     router.callback_query.register(
         process_toggle_working_bot, F.data == 'press_toggle_working_bot')
+    router.message.register(create_mail_group, (Command('m')))

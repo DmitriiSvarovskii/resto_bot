@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 
 from src.lexicons import LEXICON_RU
 from src.keyboards import product_keyboards, category_keyboards, main_keyboards
-from src.utils_new import time_utils
+from src.utils import time_utils
 from src.callbacks import CategoryIdCallbackFactory
 from src.db import category_db, store_db, product_db
 
@@ -13,10 +13,9 @@ async def get_menu_category(callback: CallbackQuery):
     if time_utils.is_valid_time_warning():
         await callback.answer(
             text=LEXICON_RU['closing_time_reminder'], show_alert=True)
-        await callback.message.edit_reply_markup(
-            reply_markup=await main_keyboards.create_keyboard_main(user_id)
-        )
-        return
+        # await callback.message.edit_reply_markup(
+        #     reply_markup=await main_keyboards.create_keyboard_main(user_id)
+        # )
 
     store_info = await store_db.get_store_info()
 

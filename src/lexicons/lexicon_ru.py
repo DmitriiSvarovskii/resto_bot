@@ -1,11 +1,13 @@
+from aiogram.types import CallbackQuery
 from datetime import datetime
 from typing import Optional, Union
 
 from src.schemas import (
     ReadDelivery,
-    ReadCustomerInfo,
+    CreateOrder,
     CreateOrderInfo,
 )
+
 from src.callbacks import (
     TimeOrdersCallbackFactory,
     CheckOrdersCallbackFactory,
@@ -212,9 +214,9 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
 def cart_text(
         bill: int,
         order_text: str,
-        comment: Optional[str] = None
+        order_comment: Optional[str] = None
 ):
-    if not comment:
+    if not order_comment:
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
@@ -227,44 +229,61 @@ def cart_text(
             f'{order_text}'
             f'Итого без скидки: {bill}  ₹\n\n'
             f'Итого цена со скидкой: {bill * 0.95} ₽\n\n'
-            f'Комментарий к заказу: {comment}'
+            f'Комментарий к заказу: {order_comment}'
         )
     return message
 
 
 async def new_order_mess_text_order_chat(
-        order_id: int,
         order_text: str,
-        order_sum: int,
-        order_type: str,
-        status: str,
-        data_customer: ReadCustomerInfo,
-        data_order_info: Optional[CreateOrderInfo] = None,
-        delivery_village: Optional[ReadDelivery] = None
+        callback: CallbackQuery,
+        data_order: CreateOrder,
+        order_info: Optional[CreateOrderInfo] = None,
+        delivery_village: Optional[ReadDelivery] = None,
+
+        # order_id: int,
+        # order_text: str,
+        # order_sum: int,
+        # order_type: str,
+        # status: str,
+        # data_customer: ReadCustomerInfo,
+        # data_order_info: Optional[CreateOrderInfo] = None,
+        # delivery_village: Optional[ReadDelivery] = None
 ):
+
+    # async def new_order_mess_text_order_chat(
+    #         order_id: int,
+    #         order_text: str,
+    #         order_sum: int,
+    #         order_type: str,
+    #         status: str,
+    #         data_customer: ReadCustomerInfo,
+    #         data_order_info: Optional[CreateOrderInfo] = None,
+    #         delivery_village: Optional[ReadDelivery] = None
+    # ):
     current_time = datetime.now()
 
-    order_sale = (order_sum * 0.95)
+    order_sale = (data_order.total_price * 0.95)
 
     customer_comment = (
-        data_order_info.order_comment
-        if data_order_info.order_comment is not None
+        order_info.order_comment
+        if order_info.order_comment is not None
         else 'Отсутствует'
     )
 
     order_header = (
-        f"ЗАКАЗ №{order_id} от "
+        f"ЗАКАЗ №{order_info.order_id} от "
         f"{current_time.strftime('%d.%m.%Y')} в "
         f"{current_time.strftime('%H:%M')}\n"
-        f"ТИП ЗАКАЗА: {order_type}\n"
+        f"ТИП ЗАКАЗА: {data_order.order_type}\n"
         "--------------------\n"
     )
 
     customer_info = (
         "Информация о клиенте:\n"
-        f"Код клиента: {data_customer.user_id}\n"
-        f"Имя клиента: {data_customer.first_name}\n"
-        f"Ссылка tg: @{data_customer.username}\n"
+        f"Код клиента: {callback.message.chat.id}\n"
+        f"Имя клиента: {callback.message.chat.first_name}\n"
+        f"Ссылка tg: @{callback.message.chat.username}\n"
         "--------------------\n"
     )
 
@@ -273,7 +292,7 @@ async def new_order_mess_text_order_chat(
         f"{order_text}"
         f"\nКомментарий к заказу: {customer_comment}\n"
         "--------------------"
-        f"\nСумма заказа: {order_sum} руп."
+        f"\nСумма заказа: {data_order.total_price} руп."
         f"\nСумма заказа с учётом скидки: {order_sale} руп.\n"
     )
 
@@ -285,7 +304,7 @@ async def new_order_mess_text_order_chat(
         order_header + order_details
     )
 
-    if order_type == "Доставка":
+    if data_order.order_type == "Доставка":
         delivery_price = delivery_village.price
 
         delivery_info = (
@@ -297,14 +316,14 @@ async def new_order_mess_text_order_chat(
         )
 
         courier_info = (
-            f"Индийский номер клиента: {data_order_info.customer_phone}\n"
-            f"Комментарий для курьера: {data_order_info.delivery_comment}\n"
+            f"Индийский номер клиента: {order_info.customer_phone}\n"
+            f"Комментарий для курьера: {order_info.delivery_comment}\n"
 
         )
         if (
-            data_order_info.delivery_latitude
+            order_info.delivery_latitude
             and
-            data_order_info.delivery_longitude
+            order_info.delivery_longitude
         ):
             courier_info += (
                 "Геолокация будет отправлена следующим сообщением\n"
@@ -323,7 +342,7 @@ async def new_order_mess_text_order_chat(
 
     status_info = (
         "--------------------\n"
-        f"Статус заказа: {status}\n"
+        f"Статус заказа: {data_order.order_status}\n"
 
     )
 

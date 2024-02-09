@@ -4,23 +4,21 @@ from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import GetCategory
-from src.callbacks import CategoryIdCallbackFactory
+from src.callbacks import (
+    CategoryIdCallbackFactory,
+    CategoryAdminCallbackFactory,
+    CategoryAdminAvailCallbackFactory
+)
 from src.db import cart_db
 
 
 async def create_keyboard_category(
     categories: List[GetCategory],
     user_id: int,
-    # session,
 ):
     bill = await cart_db.get_total_price_cart(
         user_id=user_id
     )
-
-    # bill = await crud_read_cart_items_and_totals(
-    #     user_id=user_id,
-    #     session=session
-    # )
 
     keyboard = InlineKeyboardBuilder()
 
@@ -40,9 +38,6 @@ async def create_keyboard_category(
             text=' ', callback_data='press_pass'))
 
     keyboard.row(*row_buttons, width=2)
-    # bill = 0
-    # if bill_data.total_price:
-    #     bill = bill_data.total_price
 
     keyboard.row(
         InlineKeyboardButton(
@@ -52,6 +47,84 @@ async def create_keyboard_category(
         InlineKeyboardButton(
             text=f'Корзина 🛒 {bill} ₹',
             callback_data='press_cart'
+        )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_keyboard_category_admin(
+    categories: List[GetCategory],
+):
+
+    keyboard = InlineKeyboardBuilder()
+
+    row_buttons = [
+        InlineKeyboardButton(
+            text=f'{category.name}',
+            callback_data=CategoryAdminCallbackFactory(
+                category_id=category.id).pack()
+        )
+        for category in categories
+    ]
+
+    if len(row_buttons) % 2 == 1:
+        row_buttons.append(InlineKeyboardButton(
+            text=' ', callback_data='press_pass'))
+
+    keyboard.row(*row_buttons, width=2)
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data='press_edit_menu'
+        )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_keyboard_category_avail_admin(
+    categories: List[GetCategory],
+):
+
+    keyboard = InlineKeyboardBuilder()
+
+    for category in categories:
+        availability = "В наличии" if category.availability else "Отсутствует"
+        indicator = '✅' if category.availability else '❌'
+        action = "Убрать" if category.availability else "Добавить"
+
+        keyboard.row(
+            InlineKeyboardButton(
+                text=f'{category.name}',
+                callback_data=CategoryAdminAvailCallbackFactory(
+                    category_id=category.id).pack()
+            ))
+
+        keyboard.row(
+            InlineKeyboardButton(
+                text=availability,
+                callback_data=CategoryAdminAvailCallbackFactory(
+                    category_id=category.id).pack()
+            ),
+            InlineKeyboardButton(
+                text=indicator,
+                callback_data=CategoryAdminAvailCallbackFactory(
+                    category_id=category.id).pack()
+            ),
+            InlineKeyboardButton(
+                text=action,
+                callback_data=CategoryAdminAvailCallbackFactory(
+                    category_id=category.id).pack()
+            ),
+            width=3
+        )
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data='press_edit_menu'
         )
     )
 

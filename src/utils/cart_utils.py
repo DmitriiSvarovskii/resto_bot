@@ -1,5 +1,5 @@
-from aiogram.types import CallbackQuery, Message
-from typing import Union
+from aiogram.types import CallbackQuery
+from typing import Optional
 
 from src.lexicons import cart_text, LEXICON_RU
 # from src.keyboards import create_keyboard_cart
@@ -65,8 +65,7 @@ async def process_cart_action(
 
 async def update_cart_message(
     user_id: int,
-    message: Union[CallbackQuery, Message],
-    comment=None
+    order_comment: Optional[str] = None
 ) -> None:
     response = await cart_db.get_cart_items_and_totals(
         user_id=user_id
@@ -82,19 +81,18 @@ async def update_cart_message(
             f'{item.quantity} - '
             f'{item.unit_price} ₹\n\n'
         )
-
     message_text = cart_text(
         bill=bill,
         order_text=order_text,
-        comment=comment
+        order_comment=order_comment
     )
     return message_text, bill
 
 
 def get_comment_value(user_id, user_dict_comment):
     if (user_id in user_dict_comment and
-            "comment" in user_dict_comment[user_id]):
-        return user_dict_comment[user_id]["comment"]
+            "order_comment" in user_dict_comment[user_id]):
+        return user_dict_comment[user_id]["order_comment"]
     else:
         return None
 

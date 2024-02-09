@@ -1,7 +1,6 @@
 from aiogram import Bot
 from aiogram.types import CallbackQuery
 
-from src.utils import create_new_orders, create_text, get_status_name_by_id
 from src.db import order_db
 from src.config import ADMINT_CHAT
 from src.services import ORDER_TYPES, ORDER_STATUSES
@@ -14,10 +13,10 @@ from src.callbacks import (
 from src.keyboards import order_keyboards, main_keyboards
 from src.lexicons import (
     generate_order_info_text,
-    generate_order_info_time_text,
     LEXICON_RU,
 )
-from src.utils_new import time_utils
+from src.utils import time_utils, order_utils
+from src.fsm_state import user_dict_comment, user_dict
 
 
 async def create_orders_takeaway(
@@ -25,45 +24,52 @@ async def create_orders_takeaway(
     callback_data: CreateOrderCallbackFactory,
     bot: Bot
 ):
-    if time_utils.is_valid_time():
-        order_type = callback_data.order_type
+    try:
+        if time_utils.is_valid_time():
+            order_type = callback_data.order_type
 
-        order_id, chat_text, user_text, deliv_latitude, deliv_longitude = (
-            await create_new_orders(
-                order_type=order_type,
-                status=callback_data.status,
-                callback=callback
-            )
-        )
-        await callback.message.edit_text(
-            text=user_text,
-            reply_markup=await main_keyboards.create_keyboard_main(
-                callback.message.chat.id
-            )
-        )
-
-        await bot.send_message(
-            chat_id=ADMINT_CHAT,
-            text='❗️' + chat_text,
-            reply_markup=order_keyboards.create_keyboard_check_order(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=callback.message.chat.id,
-                mess_id=callback.message.message_id,
-            )
-        )
-        if order_type == ORDER_TYPES['delivery']['id']:
-            if deliv_latitude and deliv_longitude:
-                await bot.send_location(
-                    chat_id=ADMINT_CHAT,
-                    longitude=deliv_longitude,
-                    latitude=deliv_latitude
+            order_info, chat_text, user_text = (
+                await order_utils.create_new_orders(
+                    callback_data=callback_data,
+                    callback=callback
                 )
-    else:
-        await callback.answer(
-            text=LEXICON_RU['non_working_hours'],
-            show_alert=True
-        )
+            )
+            await callback.message.edit_text(
+                text=user_text,
+                reply_markup=await main_keyboards.create_keyboard_main(
+                    callback.message.chat.id
+                )
+            )
+
+            await bot.send_message(
+                chat_id=ADMINT_CHAT,
+                text='❗️' + chat_text,
+                reply_markup=order_keyboards.create_keyboard_check_order(
+                    order_type=order_type,
+                    order_id=order_info.order_id,
+                    user_id=callback.message.chat.id,
+                    mess_id=callback.message.message_id,
+                )
+            )
+            if order_type == ORDER_TYPES['delivery']['id']:
+                if (
+                    order_info.delivery_latitude
+                    and
+                    order_info.delivery_latitude
+                ):
+                    await bot.send_location(
+                        chat_id=ADMINT_CHAT,
+                        longitude=order_info.delivery_latitude,
+                        latitude=order_info.delivery_latitude
+                    )
+        else:
+            await callback.answer(
+                text=LEXICON_RU['non_working_hours'],
+                show_alert=True
+            )
+    finally:
+        user_dict.pop(callback.message.chat.id, None)
+        user_dict_comment.pop(callback.message.chat.id, None)
 
 
 async def process_edit_status_order(
@@ -71,7 +77,9 @@ async def process_edit_status_order(
     callback_data: CheckOrdersCallbackFactory,
     bot: Bot
 ):
-    order_status = await get_status_name_by_id(callback_data.status)
+    order_status = await order_utils.get_status_name_by_id(
+        callback_data.status
+    )
     user_id = callback_data.user_id
     delivery_time = await order_db.update_order_status(
         order_status=order_status,
@@ -79,13 +87,26 @@ async def process_edit_status_order(
         order_type=callback_data.order_type
     )
 
+    # try:
+    #     await bot.edit_message_reply_markup(
+    #         chat_id=user_id,
+    #         message_id=callback_data.mess_id,
+    #         reply_markup=None
+    #     )
+    # except TelegramAPIError:
+    #     None
     await bot.edit_message_reply_markup(
         chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
+    # except TelegramAPIError:
+    #     None
 
-    text = await create_text(callback_data=callback_data)
+    text = await order_utils.create_text(
+        callback_data=callback_data,
+        callback=callback
+    )
 
     user_text = await generate_order_info_text(callback_data=callback_data)
 
@@ -131,7 +152,10 @@ async def process_time_order(
         reply_markup=None
     )
 
-    text = generate_order_info_time_text(callback_data=callback_data)
+    text = await order_utils.create_text(
+        callback_data=callback_data,
+        callback=callback
+    )
 
     message_id = await bot.send_message(
         chat_id=user_id,
@@ -160,7 +184,9 @@ async def process_edit_status_redy_order(
     callback_data: OrderStatusCallbackFactory,
     bot: Bot
 ):
-    order_status = await get_status_name_by_id(callback_data.status)
+    order_status = await order_utils.get_status_name_by_id(
+        callback_data.status
+    )
     user_id = callback_data.user_id
     await order_db.update_order_status(
         order_status=order_status,
@@ -173,7 +199,10 @@ async def process_edit_status_redy_order(
         reply_markup=None
     )
 
-    text = await create_text(callback_data=callback_data)
+    text = await order_utils.create_text(
+        callback_data=callback_data,
+        callback=callback
+    )
 
     user_text = await generate_order_info_text(callback_data=callback_data)
 

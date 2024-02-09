@@ -1,4 +1,5 @@
 from aiogram.filters.callback_data import CallbackData
+from typing import Optional
 
 
 class CartEditCallbackFactory(
@@ -6,5 +7,5 @@ class CartEditCallbackFactory(
     prefix='cart',
     sep='_'
 ):
-    type_pr: str
+    type_pr: Optional[str] = None
     product_id: int
