@@ -54,7 +54,6 @@ async def process_edit_menu(callback: CallbackQuery):
     )
 
 
-# Отчёты
 async def process_reports(callback: CallbackQuery):
     await callback.message.edit_text(
         text="message_text",

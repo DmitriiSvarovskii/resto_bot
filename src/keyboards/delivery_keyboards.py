@@ -36,15 +36,6 @@ def create_keyboard_delivery_fsm():
     ]
     keyboard = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
-    # button_1 = KeyboardButton(
-    #     text=LEXICON_KEYBOARDS_RU['skip'])
-    # button_2 = KeyboardButton(
-    #     text=LEXICON_KEYBOARDS_RU['cancel_2'])
-
-    # keyboard = ReplyKeyboardMarkup(
-    #     keyboard=[[button_2, button_1]],
-    #     resize_keyboard=True
-    # )
     return keyboard
 
 
@@ -54,14 +45,6 @@ def create_keyboard_delivery_fsm_location():
          KeyboardButton(text=LEXICON_KEYBOARDS_RU['skip'])],
         [KeyboardButton(text='Отправить геолокацию ✅', request_location=True)]
     ]
-    # button_1 = KeyboardButton(
-    #     text=LEXICON_KEYBOARDS_RU['skip'])
-    # button_2 = KeyboardButton(
-    #     text=LEXICON_KEYBOARDS_RU['cancel_2'])
-    # geo_btn = KeyboardButton(
-    #     text='Отправить геолокацию ✅',
-    #     request_location=True
-    # )
 
     keyboard = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
     return keyboard

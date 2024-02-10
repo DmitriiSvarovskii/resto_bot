@@ -87,21 +87,11 @@ async def process_edit_status_order(
         order_type=callback_data.order_type
     )
 
-    # try:
-    #     await bot.edit_message_reply_markup(
-    #         chat_id=user_id,
-    #         message_id=callback_data.mess_id,
-    #         reply_markup=None
-    #     )
-    # except TelegramAPIError:
-    #     None
     await bot.edit_message_reply_markup(
         chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
-    # except TelegramAPIError:
-    #     None
 
     text = await order_utils.create_text(
         callback_data=callback_data,

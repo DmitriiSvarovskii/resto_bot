@@ -66,47 +66,6 @@ async def press_cart(message: Union[CallbackQuery, Message]):
             text=LEXICON_RU['empty_cart'],
             show_alert=True
         )
-    # if isinstance(message, CallbackQuery):
-    #     user_id = message.message.chat.id
-    # else:
-    #     user_id = message.chat.id
-
-    # comment_value = cart_utils.get_comment_value(
-    #     user_id=user_id,
-    #     user_dict_comment=user_dict_comment
-    # )
-
-    # message_text, bill = await cart_utils.update_cart_message(
-    #     user_id=user_id,
-    #     order_comment=comment_value
-    # )
-
-    # if bill:
-    #     if isinstance(message, CallbackQuery):
-    #         await message.message.edit_text(
-    #             text=message_text,
-    #             reply_markup=cart_keyboards.create_keyboard_cart(
-    #                 mess_id=message.message.message_id
-    #             )
-    #         )
-    #     else:
-    #         await message.answer(
-    #             text=message_text,
-    #             reply_markup=cart_keyboards.create_keyboard_cart(
-    #                 mess_id=message.message_id
-    #             )
-    #         )
-    # else:
-    #     if isinstance(message, CallbackQuery):
-    #         await message.answer(
-    #             text=LEXICON_RU['empty_cart'],
-    #             show_alert=True
-    #         )
-    #     else:
-    #         await message.answer(
-    #             text=LEXICON_RU['empty_cart'],
-    #             show_alert=True
-    #         )
 
 
 async def empty_cart(callback: CallbackQuery):

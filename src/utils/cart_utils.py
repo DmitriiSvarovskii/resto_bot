@@ -2,7 +2,6 @@ from aiogram.types import CallbackQuery
 from typing import Optional
 
 from src.lexicons import cart_text, LEXICON_RU
-# from src.keyboards import create_keyboard_cart
 from src.callbacks import ProductIdCallbackFactory
 from src.db import cart_db
 from src.schemas import cart_schemas
@@ -52,15 +51,6 @@ async def process_cart_action(
             data=cart_data,
         )
         await callback.answer(text='message')
-
-        # if not cart_data:
-        #     await callback.message.answer(LEXICON_RU['cart_error'])
-
-        # else:
-        #     await delete_cart_item(
-        #         data=cart_data,
-        #         session=session,
-        #     )
 
 
 async def update_cart_message(

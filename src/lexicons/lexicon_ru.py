@@ -202,7 +202,6 @@ LEXICON_KEYBOARDS_RU: dict[str, str] = {
 
 LEXICON_COMMANDS_RU: dict[str, str] = {
     '/start': 'Запуск бота',
-    # '/admin_menu': 'Админ-панель',
 }
 
 
@@ -235,27 +234,7 @@ async def new_order_mess_text_order_chat(
         data_order: order_schemas.CreateOrder,
         order_info: Optional[order_schemas.CreateOrderInfo] = None,
         delivery_village: Optional[delivery_schemas.ReadDelivery] = None,
-
-        # order_id: int,
-        # order_text: str,
-        # order_sum: int,
-        # order_type: str,
-        # status: str,
-        # data_customer: ReadCustomerInfo,
-        # data_order_info: Optional[order_schemas.CreateOrderInfo] = None,
-        # delivery_village: Optional[store_schemas.ReadDelivery] = None
 ):
-
-    # async def new_order_mess_text_order_chat(
-    #         order_id: int,
-    #         order_text: str,
-    #         order_sum: int,
-    #         order_type: str,
-    #         status: str,
-    #         data_customer: ReadCustomerInfo,
-    #         data_order_info: Optional[order_schemas.CreateOrderInfo] = None,
-    #         delivery_village: Optional[store_schemas.ReadDelivery] = None
-    # ):
     current_time = datetime.now()
 
     order_sale = (data_order.total_price * 0.95)

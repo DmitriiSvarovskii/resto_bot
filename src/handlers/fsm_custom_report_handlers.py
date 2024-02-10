@@ -59,7 +59,6 @@ async def process_waiting_end_date(
     )
 
 
-# Доделать
 async def process_cancel_command_state(
     message: Message,
     state: FSMContext

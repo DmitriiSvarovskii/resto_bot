@@ -1,5 +1,3 @@
-# from aiogram.types import Message
-
 from src.database import get_async_session
 from src.schemas import customer_schemas
 from src.crud import customer_crud as cust_crud
