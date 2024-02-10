@@ -3,7 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.schemas import GetCategory
+from src.schemas import category_schemas
 from src.callbacks import (
     CategoryIdCallbackFactory,
     CategoryAdminCallbackFactory,
@@ -13,7 +13,7 @@ from src.db import cart_db
 
 
 async def create_keyboard_category(
-    categories: List[GetCategory],
+    categories: List[category_schemas.GetCategory],
     user_id: int,
 ):
     bill = await cart_db.get_total_price_cart(
@@ -54,7 +54,7 @@ async def create_keyboard_category(
 
 
 async def create_keyboard_category_admin(
-    categories: List[GetCategory],
+    categories: List[category_schemas.GetCategory],
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -85,7 +85,7 @@ async def create_keyboard_category_admin(
 
 
 async def create_keyboard_category_avail_admin(
-    categories: List[GetCategory],
+    categories: List[category_schemas.GetCategory],
 ):
 
     keyboard = InlineKeyboardBuilder()

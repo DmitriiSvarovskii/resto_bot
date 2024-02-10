@@ -3,14 +3,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
 from src.models import Product
-from src.schemas import ReadProduct
+from src.schemas import product_schemas
 
 
 async def crud_get_all_products(
     category_id: int,
     session: AsyncSession,
     filter: Optional[bool] = None,
-) -> List[ReadProduct]:
+) -> List[product_schemas.ReadProduct]:
     query = (
         select(Product).
         where(
@@ -46,7 +46,7 @@ async def crud_change_avail_roducts(
 
 async def crud_get_stop_list(
     session: AsyncSession
-) -> List[ReadProduct]:
+) -> List[product_schemas.ReadProduct]:
     query = (
         select(Product).
         where(

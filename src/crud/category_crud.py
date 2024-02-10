@@ -3,13 +3,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
 from src.models import Category
-from src.schemas import GetCategory
+from src.schemas import category_schemas
 
 
 async def crud_get_all_categories(
     session: AsyncSession,
     filter: Optional[bool] = None
-) -> List[GetCategory]:
+) -> List[category_schemas.GetCategory]:
     query = (
         select(Category).
         where(

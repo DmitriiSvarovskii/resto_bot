@@ -13,13 +13,7 @@ from src.models import (
     Delivery,
     Customer,
 )
-from src.schemas import (
-    SalesSummary,
-    SalesSummaryList,
-    OrderList,
-    DeliveryReport,
-    CustomerAdResourse,
-)
+from src.schemas import report_schemas, customer_schemas
 
 
 async def create_main_query():
@@ -47,21 +41,11 @@ async def create_total_price_query():
     )
 
 
-# async def crud_get_daily_sales_summary(
-#         session: AsyncSession,
-#         canceled: Optional[str] = None,
-#         start_date: Optional[str] = None,
-#         end_date: Optional[str] = None,
-#         filter=None,
-# ) -> List[SalesSummary]:
-#     pass
-
-
 async def crud_get_sales_period_summary(
         session: AsyncSession,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-) -> Optional[SalesSummaryList]:
+) -> Optional[report_schemas.SalesSummaryList]:
     query = await create_main_query()
     query_total_price = await create_total_price_query()
 
@@ -76,9 +60,10 @@ async def crud_get_sales_period_summary(
     result_total_price = await session.execute(query_total_price)
     total_price = result_total_price.scalar()
 
-    sales_summary = [SalesSummary(**row._asdict()) for row in result]
+    sales_summary = [report_schemas.SalesSummary(
+        **row._asdict()) for row in result]
     if sales_summary and total_price:
-        sales_summary_list = SalesSummaryList(
+        sales_summary_list = report_schemas.SalesSummaryList(
             order_items=sales_summary,
             total_price=total_price
         )
@@ -90,7 +75,7 @@ async def crud_get_sales_period_summary(
 
 async def crud_get_pending_orders_list(
         session: AsyncSession,
-) -> List[OrderList]:
+) -> List[report_schemas.OrderList]:
     query = (
         select(Order)
         .where(Order.order_status != "Выполнен",
@@ -102,16 +87,9 @@ async def crud_get_pending_orders_list(
     return result.scalars().all()
 
 
-async def crud_get_order_by_number(
-        session: AsyncSession,
-        order_number: int,
-) -> Order:
-    pass
-
-
 async def crud_get_delivery_report(
         session: AsyncSession,
-) -> List[DeliveryReport]:
+) -> List[report_schemas.DeliveryReport]:
     query = (
         select(
             Delivery.name.label('delivery_area'),
@@ -127,14 +105,6 @@ async def crud_get_delivery_report(
     result = await session.execute(query)
 
     return result.all()
-
-
-# async def crud_get_advertising_report(
-#         session: AsyncSession,
-#         start_date: Optional[str] = None,
-#         end_date: Optional[str] = None,
-# ) -> List[AdvertisingReport]:
-#     pass
 
 
 async def apply_date_filters(
@@ -198,7 +168,7 @@ async def crud_get_daily_sales(
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         filter=None,
-) -> List[SalesSummary]:
+) -> List[report_schemas.SalesSummary]:
     query = await create_main_query()
     query_total_price = await create_total_price_query()
     query, query_total_price = await apply_filters(
@@ -214,9 +184,10 @@ async def crud_get_daily_sales(
     result_total_price = await session.execute(query_total_price)
     total_price = result_total_price.scalar()
 
-    sales_summary = [SalesSummary(**row._asdict()) for row in result]
+    sales_summary = [report_schemas.SalesSummary(
+        **row._asdict()) for row in result]
     if sales_summary and total_price:
-        sales_summary_list = SalesSummaryList(
+        sales_summary_list = report_schemas.SalesSummaryList(
             order_items=sales_summary,
             total_price=total_price
         )
@@ -225,87 +196,11 @@ async def crud_get_daily_sales(
     else:
         return None
 
-# async def crud_get_daily_sales(
-#         session: AsyncSession,
-#         canceled: Optional[str] = None,
-#         start_date: Optional[str] = None,
-#         end_date: Optional[str] = None,
-#         filter=None,
-# ) -> List[SalesSummary]:
-#     query = (
-#         select(
-#             Product.id,
-#             Product.category_id,
-#             Product.name,
-#             func.sum(OrderDetail.quantity).label('quantity'),
-#             func.sum(OrderDetail.unit_price).label('unit_price')
-#         )
-#         .join(OrderDetail, OrderDetail.product_id == Product.id)
-#         .join(Order, Order.id == OrderDetail.order_id)
-#         # .where(Order.order_status == "Выполнен")
-#         .group_by(Product.id, Product.category_id, Product.name)
-#         .order_by(Product.id)
-#     )
-
-#     query_total_price = (select(
-#         func.sum(OrderDetail.unit_price).over().label("total_price"))
-#         .join(Order, Order.id == OrderDetail.order_id)
-#         .where(Order.order_status == "Выполнен")
-#     )
-
-#     if canceled:
-#         query = query.where(Order.order_status == canceled)
-#         query_total_price = query_total_price.where(
-#             Order.order_status == canceled)
-#     if filter:
-#         query = query.where(Order.order_status == "Выполнен",
-#                             OrderDetail.order_id == filter)
-#         query_total_price = query_total_price.where(
-#             Order.order_status == "Выполнен",
-#             OrderDetail.order_id == filter
-#         )
-
-#     if start_date and end_date:
-#         converted_start_date = datetime.strptime(
-    # start_date, '%Y-%m-%d'
-    # ).date()
-#         converted_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-#         date_condition = (
-#             (cast(OrderDetail.created_at, Date) >= converted_start_date) &
-#             (cast(OrderDetail.created_at, Date) <= converted_end_date)
-#         )
-#         query = query.where(Order.order_status == "Выполнен", date_condition)
-#         query_total_price = query_total_price.where(
-#             Order.order_status == "Выполнен", date_condition)
-
-#     result = await session.execute(query)
-#     result_total_price = await session.execute(query_total_price)
-#     total_price = result_total_price.scalar()
-
-
-#     sales_summary = [SalesSummary(**row._asdict()) for row in result]
-#     if sales_summary and total_price:
-#         sales_summary_list = SalesSummaryList(
-#             order_items=sales_summary,
-#             total_price=total_price
-#         )
-
-#         return sales_summary_list
-#     else:
-#         return None
-
-
-async def crud_get_ad_report(
-        resourse: str,
-        session: AsyncSession,
-) -> List[CustomerAdResourse]:
-    pass
-
 
 async def crud_get_resourse_report(
         resourse: str,
         session: AsyncSession,
-) -> Optional[CustomerAdResourse]:
+) -> Optional[customer_schemas.CustomerAdResourse]:
     query = (
         select(
             func.count(Customer.id).label('customer_count')

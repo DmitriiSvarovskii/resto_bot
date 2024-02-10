@@ -1,6 +1,6 @@
 from src.database import get_async_session
 from src.crud import cart_crud, product_crud
-from src.schemas import CartCreate
+from src.schemas import cart_schemas
 
 
 async def get_cart_items_and_totals(
@@ -38,7 +38,7 @@ async def delete_cart_items_by_user_id(
         break
 
 
-async def add_to_cart(data: CartCreate):
+async def add_to_cart(data: cart_schemas.CartCreate):
     async for session in get_async_session():
         response = await cart_crud.crud_add_to_cart(
             data=data,
@@ -48,7 +48,7 @@ async def add_to_cart(data: CartCreate):
     return response
 
 
-async def decrease_cart_item(data: CartCreate):
+async def decrease_cart_item(data: cart_schemas.CartCreate):
     async for session in get_async_session():
         response = await cart_crud.crud_decrease_cart_item(
             data=data,
@@ -68,7 +68,7 @@ async def get_one_product(product_id: int):
     return compound_text
 
 
-async def delete_cart_item(data: CartCreate):
+async def delete_cart_item(data: cart_schemas.CartCreate):
     async for session in get_async_session():
         await cart_crud.crud_delete_cart_item(
             data=data,

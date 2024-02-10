@@ -1,7 +1,8 @@
+from dotenv import load_dotenv
 import os
 import sys
 from logging.config import fileConfig
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+# from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from src.database import metadata, Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -11,6 +12,18 @@ from src.models import *  # noqa: F401, F403
 from alembic import context
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
+
+load_dotenv()
+
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+ADMINT_CHAT = os.environ.get("ADMINT_CHAT")
+SALE_GROUP = os.environ.get("SALE_GROUP")
+
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

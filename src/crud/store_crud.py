@@ -3,16 +3,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from src.models import Store
-from src.schemas import GetStore
+from src.schemas import store_schemas
 
 
-async def crud_get_store_info(session: AsyncSession) -> Optional[GetStore]:
+async def crud_get_store_info(
+    session: AsyncSession
+) -> Optional[store_schemas.GetStore]:
     query = (
         select(Store)
     )
     result = await session.execute(query)
-    store = result.scalar()
-    return store
+    scalar_result = result.scalar()
+    return scalar_result
 
 
 async def crud_change_is_active_bot(

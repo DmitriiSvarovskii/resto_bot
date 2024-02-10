@@ -5,7 +5,7 @@ from src.lexicons import cart_text, LEXICON_RU
 # from src.keyboards import create_keyboard_cart
 from src.callbacks import ProductIdCallbackFactory
 from src.db import cart_db
-from src.schemas import CartCreate
+from src.schemas import cart_schemas
 
 
 async def process_cart_action(
@@ -15,7 +15,7 @@ async def process_cart_action(
     product_id = callback_data.product_id
     user_id = callback.message.chat.id
 
-    cart_data = CartCreate(
+    cart_data = cart_schemas.CartCreate(
         product_id=product_id,
         user_id=user_id
     )

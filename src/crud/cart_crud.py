@@ -4,24 +4,15 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 from typing import Optional
 
-from src.models import (
-    Product,
-    Cart,
-    Category,
-)
-from src.schemas import (
-    CartResponse,
-    CartCreate,
-    CartItem,
-    CartItemTotal,
-)
+from src.models import Product, Cart, Category
+from src.schemas import cart_schemas
 from src.lexicons import LEXICON_RU
 
 
 async def crud_read_cart_items_and_totals(
     user_id: int,
     session: AsyncSession
-) -> Optional[CartResponse]:
+) -> Optional[cart_schemas.CartResponse]:
     query = (
         select(
             Product.id.label("product_id"),
@@ -29,7 +20,6 @@ async def crud_read_cart_items_and_totals(
             Product.name,
             Cart.quantity,
             (Cart.quantity * Product.price).label("unit_price"),
-            func.sum(Cart.quantity * Product.price).over().label("total_price")
         )
         .join(Cart, Cart.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
@@ -42,15 +32,10 @@ async def crud_read_cart_items_and_totals(
     )
     result = await session.execute(query)
 
-    cart_items = []
-    total_price = 0
+    cart_items = [cart_schemas.CartItem(**item._asdict()) for item in result]
+    total_price = sum(cart_item.unit_price for cart_item in cart_items)
 
-    for row in result:
-        total_price = row[5]
-        sales_summary = CartItem(**row._asdict())
-        cart_items.append(sales_summary)
-
-    response_data = CartResponse(
+    response_data = cart_schemas.CartResponse(
         cart_items=cart_items,
         total_price=total_price
     )
@@ -61,7 +46,7 @@ async def crud_read_cart_items_and_totals(
 async def crud_total_price_cart_by_id(
     user_id: int,
     session: AsyncSession
-) -> Optional[CartItemTotal]:
+) -> Optional[cart_schemas.CartItemTotal]:
     query = (
         select(
             func.sum(Cart.quantity * Product.price).label("total_price")
@@ -73,12 +58,12 @@ async def crud_total_price_cart_by_id(
         )
     )
     result = await session.execute(query)
-    response = result.scalar_one()
-    return response
+    scalar_result = result.scalar_one()
+    return scalar_result
 
 
 async def crud_add_to_cart(
-    data: CartCreate,
+    data: cart_schemas.CartCreate,
     session: AsyncSession
 ):
     query = (
@@ -104,7 +89,7 @@ async def crud_add_to_cart(
     else:
         stmt = (
             insert(Cart).
-            values(**data.dict(), quantity=1)
+            values(**data.model_dump(), quantity=1)
         )
         await session.execute(stmt)
     await session.commit()
@@ -112,7 +97,7 @@ async def crud_add_to_cart(
 
 
 async def crud_decrease_cart_item(
-    data: CartCreate,
+    data: cart_schemas.CartCreate,
     session: AsyncSession
 ):
     query = (
@@ -137,7 +122,7 @@ async def crud_decrease_cart_item(
 
 
 async def update_cart_item_quantity(
-    data: CartCreate,
+    data: cart_schemas.CartCreate,
     session: AsyncSession
 ):
     stmt = (
@@ -154,7 +139,7 @@ async def update_cart_item_quantity(
 
 
 async def crud_delete_cart_item(
-    data: CartCreate,
+    data: cart_schemas.CartCreate,
     session: AsyncSession
 ):
     stmt = (
@@ -169,7 +154,6 @@ async def crud_delete_cart_item(
     return {"message": 'ok'}
 
 
-# async def crud_delete_cart_items_by_user_id(
 async def crud_delete_cart_items_by_user_id(
     user_id: int,
     session: Session

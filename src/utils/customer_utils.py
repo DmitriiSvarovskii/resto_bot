@@ -3,13 +3,13 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import Customer
-from src.schemas import CustomerCreate
+from src.schemas import customer_schemas
 from src.crud import customer_crud as cust
 
 
 def compare_customer_data(
     customer: Customer,
-    data: CustomerCreate
+    data: customer_schemas.CustomerCreate
 ) -> bool:
     return (
         customer and
@@ -22,13 +22,13 @@ def compare_customer_data(
 
 async def create_customer_data_from_message(
     message: Message
-) -> Optional[CustomerCreate]:
+) -> Optional[customer_schemas.CustomerCreate]:
     if message.text.strip() == "/start":
         resource = None
     else:
         resource = message.text.replace("/start", "").strip()
 
-    customer_data = CustomerCreate(
+    customer_data = customer_schemas.CustomerCreate(
         user_id=message.from_user.id,
         resourse=resource,
         first_name=message.from_user.first_name,
@@ -39,7 +39,7 @@ async def create_customer_data_from_message(
 
 
 async def add_tg_user(
-        data: CustomerCreate,
+        data: customer_schemas.CustomerCreate,
         session: AsyncSession
 ):
     try:

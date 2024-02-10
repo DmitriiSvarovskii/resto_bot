@@ -2,18 +2,13 @@ from aiogram.types import CallbackQuery
 from datetime import datetime
 from typing import Optional, Union
 
-from src.schemas import (
-    ReadDelivery,
-    CreateOrder,
-    CreateOrderInfo,
-)
-
+from src.schemas import order_schemas, delivery_schemas
+from src.services import get_status_name_by_id
 from src.callbacks import (
     TimeOrdersCallbackFactory,
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory
 )
-from src.services import get_status_name_by_id
 
 LEXICON_RU: dict[str, str] = {
     'start':
@@ -237,9 +232,9 @@ def cart_text(
 async def new_order_mess_text_order_chat(
         order_text: str,
         callback: CallbackQuery,
-        data_order: CreateOrder,
-        order_info: Optional[CreateOrderInfo] = None,
-        delivery_village: Optional[ReadDelivery] = None,
+        data_order: order_schemas.CreateOrder,
+        order_info: Optional[order_schemas.CreateOrderInfo] = None,
+        delivery_village: Optional[delivery_schemas.ReadDelivery] = None,
 
         # order_id: int,
         # order_text: str,
@@ -247,8 +242,8 @@ async def new_order_mess_text_order_chat(
         # order_type: str,
         # status: str,
         # data_customer: ReadCustomerInfo,
-        # data_order_info: Optional[CreateOrderInfo] = None,
-        # delivery_village: Optional[ReadDelivery] = None
+        # data_order_info: Optional[order_schemas.CreateOrderInfo] = None,
+        # delivery_village: Optional[store_schemas.ReadDelivery] = None
 ):
 
     # async def new_order_mess_text_order_chat(
@@ -258,8 +253,8 @@ async def new_order_mess_text_order_chat(
     #         order_type: str,
     #         status: str,
     #         data_customer: ReadCustomerInfo,
-    #         data_order_info: Optional[CreateOrderInfo] = None,
-    #         delivery_village: Optional[ReadDelivery] = None
+    #         data_order_info: Optional[order_schemas.CreateOrderInfo] = None,
+    #         delivery_village: Optional[store_schemas.ReadDelivery] = None
     # ):
     current_time = datetime.now()
 

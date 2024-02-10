@@ -87,3 +87,21 @@ class ReadCustomer(BaseModel):
     user_id: int
     first_name: Optional[str] = None
     username: Optional[str] = None
+
+
+class CreateOrderDetail(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_id: int
+    product_id: int
+    quantity: int
+    unit_price: float
+
+
+class OrderDetailTest(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    category_name: Optional[str] = None
+    name: str
+    quantity: int
+    unit_price: int

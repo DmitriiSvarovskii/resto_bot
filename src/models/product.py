@@ -26,6 +26,7 @@ class Product(Base):
     name: Mapped[str_64]
     description: Mapped[str_256 | None]
     price: Mapped[int]
+    price_box: Mapped[int | None]
     availability: Mapped[bool]
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]

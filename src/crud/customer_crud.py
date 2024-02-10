@@ -3,85 +3,15 @@ from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
-from src.schemas import ReadCustomerInfo, CustomerBase, CustomerCreate
+from src.schemas import customer_schemas
 from src.models import Customer
-
-
-# async def add_tg_user(
-#         data: CustomerCreate,
-#         session: AsyncSession
-# ):
-#     query = (
-#         select(Customer).
-#         filter(
-#             Customer.user_id == data.user_id
-#         )
-#     )
-#     result = await session.execute(query)
-#     customer = result.scalar()
-#     if customer:
-#         if not compare_customer_data(customer, data):
-#             update_data = data.dict(exclude_unset=True)
-#             await session.execute(
-#                 update(Customer).
-#                 where(
-#                     Customer.user_id == data.user_id
-#                 ).
-#                 values(**update_data)
-#             )
-#             await session.commit()
-#             return customer.admin
-#         return customer.admin
-#     else:
-#         stmt = (
-#             insert(Customer).
-#             values(**data.dict())
-#         )
-#         await session.execute(stmt)
-#         await session.commit()
-#         return {"status": 201}
-
-
-# async def crud_create_user(
-#         data: CustomerCreate,
-#         session: AsyncSession
-# ):
-#     query = (
-#         select(Customer).
-#         filter(
-#             Customer.user_id == data.user_id
-#         )
-#     )
-#     result = await session.execute(query)
-#     customer = result.scalar()
-#     if customer:
-#         if not compare_customer_data(customer, data):
-#             update_data = data.dict(exclude_unset=True)
-#             await session.execute(
-#                 update(Customer).
-#                 where(
-#                     Customer.user_id == data.user_id
-#                 ).
-#                 values(**update_data)
-#             )
-#             await session.commit()
-#             return customer.admin
-#         return customer.admin
-#     else:
-#         stmt = (
-#             insert(Customer).
-#             values(**data.dict())
-#         )
-#         await session.execute(stmt)
-#         await session.commit()
-#         return {"status": 201}
 
 
 async def get_user(
     user_id: int,
     session: AsyncSession,
 
-) -> Optional[ReadCustomerInfo]:
+) -> Optional[customer_schemas.ReadCustomerInfo]:
     query = (
         select(Customer).
         where(Customer.user_id == user_id)
@@ -96,7 +26,7 @@ async def get_user_info(
     user_id: Optional[int] = None,
     resourse: Optional[str] = None,
 
-) -> [CustomerBase]:
+) -> [customer_schemas.CustomerBase]:
     query = select(Customer)
     if user_id:
         query = query.where(
@@ -117,7 +47,7 @@ async def get_user_info(
 async def get_customer_by_user_id(
     user_id: int,
     session: AsyncSession,
-) -> Optional[CustomerBase]:
+) -> Optional[customer_schemas.CustomerBase]:
     query = (
         select(Customer)
         .filter(Customer.user_id == user_id)
@@ -128,7 +58,7 @@ async def get_customer_by_user_id(
 
 
 async def crud_create_customer(
-    data: CustomerCreate,
+    data: customer_schemas.CustomerCreate,
     session: AsyncSession,
 ):
     stmt = (
@@ -141,7 +71,7 @@ async def crud_create_customer(
 
 
 async def crud_update_customer(
-    data: CustomerCreate,
+    data: customer_schemas.CustomerCreate,
     session: AsyncSession,
 ):
     update_data = data.model_dump(exclude_unset=True)

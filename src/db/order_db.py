@@ -3,8 +3,7 @@ from typing import Optional, List
 from src.crud import delivery_crud, order_crud
 from src.services import ORDER_TYPES
 from src.database import get_async_session
-from src.schemas import order_schemas
-from src.schemas import CartItem
+from src.schemas import order_schemas, cart_schemas
 
 
 async def get_order_list(
@@ -109,7 +108,7 @@ async def get_order_info(
 
 async def get_order_detail(
     order_id: int,
-) -> List[CartItem]:
+) -> List[cart_schemas.CartItem]:
     async for session in get_async_session():
         response = await order_crud.crud_get_order_detail(
             order_id=order_id,

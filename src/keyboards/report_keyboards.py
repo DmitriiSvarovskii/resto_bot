@@ -1,15 +1,7 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from typing import Optional, List
-
 
 from src.lexicons import admin_text
-from src.schemas import ReadProduct, GetCategory, GetStore
-from src.callbacks import (
-    CategoryAdminCallbackFactory,
-    ProductIdAdminCallbackFactory,
-    CategoryAdminAvailCallbackFactory,
-)
 
 
 def create_keyboard_report():

@@ -1,22 +1,17 @@
-from typing import List, Union
-from aiogram.types import CallbackQuery
-
-from src.services import ORDER_STATUSES
-from src.lexicons import new_order_mess_text_order_chat
-from src.schemas import (
-    CreateOrder,
-    CartItem,
-    ReadCustomerInfo,
-    CreateOrderInfo,
-)
-from src.fsm_state import user_dict_comment, user_dict
-from services.order_constants import ORDER_TYPES
-from src.db import cart_db, order_db, delivery_db
 from src.callbacks import (
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory,
     CreateOrderCallbackFactory,
 )
+from src.db import cart_db, order_db, delivery_db
+from services.order_constants import ORDER_TYPES
+from src.fsm_state import user_dict_comment, user_dict
+from typing import List, Union
+from aiogram.types import CallbackQuery
+
+from src.services import ORDER_STATUSES
+from src.lexicons import new_order_mess_text_order_chat
+from src.schemas import order_schemas, customer_schemas, cart_schemas
 
 
 async def create_new_orders(
@@ -58,9 +53,10 @@ async def create_new_orders(
     if user_data_del is not None:
         order_info_data = {**{'user_id': user_id,
                               'order_id': order_id}, **user_data_del}
-        order_info = CreateOrderInfo(**order_info_data)
+        order_info = order_schemas.CreateOrderInfo(**order_info_data)
     else:
-        order_info = CreateOrderInfo(user_id=user_id, order_id=order_id)
+        order_info = order_schemas.CreateOrderInfo(
+            user_id=user_id, order_id=order_id)
 
     if user_data_comment is not None:
         for key, value in user_data_comment.items():
@@ -132,7 +128,7 @@ async def create_data_order(
 
     order_type = await get_order_type_name_by_id(callback_data.order_type)
 
-    data_order = CreateOrder(
+    data_order = order_schemas.CreateOrder(
         user_id=user_id,
         order_type=order_type,
         order_status=order_status,
@@ -142,7 +138,10 @@ async def create_data_order(
     return data_order
 
 
-async def add_order_details(order_id: int, cart_items: List[CartItem]):
+async def add_order_details(
+    order_id: int,
+    cart_items: List[cart_schemas.CartItem]
+):
     data = [
         {
             "order_id": order_id,
@@ -158,7 +157,7 @@ async def add_order_details(order_id: int, cart_items: List[CartItem]):
 async def create_data_customer_info(
     callback: CallbackQuery,
 ):
-    data_customer_info = ReadCustomerInfo(
+    data_customer_info = customer_schemas.ReadCustomerInfo(
         user_id=callback.message.chat.id,
         first_name=callback.message.chat.first_name,
         username=callback.message.chat.username,
@@ -166,7 +165,7 @@ async def create_data_customer_info(
     return data_customer_info
 
 
-async def create_order_text(cart_items: List[CartItem]) -> str:
+async def create_order_text(cart_items: List[cart_schemas.CartItem]) -> str:
     order_lines = [
         f'- {cart_item.category_name} - {cart_item.name} x '
         f'{cart_item.quantity} - {cart_item.unit_price} ₹'

@@ -4,7 +4,6 @@ from src.callbacks import ProductIdCallbackFactory
 from src.database import get_async_session
 from src.db import cart_db
 from src.lexicons import LEXICON_RU
-from src.schemas import CartCreate
 from src.crud import (
     crud_get_all_products,
     crud_change_avail_roducts,

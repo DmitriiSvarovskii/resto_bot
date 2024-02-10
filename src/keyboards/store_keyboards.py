@@ -3,10 +3,10 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Optional
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.schemas import GetStore
+from src.schemas import store_schemas
 
 
-def create_keyboard_toggle_bot(store_info: Optional[GetStore]):
+def create_keyboard_toggle_bot(store_info: Optional[store_schemas.GetStore]):
     keyboard = InlineKeyboardBuilder()
 
     is_active = "Работает" if store_info.is_active else "Выключён"

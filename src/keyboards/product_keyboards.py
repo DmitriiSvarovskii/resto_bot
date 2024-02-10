@@ -7,12 +7,12 @@ from src.callbacks import (
     ProductIdCallbackFactory,
     ProductIdAdminCallbackFactory
 )
-from src.schemas import ReadProduct
+from src.schemas import product_schemas
 from src.db import cart_db
 
 
 async def create_keyboard_product(
-    products: List[ReadProduct],
+    products: List[product_schemas.ReadProduct],
     user_id: int,
 ):
     cart_info = await cart_db.get_cart_items_and_totals(
@@ -90,7 +90,7 @@ async def create_keyboard_product(
 
 
 async def create_keyboard_product_admin(
-    products: List[ReadProduct],
+    products: List[product_schemas.ReadProduct],
 ):
     keyboard = InlineKeyboardBuilder()
 

@@ -7,12 +7,14 @@ from aiogram.types import (
 )
 
 from src.callbacks import DeliveryIdCallbackFactory, CreateOrderCallbackFactory
-from src.schemas import ReadDelivery
+from src.schemas import delivery_schemas
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.services import ORDER_STATUSES, ORDER_TYPES
 
 
-async def create_keyboard_delivery(delivery_districts: List[ReadDelivery]):
+async def create_keyboard_delivery(
+    delivery_districts: List[delivery_schemas.ReadDelivery]
+):
     keyboard = InlineKeyboardBuilder()
 
     for delivery_district in delivery_districts:
