@@ -208,22 +208,32 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
 def cart_text(
         bill: int,
         order_text: str,
-        order_comment: Optional[str] = None
+        order_comment: Optional[str] = None,
+        box_price: Optional[int] = None
 ):
     if not order_comment:
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            f'Итого без скидки: {bill}  ₹\n\n'
-            f'Итого цена со скидкой: {bill*0.95} ₹\n\n'
+            "--------------------\n"
+            f'Итого без скидки: {bill} ₹\n'
+            f'Скидка: {bill*0.05} ₹\n'
+            f'Итоговая цена со скидкой: {bill*0.95} ₹\n'
         )
     else:
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            f'Итого без скидки: {bill}  ₹\n\n'
-            f'Итого цена со скидкой: {bill * 0.95} ₽\n\n'
+            "--------------------\n"
+            f'Итого без скидки: {bill} ₹\n'
+            f'Итого цена со скидкой: {bill * 0.95} ₹\n'
             f'Комментарий к заказу: {order_comment}'
+        )
+    if box_price and box_price > 0:
+        message += (
+            f'Дополнительная плата за упаковку: {box_price} ₹\n'
+            "--------------------\n"
+            f'Итоговая сумма к оплате:: {bill * 0.95 + box_price} ₹\n'
         )
     return message
 
@@ -234,10 +244,12 @@ async def new_order_mess_text_order_chat(
         data_order: order_schemas.CreateOrder,
         order_info: Optional[order_schemas.CreateOrderInfo] = None,
         delivery_village: Optional[delivery_schemas.ReadDelivery] = None,
+        box_price: Optional[int] = None,
 ):
     current_time = datetime.now()
 
-    order_sale = (data_order.total_price * 0.95)
+    total_price = data_order.total_price
+    sale_price = total_price*0.95
 
     customer_comment = (
         order_info.order_comment
@@ -266,9 +278,17 @@ async def new_order_mess_text_order_chat(
         f"{order_text}"
         f"\nКомментарий к заказу: {customer_comment}\n"
         "--------------------"
-        f"\nСумма заказа: {data_order.total_price} руп."
-        f"\nСумма заказа с учётом скидки: {order_sale} руп.\n"
+        f"\nСумма заказа: {total_price} ₹\n"
+        f'Скидка: {total_price*0.05} ₹\n'
+        f"\nСумма заказа с учётом скидки: {sale_price} ₹\n"
     )
+    if box_price and box_price > 0:
+        sale_price += box_price
+        order_details += (
+            f'Дополнительная плата за упаковку: {box_price} ₹\n'
+            "--------------------\n"
+            f'Итоговая сумма к оплате:: {sale_price} ₹\n'
+        )
 
     chat_text = (
         order_header + customer_info + order_details
@@ -284,7 +304,7 @@ async def new_order_mess_text_order_chat(
         delivery_info = (
             "--------------------\n"
             f"Стоимость доставки: {delivery_price} руп.\n"
-            f"Итого (заказ + доставка): {order_sale + delivery_price} руп.\n"
+            f"Итого (заказ + доставка): {sale_price + delivery_price} ₹\n"
             "--------------------\n"
             f"Район доставки: {delivery_village.name}\n"
         )

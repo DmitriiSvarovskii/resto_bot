@@ -29,6 +29,7 @@ class CartItem(BaseModel):
     name: Optional[str] = None
     quantity: Optional[int] = None
     unit_price: Optional[int] = None
+    box_price: Optional[int] = None
 
 
 class CartResponse(BaseModel):

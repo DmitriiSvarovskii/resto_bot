@@ -50,6 +50,10 @@ async def create_new_orders(
         cart_items=cart_items.cart_items
     )
 
+    box_price = create_box_price(
+        cart_items=cart_items.cart_items
+    )
+
     if user_data_del is not None:
         order_info_data = {**{'user_id': user_id,
                               'order_id': order_id}, **user_data_del}
@@ -81,6 +85,7 @@ async def create_new_orders(
         callback=callback,
         delivery_village=delivery_village,
         order_info=order_info,
+        box_price=box_price,
     )
     return order_info, chat_text, user_text
 
@@ -152,6 +157,12 @@ async def add_order_details(
         for detail in cart_items
     ]
     return data
+
+
+def create_box_price(
+    cart_items: List[cart_schemas.CartItem]
+):
+    return sum(item.box_price or 0 for item in cart_items)
 
 
 async def create_data_customer_info(

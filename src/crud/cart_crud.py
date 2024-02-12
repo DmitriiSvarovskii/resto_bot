@@ -20,6 +20,7 @@ async def crud_read_cart_items_and_totals(
             Product.name,
             Cart.quantity,
             (Cart.quantity * Product.price).label("unit_price"),
+            (Cart.quantity * Product.price_box).label("box_price"),
         )
         .join(Cart, Cart.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)

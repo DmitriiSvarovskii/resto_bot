@@ -302,3 +302,14 @@ async def create_mail_group(message: Message, bot: Bot):
                 message.chat.id
             )
         )
+
+
+async def create_mail_group_auto(bot: Bot):
+    text = 'Тестовая рассылка'
+    await bot.send_photo(
+        chat_id=SALE_GROUP,
+        photo='https://pesto-family.com/image/cache/catalog'
+        '/pestocafe-%29/soupbread/227023-770x480.jpg',
+        caption=text,
+        reply_markup=admin_keyboards.create_keyboard_sale_group()
+    )

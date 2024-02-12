@@ -43,6 +43,7 @@ async def process_comment_sent(
         text=LEXICON_RU['good'],
         reply_markup=ReplyKeyboardRemove()
     )
+
     user_dict_comment[user_id] = await state.get_data()
 
     await state.clear()

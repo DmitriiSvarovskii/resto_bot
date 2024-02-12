@@ -63,6 +63,7 @@ async def update_cart_message(
 
     bill = response.total_price
     order_text = ''
+    box_price = 0
 
     for item in response.cart_items:
         order_text += (
@@ -71,10 +72,13 @@ async def update_cart_message(
             f'{item.quantity} - '
             f'{item.unit_price} ₹\n\n'
         )
+        if item.box_price:
+            box_price += item.box_price
     message_text = cart_text(
         bill=bill,
         order_text=order_text,
-        order_comment=order_comment
+        order_comment=order_comment,
+        box_price=box_price,
     )
     return message_text, bill
 
