@@ -15,7 +15,7 @@ async def add_new_user_to_database(
         break
 
 
-async def get_admin_status_by_user_id(
+async def get_user_info_by_id(
     user_id: int
 ):
     async for session in get_async_session():

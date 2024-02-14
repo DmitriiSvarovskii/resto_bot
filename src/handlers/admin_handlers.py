@@ -14,7 +14,7 @@ from src.keyboards import (
     product_keyboards,
     main_keyboards,
 )
-from src.config import SALE_GROUP
+from src.config import settings
 from src.db import product_db, store_db, category_db
 from src.utils import report_utils
 
@@ -278,16 +278,16 @@ async def get_my_id(message: Message):
 
 
 async def create_mail_group(message: Message, bot: Bot):
-    status_admin = await customer_db.get_admin_status_by_user_id(
+    user_info = await customer_db.get_user_info_by_id(
         user_id=message.chat.id
     )
-    if status_admin:
+    if user_info.admin:
         text = message.caption[2:]
         await bot.send_photo(
-            chat_id=SALE_GROUP,
+            chat_id=settings.SALE_GROUP,
             photo=message.photo[-1].file_id,
             caption=text,
-            reply_markup=admin_keyboards.create_keyboard_sale_group()
+            reply_markup=admin_keyboards.settings.create_keyboard_sale_group()
         )
         await message.answer(
             text='Пост опубликован успешно',
@@ -307,9 +307,9 @@ async def create_mail_group(message: Message, bot: Bot):
 async def create_mail_group_auto(bot: Bot):
     text = 'Тестовая рассылка'
     await bot.send_photo(
-        chat_id=SALE_GROUP,
+        chat_id=settings.SALE_GROUP,
         photo='https://pesto-family.com/image/cache/catalog'
         '/pestocafe-%29/soupbread/227023-770x480.jpg',
         caption=text,
-        reply_markup=admin_keyboards.create_keyboard_sale_group()
+        reply_markup=admin_keyboards.settings.create_keyboard_sale_group()
     )

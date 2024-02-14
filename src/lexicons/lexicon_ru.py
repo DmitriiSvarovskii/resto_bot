@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 from datetime import datetime
 from typing import Optional, Union
 
-from src.schemas import order_schemas, delivery_schemas
+from src.schemas import customer_schemas, delivery_schemas, order_schemas
 from src.services import get_status_name_by_id
 from src.callbacks import (
     TimeOrdersCallbackFactory,
@@ -240,16 +240,21 @@ def cart_text(
 
 async def new_order_mess_text_order_chat(
         order_text: str,
-        callback: CallbackQuery,
         data_order: order_schemas.CreateOrder,
         order_info: Optional[order_schemas.CreateOrderInfo] = None,
         delivery_village: Optional[delivery_schemas.ReadDelivery] = None,
+        user_info: Optional[customer_schemas.CustomerBase] = None,
         box_price: Optional[int] = None,
+        callback: Optional[CallbackQuery] = None,
 ):
     current_time = datetime.now()
 
     total_price = data_order.total_price
     sale_price = total_price*0.95
+
+    user_id = user_info.user_id if user_info else callback.message.chat.id
+    first_name = user_info.first_name if user_info else callback.message.chat.first_name  # noqa: E501
+    username = user_info.username if user_info else callback.message.chat.username  # noqa: E501
 
     customer_comment = (
         order_info.order_comment
@@ -267,9 +272,9 @@ async def new_order_mess_text_order_chat(
 
     customer_info = (
         "Информация о клиенте:\n"
-        f"Код клиента: {callback.message.chat.id}\n"
-        f"Имя клиента: {callback.message.chat.first_name}\n"
-        f"Ссылка tg: @{callback.message.chat.username}\n"
+        f"Код клиента: {user_id}\n"
+        f"Имя клиента: {first_name}\n"
+        f"Ссылка tg: @{username}\n"
         "--------------------\n"
     )
 

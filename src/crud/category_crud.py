@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
@@ -38,3 +38,16 @@ async def crud_change_avail_categories(
     await session.execute(stmt)
     await session.commit()
     return {"message": "Статус для availability изменен"}
+
+
+async def crud_create_category(
+    data: category_schemas.CreateCategory,
+    session: AsyncSession,
+):
+    stmt = (
+        insert(Category)
+        .values(**data.model_dump())
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"message": "Создана новая категория"}

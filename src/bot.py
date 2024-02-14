@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 # from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import BOT_TOKEN
+from config import settings
 from handlers import register_user_commands, register_admin_commands
 from utils import set_menu
 
@@ -32,7 +32,7 @@ async def main():
 
     logger.info('Starting bot')
 
-    bot: Bot = Bot(token=BOT_TOKEN, parse_mode='HTML')
+    bot: Bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
     redis = Redis(host='localhost')
     storage = RedisStorage(redis=redis)
     dp: Dispatcher = Dispatcher(storage=storage)

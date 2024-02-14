@@ -74,12 +74,14 @@ async def update_cart_message(
         )
         if item.box_price:
             box_price += item.box_price
+
     message_text = cart_text(
         bill=bill,
         order_text=order_text,
         order_comment=order_comment,
         box_price=box_price,
     )
+
     return message_text, bill
 
 

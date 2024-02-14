@@ -8,3 +8,10 @@ class GetCategory(BaseModel):
     name: str
     availability: bool
     deleted_flag: bool
+
+
+class CreateCategory(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    name: str
+    availability: bool

@@ -3,7 +3,7 @@ from src.callbacks import (
     OrderStatusCallbackFactory,
     CreateOrderCallbackFactory,
 )
-from src.db import cart_db, order_db, delivery_db
+from src.db import cart_db, order_db, delivery_db, customer_db
 from services.order_constants import ORDER_TYPES
 from src.fsm_state import user_dict_comment, user_dict
 from typing import List, Union
@@ -102,6 +102,8 @@ async def create_text(
 
     data_order = await order_db.get_order(order_id=order_id)
 
+    user_info = await customer_db.get_user_info_by_id(user_id=data_order.user_id) # noqa: E:501
+
     order_info = await order_db.get_order_info(order_id=order_id)
 
     cart_items = await order_db.get_order_detail(order_id=order_id)
@@ -116,7 +118,7 @@ async def create_text(
     chat_text, user_text = await new_order_mess_text_order_chat(
         order_text=order_text,
         data_order=data_order,
-        callback=callback,
+        user_info=user_info,
         delivery_village=delivery_village,
         order_info=order_info,
     )

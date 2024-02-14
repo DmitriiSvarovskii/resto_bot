@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.types import CallbackQuery
 
 from src.db import order_db
-from src.config import ADMINT_CHAT
+from src.config import settings
 from src.services import ORDER_TYPES, ORDER_STATUSES
 from src.callbacks import (
     CreateOrderCallbackFactory,
@@ -42,7 +42,7 @@ async def create_orders_takeaway(
             )
 
             await bot.send_message(
-                chat_id=ADMINT_CHAT,
+                chat_id=settings.ADMINT_CHAT,
                 text='❗️' + chat_text,
                 reply_markup=order_keyboards.create_keyboard_check_order(
                     order_type=order_type,
@@ -58,7 +58,7 @@ async def create_orders_takeaway(
                     order_info.delivery_latitude
                 ):
                     await bot.send_location(
-                        chat_id=ADMINT_CHAT,
+                        chat_id=settings.ADMINT_CHAT,
                         longitude=order_info.delivery_latitude,
                         latitude=order_info.delivery_latitude
                     )
@@ -87,11 +87,12 @@ async def process_edit_status_order(
         order_type=callback_data.order_type
     )
 
-    await bot.edit_message_reply_markup(
-        chat_id=user_id,
-        message_id=callback_data.mess_id,
-        reply_markup=None
-    )
+    if callback.message.reply_markup:
+        await bot.edit_message_reply_markup(
+            chat_id=user_id,
+            message_id=callback_data.mess_id,
+            reply_markup=None
+        )
 
     text = await order_utils.create_text(
         callback_data=callback_data,

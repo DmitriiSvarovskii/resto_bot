@@ -146,10 +146,8 @@ def create_order_status_keyboard(
 
 
 def create_order_status_delivery_keyboard(
-    order_type: int,
-    order_id: int,
-    user_id: int,
     mess_id: int,
+    data: TimeOrdersCallbackFactory
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -157,9 +155,9 @@ def create_order_status_delivery_keyboard(
         InlineKeyboardButton(
             text='Передан курьеру',
             callback_data=OrderStatusCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['courier_assigned']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -167,9 +165,9 @@ def create_order_status_delivery_keyboard(
         InlineKeyboardButton(
             text='Отменить',
             callback_data=CheckOrdersCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['cancelled']['id'],
                 mess_id=mess_id,
             ).pack()
@@ -177,9 +175,9 @@ def create_order_status_delivery_keyboard(
         InlineKeyboardButton(
             text='Выполнен',
             callback_data=OrderStatusCallbackFactory(
-                order_type=order_type,
-                order_id=order_id,
-                user_id=user_id,
+                order_type=data.order_type,
+                order_id=data.order_id,
+                user_id=data.user_id,
                 status=ORDER_STATUSES['completed']['id'],
                 mess_id=mess_id,
             ).pack()

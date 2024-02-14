@@ -5,18 +5,18 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column
 from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from src.config import settings
 
 
-DATABASE_URL = (
-    f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@"
-    f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+# DATABASE_URL = (
+#     f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASS}@"
+#     f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+# )
 
 metadata = MetaData()
 
 
-engine = create_async_engine(DATABASE_URL, poolclass=NullPool)
+engine = create_async_engine(settings.DB_URL, poolclass=NullPool)
 async_session_maker = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False)
 

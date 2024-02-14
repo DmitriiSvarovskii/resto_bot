@@ -7,7 +7,7 @@ from src.db import customer_db
 
 
 async def create_keyboard_main(user_id: Optional[int] = None):
-    status_admin = await customer_db.get_admin_status_by_user_id(
+    user_info = await customer_db.get_user_info_by_id(
         user_id=user_id
     )
     keyboard = InlineKeyboardBuilder()
@@ -40,7 +40,7 @@ async def create_keyboard_main(user_id: Optional[int] = None):
 
     keyboard.row(*buttons, width=2)
 
-    if status_admin.admin:
+    if user_info.admin:
         keyboard.row(button_admin, width=1)
 
     return keyboard.as_markup()
