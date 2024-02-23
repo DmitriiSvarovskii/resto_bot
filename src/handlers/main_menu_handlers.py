@@ -19,8 +19,10 @@ async def press_del_location(callback: CallbackQuery):
 async def get_contact(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['contact'],
+        disable_web_page_preview=True,
         parse_mode='HTML',
-        reply_markup=common_keyboards.create_keyboard_back()
+        reply_markup=common_keyboards.create_keyboard_back(),
+
     )
 
 

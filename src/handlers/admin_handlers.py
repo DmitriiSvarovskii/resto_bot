@@ -1,6 +1,9 @@
+import random
+import os
+
+from aiogram import Bot, types
 from src.db import customer_db
 from aiogram.types import Message
-from aiogram import Bot
 from aiogram.types import CallbackQuery
 from aiogram.exceptions import TelegramBadRequest
 from datetime import datetime
@@ -305,11 +308,23 @@ async def create_mail_group(message: Message, bot: Bot):
 
 
 async def create_mail_group_auto(bot: Bot):
-    text = 'Тестовая рассылка'
+    text = 'Всем хорошего дня 🫶\nЭта кнопка для заказа через наш Marcello магазин 🔥'
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    static_folder = os.path.join(current_dir, '..', 'static')
+
+    file_list = os.listdir(static_folder)
+
+    random_file = random.choice(file_list)
+
+    random_file_path = os.path.join(static_folder, random_file)
+
+    photo_file = types.FSInputFile(random_file_path)
+
     await bot.send_photo(
         chat_id=settings.SALE_GROUP,
-        photo='https://pesto-family.com/image/cache/catalog'
-        '/pestocafe-%29/soupbread/227023-770x480.jpg',
+        photo=photo_file,
         caption=text,
-        reply_markup=admin_keyboards.settings.create_keyboard_sale_group()
+        reply_markup=admin_keyboards.create_keyboard_sale_group()
     )

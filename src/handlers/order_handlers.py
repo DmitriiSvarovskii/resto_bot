@@ -13,6 +13,7 @@ from src.callbacks import (
 from src.keyboards import order_keyboards, main_keyboards
 from src.lexicons import (
     generate_order_info_text,
+    generate_order_info_time_text,
     LEXICON_RU,
 )
 from src.utils import time_utils, order_utils
@@ -25,7 +26,7 @@ async def create_orders_takeaway(
     bot: Bot
 ):
     try:
-        if time_utils.is_valid_time():
+        if time_utils.is_valid_time:
             order_type = callback_data.order_type
 
             order_info, chat_text, user_text = (
@@ -137,20 +138,24 @@ async def process_time_order(
     bot: Bot
 ):
     user_id = callback_data.user_id
+
     await bot.edit_message_reply_markup(
         chat_id=user_id,
         message_id=callback_data.mess_id,
         reply_markup=None
     )
 
-    text = await order_utils.create_text(
-        callback_data=callback_data,
-        callback=callback
+    user_text = generate_order_info_time_text(
+        callback_data=callback_data
     )
+    # text = await order_utils.create_text(
+    #     callback_data=callback_data,
+    #     callback=callback
+    # )
 
     message_id = await bot.send_message(
         chat_id=user_id,
-        text=text,
+        text=user_text,
         reply_markup=await main_keyboards.create_keyboard_main(user_id)
     )
 

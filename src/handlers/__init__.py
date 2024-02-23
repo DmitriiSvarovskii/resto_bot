@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
 
 from .start_handlers import process_start_command
-from .admin_handlers import get_my_id, create_mail_group
+from .admin_handlers import get_my_id, create_mail_group, create_mail_group_auto
 from .main_menu_handlers import (
     press_get_location,
     press_del_location,

@@ -227,7 +227,7 @@ def cart_text(
             "--------------------\n"
             f'Итого без скидки: {bill} ₹\n'
             f'Итого цена со скидкой: {bill * 0.95} ₹\n'
-            f'Комментарий к заказу: {order_comment}'
+            f'Комментарий к заказу: {order_comment}\n'
         )
     if box_price and box_price > 0:
         message += (
