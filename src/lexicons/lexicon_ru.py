@@ -1,3 +1,4 @@
+import pytz
 from aiogram.types import CallbackQuery
 from datetime import datetime
 from typing import Optional, Union
@@ -247,7 +248,10 @@ async def new_order_mess_text_order_chat(
         box_price: Optional[int] = None,
         callback: Optional[CallbackQuery] = None,
 ):
-    current_time = datetime.now()
+    desired_timezone = pytz.timezone('Asia/Kolkata')
+
+# Получаем текущее время с указанной временной зоной
+    current_time = datetime.now(desired_timezone)
 
     total_price = data_order.total_price
     sale_price = total_price*0.95
@@ -367,10 +371,14 @@ def get_comments_prompt_message():
 
 
 def generate_order_info_time_text(callback_data: TimeOrdersCallbackFactory):
+    desired_timezone = pytz.timezone('Asia/Kolkata')
+
+    # Получаем текущее время с указанной временной зоной
+    current_time = datetime.now(desired_timezone)
     message = (
         "--------------------\n"
         f"Заказ № {callback_data.order_id} от "
-        f"{datetime.now().strftime('%d.%m.%Y')}\n"
+        f"{current_time.strftime('%d.%m.%Y')}\n"
         f"Время приготовления: {callback_data.time} минут\n"
     )
     if callback_data.order_type == 2:
@@ -387,11 +395,13 @@ async def generate_order_info_text(
     ]
 ):
     status = await get_status_name_by_id(callback_data.status)
+    desired_timezone = pytz.timezone('Asia/Kolkata')
 
+    current_time = datetime.now(desired_timezone)
     message = (
         "--------------------\n"
         f"Заказ № {callback_data.order_id} от "
-        f"{datetime.now().strftime('%d.%m.%Y')}\n"
+        f"{current_time.strftime('%d.%m.%Y')}\n"
         f"Статус заказа: {status}"
     )
     return message
