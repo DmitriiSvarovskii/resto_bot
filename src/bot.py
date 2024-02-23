@@ -17,8 +17,8 @@ from utils import set_menu
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), "src.")))
 
-run_time = datetime.now().replace(hour=9,
-                                  minute=19, second=35, microsecond=0)
+run_time = datetime.now().replace(hour=12,
+                                  minute=53, second=30, microsecond=0)
 
 logger = logging.getLogger(__name__)
 
