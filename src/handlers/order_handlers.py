@@ -26,7 +26,7 @@ async def create_orders_takeaway(
     bot: Bot
 ):
     try:
-        if time_utils.is_valid_time:
+        if time_utils.is_valid_time():
             order_type = callback_data.order_type
 
             order_info, chat_text, user_text = (
