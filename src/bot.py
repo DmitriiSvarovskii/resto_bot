@@ -17,8 +17,8 @@ from utils import set_menu
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), "src.")))
 
-run_time = datetime.now().replace(hour=12,
-                                  minute=53, second=30, microsecond=0)
+run_time = datetime.now().replace(hour=13,
+                                  minute=0, second=0, microsecond=0)
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ async def main():
                       run_date=run_time,
                       kwargs={'bot': bot})
     schedular.start()
-    await create_mail_group_auto(bot=bot)
+
     register_user_commands(dp)
     register_admin_commands(dp)
 
