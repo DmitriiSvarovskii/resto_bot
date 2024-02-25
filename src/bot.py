@@ -1,3 +1,4 @@
+from pytz import timezone
 import asyncio
 import logging
 import sys
@@ -11,7 +12,11 @@ from aiogram.fsm.storage.redis import RedisStorage, Redis
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import settings
-from handlers import register_user_commands, register_admin_commands, create_mail_group_auto
+from handlers import (
+    register_user_commands,
+    register_admin_commands,
+    create_mail_group_auto,
+)
 from utils import set_menu
 
 
@@ -19,7 +24,11 @@ sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), "src.")))
 
 
-execution_time = time(hour=13, minute=0)
+kolkata_timezone = timezone('Asia/Kolkata')
+
+# Установка времени выполнения в соответствии с таймзоной
+execution_time = time(hour=13, minute=0, tzinfo=kolkata_timezone)
+
 
 trigger = CronTrigger(hour=execution_time.hour, minute=execution_time.minute)
 

@@ -54,13 +54,13 @@ async def create_orders_takeaway(
             )
             if order_type == ORDER_TYPES['delivery']['id']:
                 if (
-                    order_info.delivery_latitude
+                    order_info.delivery_longitude
                     and
                     order_info.delivery_latitude
                 ):
                     await bot.send_location(
                         chat_id=settings.ADMINT_CHAT,
-                        longitude=order_info.delivery_latitude,
+                        longitude=order_info.delivery_longitude,
                         latitude=order_info.delivery_latitude
                     )
         else:
