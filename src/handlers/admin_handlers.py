@@ -140,7 +140,7 @@ async def process_resourse_report(callback: CallbackQuery):
 
 
 async def process_modify_availability_products(callback: CallbackQuery):
-    categories = category_db.get_all_categories()
+    categories = await category_db.get_all_categories()
     keyboard = await category_keyboards.create_keyboard_category_admin(
         categories=categories
     )
@@ -151,7 +151,7 @@ async def process_modify_availability_products(callback: CallbackQuery):
 
 
 async def process_modify_availability_categories(callback: CallbackQuery):
-    categories = category_db.get_all_categories()
+    categories = await category_db.get_all_categories_admin()
     keyboard = await category_keyboards.create_keyboard_category_avail_admin(
         categories=categories
     )
@@ -166,7 +166,7 @@ async def process_press_availability_categories(
     callback_data: CategoryAdminCallbackFactory
 ):
     await category_db.change_avail_category(callback_data.category_id)
-    categories = category_db.get_all_categories()
+    categories = await category_db.get_all_categories_admin()
     keyboard = await category_keyboards.create_keyboard_category_avail_admin(
         categories=categories
     )
@@ -308,7 +308,8 @@ async def create_mail_group(message: Message, bot: Bot):
 
 
 async def create_mail_group_auto(bot: Bot):
-    text = 'Всем хорошего дня 🫶\nЭта кнопка для заказа через наш Marcello магазин 🔥'
+    text = 'Всем хорошего дня 🫶\n'
+    'Эта кнопка для заказа через наш Marcello магазин 🔥'
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
