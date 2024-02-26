@@ -26,8 +26,7 @@ sys.path.insert(0, os.path.abspath(
 
 kolkata_timezone = timezone('Asia/Kolkata')
 
-# Установка времени выполнения в соответствии с таймзоной
-execution_time = time(hour=13, minute=0, tzinfo=kolkata_timezone)
+execution_time = time(hour=14, minute=11, tzinfo=kolkata_timezone)
 
 
 trigger = CronTrigger(hour=execution_time.hour, minute=execution_time.minute)
