@@ -33,7 +33,7 @@ current_time = pytz.utc.localize(
     datetime.utcnow()).astimezone(kolkata_timezone)
 
 # Устанавливаем желаемое время в нужном часовом поясе
-execution_time = current_time.replace(hour=14, minute=23)
+execution_time = current_time.replace(hour=14, minute=25)
 
 trigger = CronTrigger(hour=execution_time.hour, minute=execution_time.minute)
 
