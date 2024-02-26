@@ -29,12 +29,8 @@ sys.path.insert(0, os.path.abspath(
 
 kolkata_timezone = timezone('Asia/Kolkata')
 
-current_time = pytz.utc.localize(
-    datetime.utcnow()).astimezone(kolkata_timezone)
 
-# Устанавливаем желаемое время в нужном часовом поясе
-execution_time = current_time.replace(hour=14, minute=29
-                                      )
+execution_time = datetime.now(kolkata_timezone).replace(hour=14, minute=0)
 
 trigger = CronTrigger(hour=execution_time.hour,
                       minute=execution_time.minute, timezone=kolkata_timezone)
@@ -50,7 +46,6 @@ async def main():
     )
 
     logger.info('Starting bot')
-    print(current_time)
     bot: Bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
     redis = Redis(host=settings.DB_HOST)
     storage = RedisStorage(redis=redis)
