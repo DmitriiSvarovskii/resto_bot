@@ -308,8 +308,8 @@ async def create_mail_group(message: Message, bot: Bot):
 
 
 async def create_mail_group_auto(bot: Bot):
-    text = 'Всем хорошего дня 🫶\n'
-    'Эта кнопка для заказа через наш Marcello магазин 🔥'
+    text = ('Всем хорошего дня 🫶\n'
+            'Эта кнопка для заказа через наш Marcello магазин 🔥')
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
 

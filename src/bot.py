@@ -6,6 +6,8 @@ import os
 
 from apscheduler.triggers.cron import CronTrigger
 from datetime import time
+from datetime import datetime
+
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, Redis
@@ -25,9 +27,8 @@ sys.path.insert(0, os.path.abspath(
 
 
 kolkata_timezone = timezone('Asia/Kolkata')
-
-execution_time = time(hour=14, minute=11, tzinfo=kolkata_timezone)
-
+# Устанавливаем желаемое время в нужном часовом поясе
+execution_time = datetime.now(kolkata_timezone).replace(hour=14, minute=18)
 
 trigger = CronTrigger(hour=execution_time.hour, minute=execution_time.minute)
 
