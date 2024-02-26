@@ -3,6 +3,7 @@ import asyncio
 import logging
 import sys
 import os
+import pytz
 
 from apscheduler.triggers.cron import CronTrigger
 from datetime import time
@@ -27,8 +28,12 @@ sys.path.insert(0, os.path.abspath(
 
 
 kolkata_timezone = timezone('Asia/Kolkata')
+
+current_time = pytz.utc.localize(
+    datetime.utcnow()).astimezone(kolkata_timezone)
+
 # Устанавливаем желаемое время в нужном часовом поясе
-execution_time = datetime.now(kolkata_timezone).replace(hour=14, minute=18)
+execution_time = current_time.replace(hour=14, minute=23)
 
 trigger = CronTrigger(hour=execution_time.hour, minute=execution_time.minute)
 
