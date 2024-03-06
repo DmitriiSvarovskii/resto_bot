@@ -12,7 +12,7 @@ def is_valid_time_warning():
 def is_valid_time():
     current_time = pytz.utc.localize(datetime.utcnow()).astimezone(time_zone)
 
-    start_hour, start_minute = 14, 45
+    start_hour, start_minute = 13, 45
     end_hour, end_minute = 22, 59
 
     current_hour, current_minute = current_time.hour, current_time.minute

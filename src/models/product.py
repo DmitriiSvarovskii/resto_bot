@@ -3,7 +3,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import (
+from src.db.database import (
     Base, intpk, str_64,
     str_256, created_at, updated_at,
     deleted_at, deleted_flag

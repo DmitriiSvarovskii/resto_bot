@@ -1,12 +1,17 @@
-from aiogram.types import Message
+from aiogram import Router, types
 
-from src.keyboards import main_keyboards
+from src.keyboards import main_kb
 from src.lexicons import LEXICON_RU
 from src.db import customer_db
-from src.utils import customer_utils, create_qr
+from src.utils import customer_utils
+
+from aiogram.filters import CommandStart
+
+router = Router(name=__name__)
 
 
-async def process_start_command(message: Message):
+@router.message(CommandStart())
+async def process_start_command(message: types.Message):
     customer_data = await customer_utils.create_customer_data_from_message(
         message=message
     )
@@ -14,12 +19,7 @@ async def process_start_command(message: Message):
         customer_data=customer_data
     )
 
-    keyboard = await main_keyboards.create_keyboard_main(message.chat.id)
-    # img = await create_qr.generate_qr_code()
-
-    # await message.answer_photo(
-    #     photo=await create_qr.generate_qr_code(),
-    # )
+    keyboard = await main_kb.create_kb_main(message.chat.id)
 
     await message.answer(
         text=LEXICON_RU['start'],

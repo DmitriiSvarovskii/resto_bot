@@ -5,7 +5,7 @@ from src.callbacks import (
 )
 from src.db import cart_db, order_db, delivery_db, customer_db
 from services.order_constants import ORDER_TYPES
-from src.fsm_state import user_dict_comment, user_dict
+from src.state import user_dict_comment, user_dict
 from typing import List, Union
 from aiogram.types import CallbackQuery
 

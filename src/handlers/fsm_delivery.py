@@ -1,23 +1,26 @@
-from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
+from aiogram import Router, F, types
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 
-from src.fsm_state import FSMDeliveryInfo, user_dict
+from src.state import FSMDeliveryInfo, user_dict
 from src.callbacks import DeliveryIdCallbackFactory
-from src.lexicons import LEXICON_RU
+from src.lexicons import LEXICON_RU, LEXICON_KEYBOARDS_RU
 from src.utils import time_utils
 from src.db import delivery_db
-from src.keyboards import delivery_keyboards, main_keyboards
+from src.keyboards import delivery_kb, main_kb
+
+router = Router(name=__name__)
 
 
+@router.callback_query(F.data == 'press_delivery_pay')
 async def process_delivery_form_command(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     state: FSMContext
 ):
     if time_utils.is_valid_time():
         delivery_disctricts = await delivery_db.get_delivery_districts()
 
-        keyboard = await delivery_keyboards.create_keyboard_delivery(
+        keyboard = await delivery_kb.create_kb_delivery(
             delivery_disctricts
         )
 
@@ -34,25 +37,30 @@ async def process_delivery_form_command(
         )
 
 
+@router.message(F.text == LEXICON_KEYBOARDS_RU['cancel_2'])
 async def process_cancel_command_delivery(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     await message.answer(
         text=LEXICON_RU['abort_delivery'],
-        reply_markup=ReplyKeyboardRemove()
+        reply_markup=types.ReplyKeyboardRemove()
     )
 
     await state.clear()
 
     await message.answer(
         text=LEXICON_RU['order_saved_message'],
-        reply_markup=await main_keyboards.create_keyboard_main(message.chat.id)
+        reply_markup=await main_kb.create_kb_main(message.chat.id)
     )
 
 
+@router.callback_query(
+    FSMDeliveryInfo.waiting_delivery_id,
+    DeliveryIdCallbackFactory.filter()
+)
 async def process_district_selection(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     state: FSMContext,
     callback_data: DeliveryIdCallbackFactory
 ):
@@ -66,15 +74,16 @@ async def process_district_selection(
 
     await callback.message.answer(
         text=LEXICON_RU['phone_input'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm()
+        reply_markup=delivery_kb.create_kb_delivery_fsm()
     )
     await state.set_state(FSMDeliveryInfo.waiting_number_phone)
 
 
-async def warning_not_number(message: Message):
+@router.message(FSMDeliveryInfo.waiting_delivery_id)
+async def warning_not_number(message: types.Message):
     delivery_disctricts = await delivery_db.get_delivery_districts()
 
-    keyboard = await delivery_keyboards.create_keyboard_delivery(
+    keyboard = await delivery_kb.create_kb_delivery(
         delivery_disctricts
     )
 
@@ -84,8 +93,11 @@ async def warning_not_number(message: Message):
     )
 
 
+@router.message(FSMDeliveryInfo.waiting_number_phone,
+                (lambda x: x.text.isdigit() and len(x.text)
+                 == 10 or x.text == "Пропустить шаг"))
 async def process_phone_sent(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     if message.text == LEXICON_RU['skip']:
@@ -95,21 +107,23 @@ async def process_phone_sent(
 
     await message.answer(
         text=LEXICON_RU['delivery_comment_prompt'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm()
+        reply_markup=delivery_kb.create_kb_delivery_fsm()
     )
 
     await state.set_state(FSMDeliveryInfo.waiting_guide)
 
 
-async def warning_not_phone(message: Message):
+@router.message(FSMDeliveryInfo.waiting_number_phone)
+async def warning_not_phone(message: types.Message):
     await message.answer(
         text=LEXICON_RU['phone_number_error_message'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm()
+        reply_markup=delivery_kb.create_kb_delivery_fsm()
     )
 
 
+@router.message(FSMDeliveryInfo.waiting_guide, F.text)
 async def process_guide_sent(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     if message.text == LEXICON_RU['skip']:
@@ -119,21 +133,26 @@ async def process_guide_sent(
 
     await message.answer(
         text=LEXICON_RU['location_request_step'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm_location()
+        reply_markup=delivery_kb.create_kb_delivery_fsm_location()
     )
 
     await state.set_state(FSMDeliveryInfo.waiting_location)
 
 
-async def warning_not_guide(message: Message):
+@router.message(FSMDeliveryInfo.waiting_guide)
+async def warning_not_guide(message: types.Message):
     await message.answer(
         text=LEXICON_RU['error_comment'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm()
+        reply_markup=delivery_kb.create_kb_delivery_fsm()
     )
 
 
+@router.message(
+    FSMDeliveryInfo.waiting_location,
+    F.location | (F.text == "Пропустить шаг")
+)
 async def process_location_sent(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     if message.location:
@@ -143,11 +162,11 @@ async def process_location_sent(
         )
     await message.answer(
         text=LEXICON_RU['good'],
-        reply_markup=ReplyKeyboardRemove()
+        reply_markup=types.ReplyKeyboardRemove()
     )
     await message.answer(
         text=LEXICON_RU['done_fsm_delivery'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_go(
+        reply_markup=delivery_kb.create_kb_delivery_go(
             mess_id=message.message_id
         )
     )
@@ -156,8 +175,9 @@ async def process_location_sent(
     await state.clear()
 
 
-async def warning_not_location(message: Message):
+@router.message(FSMDeliveryInfo.waiting_location)
+async def warning_not_location(message: types.Message):
     await message.answer(
         text=LEXICON_RU['error_location'],
-        reply_markup=delivery_keyboards.create_keyboard_delivery_fsm()
+        reply_markup=delivery_kb.create_kb_delivery_fsm()
     )

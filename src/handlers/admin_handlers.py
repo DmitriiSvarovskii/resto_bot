@@ -1,48 +1,59 @@
 import random
 import os
-
-from aiogram import Bot, types
-from src.db import customer_db
-from aiogram.types import Message
-from aiogram.types import CallbackQuery
-from aiogram.exceptions import TelegramBadRequest
 from datetime import datetime
+from aiogram import Bot, types, Router, F
+from aiogram.filters import Command
+from aiogram.exceptions import TelegramBadRequest
 
+from src.db import customer_db
 from src.lexicons import LEXICON_RU
 from src.keyboards import (
-    report_keyboards,
-    admin_keyboards,
-    store_keyboards,
-    category_keyboards,
-    product_keyboards,
-    main_keyboards,
+    admin_kb,
+    category_kb,
+    main_kb,
+    product_kb,
+    report_kb,
+    store_kb,
 )
 from src.config import settings
 from src.db import product_db, store_db, category_db
 from src.utils import report_utils
-
 from src.callbacks import (
     CategoryAdminCallbackFactory,
     ProductIdAdminCallbackFactory,
+    CategoryAdminAvailCallbackFactory,
 )
 
 
-async def press_admin_menu(callback: CallbackQuery):
+router = Router(name=__name__)
+
+
+@router.callback_query(F.data == 'press_admin')
+async def press_admin_menu(callback: types.CallbackQuery):
     message_text = 'Выберите необходимый пункт'
     await callback.message.edit_text(
         text=message_text,
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def press_stop_list(callback: CallbackQuery, bot: Bot):
+async def back_admin_menu(message: types.Message):
+    message_text = 'Выберите необходимый пункт'
+    await message.answer(
+        text=message_text,
+        reply_markup=admin_kb.create_kb_admin_main()
+    )
+
+
+@router.callback_query(F.data == 'press_stop_list')
+async def press_stop_list(callback: types.CallbackQuery):
     try:
         message_text = await report_utils.create_text_stop_list()
         if message_text is None:
             message_text = 'Стоп лист отсутствует'
         await callback.message.edit_text(
             text=message_text,
-            reply_markup=admin_keyboards.create_keyboard_admin_main()
+            reply_markup=admin_kb.create_kb_admin_main()
         )
     except TelegramBadRequest:
         await callback.answer(
@@ -50,21 +61,24 @@ async def press_stop_list(callback: CallbackQuery, bot: Bot):
         )
 
 
-async def process_edit_menu(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_edit_menu')
+async def process_edit_menu(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_edit_menu()
+        reply_markup=admin_kb.create_kb_edit_menu()
     )
 
 
-async def process_reports(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_reports')
+async def process_reports(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
-async def process_sales_today(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_sales_today')
+async def process_sales_today(callback: types.CallbackQuery):
     try:
         today = datetime.now().strftime('%Y-%m-%d')
 
@@ -75,7 +89,7 @@ async def process_sales_today(callback: CallbackQuery):
 
         await callback.message.edit_text(
             text=message,
-            reply_markup=report_keyboards.create_keyboard_report()
+            reply_markup=report_kb.create_kb_report()
         )
     except TelegramBadRequest:
         await callback.answer(
@@ -83,27 +97,29 @@ async def process_sales_today(callback: CallbackQuery):
         )
 
 
-async def process_sales_period(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_sales_period')
+async def process_sales_period(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
-async def process_sales_period_custom(callback: CallbackQuery):
+async def process_sales_period_custom(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
-async def process_pending_orders(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_pending_orders')
+async def process_pending_orders(callback: types.CallbackQuery):
     try:
         message = await report_utils.generate_pending_orders_text()
 
         await callback.message.edit_text(
             text=message,
-            reply_markup=report_keyboards.create_keyboard_report()
+            reply_markup=report_kb.create_kb_report()
         )
     except TelegramBadRequest:
         await callback.answer(
@@ -111,20 +127,21 @@ async def process_pending_orders(callback: CallbackQuery):
         )
 
 
-async def process_view_order(callback: CallbackQuery):
+async def process_view_order(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
-async def process_delivery_report(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_delivery_report')
+async def process_delivery_report(callback: types.CallbackQuery):
     try:
         message = await report_utils.generate_delivery_report_text()
 
         await callback.message.edit_text(
             text=message,
-            reply_markup=report_keyboards.create_keyboard_report()
+            reply_markup=report_kb.create_kb_report()
         )
     except TelegramBadRequest:
         await callback.answer(
@@ -132,16 +149,17 @@ async def process_delivery_report(callback: CallbackQuery):
         )
 
 
-async def process_resourse_report(callback: CallbackQuery):
+async def process_resourse_report(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
-async def process_modify_availability_products(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_modify_avail_prod')
+async def process_modify_availability_products(callback: types.CallbackQuery):
     categories = await category_db.get_all_categories()
-    keyboard = await category_keyboards.create_keyboard_category_admin(
+    keyboard = await category_kb.create_kb_category_admin(
         categories=categories
     )
     await callback.message.edit_text(
@@ -150,9 +168,12 @@ async def process_modify_availability_products(callback: CallbackQuery):
     )
 
 
-async def process_modify_availability_categories(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_modify_avail_categ')
+async def process_modify_availability_categories(
+    callback: types.CallbackQuery
+):
     categories = await category_db.get_all_categories_admin()
-    keyboard = await category_keyboards.create_keyboard_category_avail_admin(
+    keyboard = await category_kb.create_kb_category_avail_admin(
         categories=categories
     )
     await callback.message.edit_text(
@@ -161,13 +182,14 @@ async def process_modify_availability_categories(callback: CallbackQuery):
     )
 
 
+@router.callback_query(CategoryAdminAvailCallbackFactory.filter())
 async def process_press_availability_categories(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: CategoryAdminCallbackFactory
 ):
     await category_db.change_avail_category(callback_data.category_id)
     categories = await category_db.get_all_categories_admin()
-    keyboard = await category_keyboards.create_keyboard_category_avail_admin(
+    keyboard = await category_kb.create_kb_category_avail_admin(
         categories=categories
     )
     await callback.message.edit_text(
@@ -176,44 +198,50 @@ async def process_press_availability_categories(
     )
 
 
-async def process_add_product(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_add_product')
+async def process_add_product(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def process_delete_product(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_delete_product')
+async def process_delete_product(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def process_add_category(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_add_category')
+async def process_add_category(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def process_delete_category(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_delete_category')
+async def process_delete_category(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def process_edit_hours(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_edit_hours')
+async def process_edit_hours(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
-        reply_markup=admin_keyboards.create_keyboard_admin_main()
+        reply_markup=admin_kb.create_kb_admin_main()
     )
 
 
-async def process_toggle_bot(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_toggle_bot')
+async def process_toggle_bot(callback: types.CallbackQuery):
     store_info = await store_db.get_store_info()
-    keyboard = store_keyboards.create_keyboard_toggle_bot(
+    keyboard = store_kb.create_kb_toggle_bot(
         store_info=store_info
     )
     await callback.message.edit_text(
@@ -222,11 +250,12 @@ async def process_toggle_bot(callback: CallbackQuery):
     )
 
 
-async def process_toggle_working_bot(callback: CallbackQuery):
+@router.callback_query(F.data == 'press_toggle_working_bot')
+async def process_toggle_working_bot(callback: types.CallbackQuery):
     await store_db.change_is_active_bot()
 
     store_info = await store_db.get_store_info()
-    keyboard = store_keyboards.create_keyboard_toggle_bot(
+    keyboard = store_kb.create_kb_toggle_bot(
         store_info=store_info
     )
     await callback.message.edit_text(
@@ -235,15 +264,16 @@ async def process_toggle_working_bot(callback: CallbackQuery):
     )
 
 
+@router.callback_query(CategoryAdminCallbackFactory.filter())
 async def get_admin_products(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: CategoryAdminCallbackFactory
 ):
     products = await product_db.get_products_by_category_admin(
         category_id=callback_data.category_id
     )
 
-    keyboard = await product_keyboards.create_keyboard_product_admin(
+    keyboard = await product_kb.create_kb_product_admin(
         products=products
     )
 
@@ -252,8 +282,9 @@ async def get_admin_products(
     await callback.answer(text='Ок')
 
 
+@router.callback_query(ProductIdAdminCallbackFactory.filter())
 async def get_admin_change_avail_products(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: ProductIdAdminCallbackFactory
 ):
     try:
@@ -263,7 +294,7 @@ async def get_admin_change_avail_products(
             category_id=callback_data.category_id
         )
 
-        keyboard = await product_keyboards.create_keyboard_product_admin(
+        keyboard = await product_kb.create_kb_product_admin(
             products=products
         )
 
@@ -276,11 +307,13 @@ async def get_admin_change_avail_products(
         )
 
 
-async def get_my_id(message: Message):
+@router.message(Command('id'))
+async def get_my_id(message: types.Message):
     await message.answer(text=str(message.chat.id))
 
 
-async def create_mail_group(message: Message, bot: Bot):
+@router.message((Command('m')))
+async def create_mail_group(message: types.Message, bot: Bot):
     user_info = await customer_db.get_user_info_by_id(
         user_id=message.chat.id
     )
@@ -290,18 +323,18 @@ async def create_mail_group(message: Message, bot: Bot):
             chat_id=settings.SALE_GROUP,
             photo=message.photo[-1].file_id,
             caption=text,
-            reply_markup=admin_keyboards.settings.create_keyboard_sale_group()
+            reply_markup=admin_kb.settings.create_kb_sale_group()
         )
         await message.answer(
             text='Пост опубликован успешно',
-            reply_markup=await main_keyboards.create_keyboard_main(
+            reply_markup=await main_kb.create_kb_main(
                 message.chat.id
             )
         )
     else:
         await message.answer(
             text='Данная команда доступна только для администраторов бота',
-            reply_markup=await main_keyboards.create_keyboard_main(
+            reply_markup=await main_kb.create_kb_main(
                 message.chat.id
             )
         )
@@ -327,5 +360,5 @@ async def create_mail_group_auto(bot: Bot):
         chat_id=settings.SALE_GROUP,
         photo=photo_file,
         caption=text,
-        reply_markup=admin_keyboards.create_keyboard_sale_group()
+        reply_markup=admin_kb.create_kb_sale_group()
     )

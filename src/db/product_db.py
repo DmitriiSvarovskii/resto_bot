@@ -1,5 +1,5 @@
 from src.crud import product_crud
-from src.database import get_async_session
+from src.db.database import get_async_session
 
 
 async def get_products_by_category(category_id):

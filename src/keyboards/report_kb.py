@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from src.lexicons import admin_text
 
 
-def create_keyboard_report():
+def create_kb_report():
     keyboard = InlineKeyboardBuilder()
     buttons = [
         InlineKeyboardButton(

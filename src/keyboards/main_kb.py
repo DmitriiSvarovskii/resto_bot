@@ -6,7 +6,7 @@ from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.db import customer_db
 
 
-async def create_keyboard_main(user_id: Optional[int] = None):
+async def create_kb_main(user_id: Optional[int] = None):
     user_info = await customer_db.get_user_info_by_id(
         user_id=user_id
     )

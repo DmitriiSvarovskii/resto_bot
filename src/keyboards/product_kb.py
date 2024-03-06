@@ -11,7 +11,7 @@ from src.schemas import product_schemas
 from src.db import cart_db
 
 
-async def create_keyboard_product(
+async def create_kb_product(
     products: List[product_schemas.ReadProduct],
     user_id: int,
 ):
@@ -89,7 +89,7 @@ async def create_keyboard_product(
     return keyboard.as_markup()
 
 
-async def create_keyboard_product_admin(
+async def create_kb_product_admin(
     products: List[product_schemas.ReadProduct],
 ):
     keyboard = InlineKeyboardBuilder()

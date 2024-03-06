@@ -55,6 +55,10 @@ admin_main_dict = {
         'text': 'Вкл/выкл бота',
         'callback_data': 'press_toggle_bot'
     },
+    'qr_code': {
+        'text': 'Сгенерировать qr-code',
+        'callback_data': 'press_qr_code'
+    },
     'main_menu': {
         'text': '<<< назад',
         'callback_data': 'press_main_menu'

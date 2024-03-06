@@ -12,7 +12,7 @@ from src.callbacks import (
 from src.db import cart_db
 
 
-async def create_keyboard_category(
+async def create_kb_category(
     categories: List[category_schemas.GetCategory],
     user_id: int,
 ):
@@ -53,7 +53,7 @@ async def create_keyboard_category(
     return keyboard.as_markup()
 
 
-async def create_keyboard_category_admin(
+async def create_kb_category_admin(
     categories: List[category_schemas.GetCategory],
 ):
 
@@ -84,7 +84,7 @@ async def create_keyboard_category_admin(
     return keyboard.as_markup()
 
 
-async def create_keyboard_category_avail_admin(
+async def create_kb_category_avail_admin(
     categories: List[category_schemas.GetCategory],
 ):
 

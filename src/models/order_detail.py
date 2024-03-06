@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import Base, intpk, created_at
+from src.db.database import Base, intpk, created_at
 
 if TYPE_CHECKING:
     from . import Product, Order  # noqa: F401

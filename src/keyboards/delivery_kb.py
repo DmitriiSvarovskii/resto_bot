@@ -12,7 +12,7 @@ from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.services import ORDER_STATUSES, ORDER_TYPES
 
 
-async def create_keyboard_delivery(
+async def create_kb_delivery(
     delivery_districts: List[delivery_schemas.ReadDelivery]
 ):
     keyboard = InlineKeyboardBuilder()
@@ -29,7 +29,7 @@ async def create_keyboard_delivery(
     return keyboard.as_markup()
 
 
-def create_keyboard_delivery_fsm():
+def create_kb_delivery_fsm():
     buttons = [
         [KeyboardButton(text=LEXICON_KEYBOARDS_RU['cancel_2']),
          KeyboardButton(text=LEXICON_KEYBOARDS_RU['skip'])]
@@ -39,7 +39,7 @@ def create_keyboard_delivery_fsm():
     return keyboard
 
 
-def create_keyboard_delivery_fsm_location():
+def create_kb_delivery_fsm_location():
     buttons = [
         [KeyboardButton(text=LEXICON_KEYBOARDS_RU['cancel_2']),
          KeyboardButton(text=LEXICON_KEYBOARDS_RU['skip'])],
@@ -50,7 +50,7 @@ def create_keyboard_delivery_fsm_location():
     return keyboard
 
 
-def create_keyboard_delivery_go(mess_id: int):
+def create_kb_delivery_go(mess_id: int):
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
         InlineKeyboardButton(

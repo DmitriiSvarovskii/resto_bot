@@ -1,4 +1,4 @@
-from src.database import get_async_session
+from src.db.database import get_async_session
 from src.crud import store_crud
 
 

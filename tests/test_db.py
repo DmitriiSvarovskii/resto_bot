@@ -1,6 +1,6 @@
 import pytest
 
-from src.database import Base, engine
+from src.db.database import Base, engine
 from src.config import settings
 from src.schemas.category_schemas import CreateCategory
 from src.db import category_db

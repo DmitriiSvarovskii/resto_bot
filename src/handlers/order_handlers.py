@@ -1,5 +1,4 @@
-from aiogram import Bot
-from aiogram.types import CallbackQuery
+from aiogram import Bot, Router, F, types
 
 from src.db import order_db
 from src.config import settings
@@ -10,18 +9,22 @@ from src.callbacks import (
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,
 )
-from src.keyboards import order_keyboards, main_keyboards
+from src.keyboards import main_kb, order_kb
 from src.lexicons import (
     generate_order_info_text,
     generate_order_info_time_text,
     LEXICON_RU,
 )
 from src.utils import time_utils, order_utils
-from src.fsm_state import user_dict_comment, user_dict
+from src.state import user_dict_comment, user_dict
 
 
+router = Router(name=__name__)
+
+
+@router.callback_query(CreateOrderCallbackFactory.filter())
 async def create_orders_takeaway(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: CreateOrderCallbackFactory,
     bot: Bot
 ):
@@ -37,7 +40,7 @@ async def create_orders_takeaway(
             )
             await callback.message.edit_text(
                 text=user_text,
-                reply_markup=await main_keyboards.create_keyboard_main(
+                reply_markup=await main_kb.create_kb_main(
                     callback.message.chat.id
                 )
             )
@@ -45,7 +48,7 @@ async def create_orders_takeaway(
             await bot.send_message(
                 chat_id=settings.ADMINT_CHAT,
                 text='❗️' + chat_text,
-                reply_markup=order_keyboards.create_keyboard_check_order(
+                reply_markup=order_kb.create_kb_check_order(
                     order_type=order_type,
                     order_id=order_info.order_id,
                     user_id=callback.message.chat.id,
@@ -73,8 +76,9 @@ async def create_orders_takeaway(
         user_dict_comment.pop(callback.message.chat.id, None)
 
 
+@router.callback_query(CheckOrdersCallbackFactory.filter())
 async def process_edit_status_order(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: CheckOrdersCallbackFactory,
     bot: Bot
 ):
@@ -105,12 +109,12 @@ async def process_edit_status_order(
     message_id = await bot.send_message(
         chat_id=user_id,
         text=user_text,
-        reply_markup=await main_keyboards.create_keyboard_main(
+        reply_markup=await main_kb.create_kb_main(
             user_id
         )
     )
 
-    keyboard = order_keyboards.create_keyboard_time_cooking(
+    keyboard = order_kb.create_kb_time_cooking(
         data=callback_data,
         mess_id=message_id.message_id,
         time_del=delivery_time,
@@ -132,8 +136,9 @@ async def process_edit_status_order(
         )
 
 
+@router.callback_query(TimeOrdersCallbackFactory.filter())
 async def process_time_order(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: TimeOrdersCallbackFactory,
     bot: Bot
 ):
@@ -156,16 +161,16 @@ async def process_time_order(
     message_id = await bot.send_message(
         chat_id=user_id,
         text=user_text,
-        reply_markup=await main_keyboards.create_keyboard_main(user_id)
+        reply_markup=await main_kb.create_kb_main(user_id)
     )
 
     if callback_data.order_type == ORDER_TYPES['takeaway']['id']:
-        keyboard = order_keyboards.create_order_status_keyboard(
+        keyboard = order_kb.create_order_status_keyboard(
             data=callback_data,
             mess_id=message_id.message_id,
         )
     else:
-        keyboard = order_keyboards.create_order_status_delivery_keyboard(
+        keyboard = order_kb.create_order_status_delivery_keyboard(
             data=callback_data,
             mess_id=message_id.message_id,
         )
@@ -175,8 +180,9 @@ async def process_time_order(
     )
 
 
+@router.callback_query(OrderStatusCallbackFactory.filter())
 async def process_edit_status_redy_order(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     callback_data: OrderStatusCallbackFactory,
     bot: Bot
 ):
@@ -205,10 +211,10 @@ async def process_edit_status_redy_order(
     message_id = await bot.send_message(
         chat_id=user_id,
         text=user_text,
-        reply_markup=await main_keyboards.create_keyboard_main(user_id)
+        reply_markup=await main_kb.create_kb_main(user_id)
     )
 
-    keyboard = order_keyboards.create_status_redy_order_keyboard(
+    keyboard = order_kb.create_status_redy_order_keyboard(
         data=callback_data,
         mess_id=message_id.message_id,
     )
@@ -225,9 +231,10 @@ async def process_edit_status_redy_order(
         )
 
 
-async def process_open_account(callback: CallbackQuery,):
+@router.callback_query(F.data == 'press_account')
+async def process_open_account(callback: types.CallbackQuery,):
 
-    keyboard = await order_keyboards.account_keyboards.create_keyboard_account(
+    keyboard = await order_kb.account_keyboards.create_kb_account(
         user_id=callback.message.chat.id
     )
 

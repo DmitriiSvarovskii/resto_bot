@@ -1,25 +1,24 @@
-from pytz import timezone
 import asyncio
 import logging
 import sys
 import os
-import pytz
 
 from apscheduler.triggers.cron import CronTrigger
-from datetime import time
 from datetime import datetime
-
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import settings
-from handlers import (
-    register_user_commands,
-    register_admin_commands,
-    create_mail_group_auto,
-)
+from config import settings, TIMEZONE
+from handlers import router as main_router
+from handlers.admin_handlers import create_mail_group_auto
+
+# from handlers import (
+#     register_user_commands,
+#     register_admin_commands,
+#     create_mail_group_auto,
+# )
 from utils import set_menu
 
 
@@ -27,13 +26,10 @@ sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), "src.")))
 
 
-kolkata_timezone = timezone('Asia/Kolkata')
-
-
-execution_time = datetime.now(kolkata_timezone).replace(hour=14, minute=0)
+execution_time = datetime.now(TIMEZONE).replace(hour=13, minute=0)
 
 trigger = CronTrigger(hour=execution_time.hour,
-                      minute=execution_time.minute, timezone=kolkata_timezone)
+                      minute=execution_time.minute, timezone=TIMEZONE)
 
 logger = logging.getLogger(__name__)
 
@@ -47,17 +43,18 @@ async def main():
 
     logger.info('Starting bot')
     bot: Bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
-    redis = Redis(host=settings.DB_HOST)
+    redis = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
     storage = RedisStorage(redis=redis)
     dp: Dispatcher = Dispatcher(storage=storage)
-    scheduler = AsyncIOScheduler(timezone='Asia/Kolkata')
+    dp.include_router(main_router)
+    scheduler = AsyncIOScheduler(timezone=TIMEZONE)
     scheduler.add_job(create_mail_group_auto,
                       trigger=trigger, kwargs={'bot': bot})
 
     scheduler.start()
 
-    register_user_commands(dp)
-    register_admin_commands(dp)
+    # register_user_commands(dp)
+    # register_admin_commands(dp)
 
     await set_menu.create_set_main_menu(bot)
 

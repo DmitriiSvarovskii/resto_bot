@@ -1,4 +1,4 @@
-from src.database import get_async_session
+from src.db.database import get_async_session
 from src.crud import cart_crud, product_crud
 from src.schemas import cart_schemas
 

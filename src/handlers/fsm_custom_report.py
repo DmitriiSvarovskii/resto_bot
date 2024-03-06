@@ -1,14 +1,19 @@
+from aiogram import Router, F, types
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
-from src.keyboards import report_keyboards
-from src.fsm_state import FSMSalesPeriodCustom, admin_check_order
+
+from src.keyboards import report_kb
+from src.state import FSMSalesPeriodCustom, admin_check_order
 from src.utils import report_utils
 from src.lexicons import LEXICON_RU
 
 
+router = Router(name=__name__)
+
+
+@router.callback_query(F.data == 'press_sales_period_custom')
 async def process_sales_period_custom(
-    callback: CallbackQuery,
+    callback: types.CallbackQuery,
     state: FSMContext
 ):
     await callback.message.delete()
@@ -21,8 +26,9 @@ async def process_sales_period_custom(
     await state.set_state(FSMSalesPeriodCustom.start_date)
 
 
+@router.message(FSMSalesPeriodCustom.start_date, F.text)
 async def process_waiting_start_date(
-    message: Message,
+    message: types.Message,
     state: FSMContext,
 ):
     await state.update_data(start_date=message.text)
@@ -36,8 +42,9 @@ async def process_waiting_start_date(
     await state.set_state(FSMSalesPeriodCustom.end_date)
 
 
+@router.message(FSMSalesPeriodCustom.end_date, F.text)
 async def process_waiting_end_date(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     user_id = message.chat.id
@@ -55,20 +62,20 @@ async def process_waiting_end_date(
 
     await message.answer(
         text=text,
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )
 
 
 async def process_cancel_command_state(
-    message: Message,
+    message: types.Message,
     state: FSMContext
 ):
     await message.answer(
         text=LEXICON_RU['comment_input_cancelled'],
-        reply_markup=ReplyKeyboardRemove()
+        reply_markup=types.ReplyKeyboardRemove()
     )
     await state.clear()
     await message.answer(
         text='Запрос отчёта отменён.',
-        reply_markup=report_keyboards.create_keyboard_report()
+        reply_markup=report_kb.create_kb_report()
     )

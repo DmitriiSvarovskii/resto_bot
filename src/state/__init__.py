@@ -3,9 +3,11 @@ from .fsm_comment import FSMComment
 from .fsm_sales_period_custom import FSMSalesPeriodCustom
 from .fsm_check_order import FSMCheckOrder
 from .frm_ad_report import FSMAdReport
+from .fsm_qr_code import FSMQrCode
 
 
 __all__ = [
+    'FSMQrCode',
     'FSMDeliveryInfo',
     'FSMComment',
     'FSMCheckOrder',

@@ -3,12 +3,12 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.lexicons import LEXICON_RU
 from src.callbacks import CartEditCallbackFactory
-from .main_keyboards import create_keyboard_main
+from .main_kb import create_kb_main
 from src.db import cart_db
 from src.lexicons import cart_test_text
 
 
-def create_keyboard_cart(mess_id: int):
+def create_kb_cart(mess_id: int):
     my_dict = cart_test_text.my_func(mess_id=mess_id)
 
     keyboard = InlineKeyboardBuilder()
@@ -29,7 +29,7 @@ def create_keyboard_cart(mess_id: int):
     return keyboard.as_markup()
 
 
-async def create_keyboards_products_cart(callback, user_id):
+async def create_kbs_products_cart(callback, user_id):
 
     cart_info = await cart_db.get_cart_items_and_totals(
         user_id=user_id
@@ -110,6 +110,6 @@ async def create_keyboards_products_cart(callback, user_id):
     else:
         await callback.message.edit_text(
             text=LEXICON_RU['empty_cart'],
-            reply_markup=await create_keyboard_main(callback.message.chat.id)
+            reply_markup=await create_kb_main(callback.message.chat.id)
         )
         return {'status': 'success'}

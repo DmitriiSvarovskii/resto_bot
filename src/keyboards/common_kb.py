@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from src.lexicons import LEXICON_KEYBOARDS_RU
 
 
-def create_keyboard_del():
+def create_kb_del():
     button = InlineKeyboardButton(
         text=LEXICON_KEYBOARDS_RU['del_locations'],
         callback_data='press_del')
@@ -18,7 +18,7 @@ def create_keyboard_del():
     return keyboard_del_builder.as_markup()
 
 
-def create_keyboard_back():
+def create_kb_back():
     buttons = [
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
@@ -33,7 +33,7 @@ def create_keyboard_back():
     return keyboard_back_builder.as_markup()
 
 
-def create_keyboard_fsm_comment() -> ReplyKeyboardMarkup:
+def create_kb_fsm_comment() -> ReplyKeyboardMarkup:
     button = KeyboardButton(text=LEXICON_KEYBOARDS_RU['cancel'])
     keyboard: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
         keyboard=[[button]],

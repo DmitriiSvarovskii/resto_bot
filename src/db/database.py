@@ -1,4 +1,5 @@
 import datetime
+
 from typing import Annotated, AsyncGenerator
 from sqlalchemy import MetaData, String, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column
@@ -7,11 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from src.config import settings
 
-
-# DATABASE_URL = (
-#     f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASS}@"
-#     f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
-# )
 
 metadata = MetaData()
 

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import Base, intpk, str_64
+from src.db.database import Base, intpk, str_64
 
 if TYPE_CHECKING:
     from . import Product  # noqa: F401

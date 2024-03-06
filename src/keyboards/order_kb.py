@@ -12,7 +12,7 @@ from src.callbacks import (
 )
 
 
-def create_keyboard_back_main():
+def create_kb_back_main():
     button_menu: InlineKeyboardButton = InlineKeyboardButton(
         text=LEXICON_KEYBOARDS_RU['back_menu'],
         callback_data='press_back_main_menu')
@@ -22,7 +22,7 @@ def create_keyboard_back_main():
     return keyboard_back_builder.as_markup()
 
 
-def create_keyboard_check_order(
+def create_kb_check_order(
     order_type: int,
     order_id: int,
     user_id: int,
@@ -55,7 +55,7 @@ def create_keyboard_check_order(
     return keyboard.as_markup()
 
 
-def create_keyboard_time_cooking(
+def create_kb_time_cooking(
     data: CheckOrdersCallbackFactory,
     mess_id: int,
     time_del: Optional[int] = None,

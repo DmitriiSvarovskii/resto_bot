@@ -6,7 +6,7 @@ from src.db import order_db, cart_db
 from src.callbacks import OrderStatusCallbackFactory
 
 
-async def create_keyboard_account(user_id: int):
+async def create_kb_account(user_id: int):
     order_list = await order_db.get_order_list(user_id=user_id)
     bill_data = await cart_db.get_total_price_cart(user_id=user_id)
 

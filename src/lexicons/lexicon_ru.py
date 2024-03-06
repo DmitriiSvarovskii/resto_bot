@@ -111,12 +111,14 @@ LEXICON_RU: dict[str, str] = {
                                  '"Прервать оформление ❌"',
     'skip': 'Пропустить шаг',
     'good': 'Отлично!\n\n',
+    'link_input_cancelled': 'Вы отменили создание qr-code.\n\n',
     'comment_input_cancelled': 'Вы отменили ввод комментария.\n\n',
     'error': 'Повторный запрос',
     'store_not_active': 'В настоящий момент наше заведение не работает',
     'non_working_hours': 'Упс...((\n\nИзвините, оформить заказ не получится.\n'
                          'Мы работаем с 15:00 до 23:00.\n'
                          'Будем рады накормить вас в рабочие часы)',
+    'invalid_request_message': 'Некорректный запрос',
 }
 
 LEXICON_KEYBOARDS_RU: dict[str, str] = {
@@ -158,6 +160,7 @@ LEXICON_KEYBOARDS_RU: dict[str, str] = {
     'location': 'Наша геолокация',
     'change_count_products': 'Корректировака остатков',
     'cancel': 'Кнопка отмены',
+    'cancel_qr': 'Отменить создание qr-code',
     'cancel_2': 'Прервать оформление ❌',
     'skip': 'Пропустить шаг',
     'cancel_category': 'Отменить добавление',

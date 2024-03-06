@@ -2,7 +2,7 @@ from sqlalchemy import BIGINT, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
-from src.database import (
+from src.db.database import (
     Base, intpk, created_at
 )
 

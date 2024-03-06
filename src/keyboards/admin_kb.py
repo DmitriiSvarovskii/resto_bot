@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from src.lexicons import admin_text
 
 
-def create_keyboard_admin_main():
+def create_kb_admin_main():
     keyboard = InlineKeyboardBuilder()
     buttons = [
         InlineKeyboardButton(
@@ -17,7 +17,7 @@ def create_keyboard_admin_main():
     return keyboard.as_markup()
 
 
-def create_keyboard_edit_menu():
+def create_kb_edit_menu():
     keyboard = InlineKeyboardBuilder()
     buttons = [
         InlineKeyboardButton(
@@ -30,7 +30,7 @@ def create_keyboard_edit_menu():
     return keyboard.as_markup()
 
 
-def create_keyboard_sale_group():
+def create_kb_sale_group():
     keyboard = InlineKeyboardBuilder()
     button_url_bot = InlineKeyboardButton(
         text='Онлайн заказ',
