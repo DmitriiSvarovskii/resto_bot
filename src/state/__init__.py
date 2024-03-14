@@ -4,9 +4,13 @@ from .fsm_sales_period_custom import FSMSalesPeriodCustom
 from .fsm_check_order import FSMCheckOrder
 from .frm_ad_report import FSMAdReport
 from .fsm_qr_code import FSMQrCode
+from .fsm_add_new_product import FSMAddNewProduct
+from .fsm_add_new_category import FSMAddNewCategory
 
 
 __all__ = [
+    'FSMAddNewCategory',
+    'FSMAddNewProduct',
     'FSMQrCode',
     'FSMDeliveryInfo',
     'FSMComment',

@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 
@@ -87,3 +87,16 @@ async def get_one_product_test(
     result = await session.execute(query)
     products = result.scalar()
     return products
+
+
+async def crud_create_new_product(
+    data: product_schemas.CreateProduct,
+    session: AsyncSession
+):
+    stmt = (
+        insert(Product).
+        values(**data.model_dump())
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": 201, }

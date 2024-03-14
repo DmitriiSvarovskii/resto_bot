@@ -1,9 +1,15 @@
 from .cart import CartEditCallbackFactory
-from .product import ProductIdCallbackFactory, ProductIdAdminCallbackFactory
+from .product import (
+    ProductIdCallbackFactory,
+    ProductIdAdminCallbackFactory,
+    AddProductAvailabilityCallbackFactory,
+)
 from .category import (
     CategoryIdCallbackFactory,
     CategoryAdminCallbackFactory,
-    CategoryAdminAvailCallbackFactory
+    CategoryAdminAvailCallbackFactory,
+    CategoryAdminAddCallbackFactory,
+    AddCategoryAvailabilityCallbackFactory,
 )
 from .order import (
     CreateOrderCallbackFactory,
@@ -14,6 +20,9 @@ from .order import (
 from .delivery import DeliveryIdCallbackFactory
 
 __all__ = [
+    'AddCategoryAvailabilityCallbackFactory',
+    'AddProductAvailabilityCallbackFactory',
+    'CategoryAdminAddCallbackFactory',
     'CategoryAdminAvailCallbackFactory',
     'CategoryIdCallbackFactory',
     'ProductIdCallbackFactory',

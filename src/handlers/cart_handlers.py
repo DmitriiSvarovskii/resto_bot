@@ -31,7 +31,9 @@ async def adding_to_cart(
         products=products,
         user_id=callback.message.chat.id
     )
-    await callback.message.edit_reply_markup(reply_markup=keyboard)
+
+    if callback_data.type_pr != 'compound':
+        await callback.message.edit_reply_markup(reply_markup=keyboard)
 
 
 @router.callback_query(F.data == 'press_cart')

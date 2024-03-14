@@ -20,3 +20,18 @@ class CategoryAdminAvailCallbackFactory(
     prefix="adm-av"
 ):
     pass
+
+
+class CategoryAdminAddCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="adm-add"
+):
+    category_name: str
+
+
+class AddCategoryAvailabilityCallbackFactory(
+    CallbackData,
+    prefix='cat-avail',
+    sep='_'
+):
+    availability: bool

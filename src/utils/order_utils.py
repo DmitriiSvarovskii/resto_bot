@@ -4,7 +4,7 @@ from src.callbacks import (
     CreateOrderCallbackFactory,
 )
 from src.db import cart_db, order_db, delivery_db, customer_db
-from services.order_constants import ORDER_TYPES
+from src.services.order_constants import ORDER_TYPES
 from src.state import user_dict_comment, user_dict
 from typing import List, Union
 from aiogram.types import CallbackQuery

@@ -46,6 +46,7 @@ async def process_cart_action(
             text=compound_text.description,
             show_alert=True
         )
+
     elif type_pr == 'del':
         await cart_db.delete_cart_item(
             data=cart_data,

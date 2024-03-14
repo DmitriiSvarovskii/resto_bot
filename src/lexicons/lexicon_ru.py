@@ -160,10 +160,11 @@ LEXICON_KEYBOARDS_RU: dict[str, str] = {
     'location': 'Наша геолокация',
     'change_count_products': 'Корректировака остатков',
     'cancel': 'Кнопка отмены',
+    'cancel_add_product': 'Отменить добавление товара ❌',
     'cancel_qr': 'Отменить создание qr-code',
     'cancel_2': 'Прервать оформление ❌',
     'skip': 'Пропустить шаг',
-    'cancel_category': 'Отменить добавление',
+    'cancel_add_category': 'Отменить добавление категории ❌',
 
 
     'edit_menu': 'Редакторование меню',

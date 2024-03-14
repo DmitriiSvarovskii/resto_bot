@@ -3,6 +3,8 @@ __all__ = ("router",)
 from aiogram import Router
 
 from .admin_handlers import router as admin_router
+from .fsm_add_product import router as fsm_add_prod_router
+from .fsm_add_category import router as fsm_add_cat_router
 from .cart_handlers import router as cart_router
 from .fsm_check_order import router as fsm_check_order_router
 from .fsm_comment import router as fsm_comment_router
@@ -31,6 +33,8 @@ router.include_routers(
     fsm_check_order_router,
     fsm_create_qr_router,
     fsm_custom_report_router,
+    fsm_add_prod_router,
+    fsm_add_cat_router,
     fsm_resourse_report_router,
 )
 

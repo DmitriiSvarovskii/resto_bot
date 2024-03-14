@@ -28,5 +28,5 @@ async def categories():
 
 @pytest.mark.asyncio
 async def test_create_category(categories):
-    stmt = await category_db.create_new_category(await categories)
+    stmt = await category_db.db_create_new_category(await categories)
     assert stmt['message'] == "Создана новая категория"

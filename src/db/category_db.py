@@ -12,7 +12,7 @@ async def get_all_categories():
         return categories
 
 
-async def create_new_category(data: category_schemas.CreateCategory):
+async def db_create_new_category(data: category_schemas.CreateCategory):
     async for session in get_async_session():
         categories = await cat_crud.crud_create_category(
             data=data,

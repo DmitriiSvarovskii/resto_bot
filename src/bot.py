@@ -3,27 +3,21 @@ import logging
 import sys
 import os
 
-from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime
+from apscheduler.triggers.cron import CronTrigger
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import settings, TIMEZONE
-from handlers import router as main_router
-from handlers.admin_handlers import create_mail_group_auto
-
-# from handlers import (
-#     register_user_commands,
-#     register_admin_commands,
-#     create_mail_group_auto,
-# )
-from utils import set_menu
+from src.config import settings, TIMEZONE
+from src.handlers import router as main_router
+from src.handlers.admin_handlers import create_mail_group_auto
+from src.utils import set_menu
 
 
 sys.path.insert(0, os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "src.")))
+    os.path.join(os.path.dirname(__file__), "../src")))
 
 
 execution_time = datetime.now(TIMEZONE).replace(hour=13, minute=0)
@@ -52,9 +46,6 @@ async def main():
                       trigger=trigger, kwargs={'bot': bot})
 
     scheduler.start()
-
-    # register_user_commands(dp)
-    # register_admin_commands(dp)
 
     await set_menu.create_set_main_menu(bot)
 

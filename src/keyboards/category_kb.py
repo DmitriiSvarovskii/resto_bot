@@ -7,7 +7,8 @@ from src.schemas import category_schemas
 from src.callbacks import (
     CategoryIdCallbackFactory,
     CategoryAdminCallbackFactory,
-    CategoryAdminAvailCallbackFactory
+    CategoryAdminAvailCallbackFactory,
+    CategoryAdminAddCallbackFactory,
 )
 from src.db import cart_db
 
@@ -80,6 +81,32 @@ async def create_kb_category_admin(
             callback_data='press_edit_menu'
         )
     )
+
+    return keyboard.as_markup()
+
+
+async def create_kb_category_admin_add_prod(
+    categories: List[category_schemas.GetCategory],
+):
+
+    keyboard = InlineKeyboardBuilder()
+
+    row_buttons = [
+        InlineKeyboardButton(
+            text=f'{category.name}',
+            callback_data=CategoryAdminAddCallbackFactory(
+                category_id=category.id,
+                category_name=category.name
+            ).pack()
+        )
+        for category in categories
+    ]
+
+    if len(row_buttons) % 2 == 1:
+        row_buttons.append(InlineKeyboardButton(
+            text=' ', callback_data='press_pass'))
+
+    keyboard.row(*row_buttons, width=2)
 
     return keyboard.as_markup()
 

@@ -198,24 +198,16 @@ async def process_press_availability_categories(
     )
 
 
-@router.callback_query(F.data == 'press_add_product')
-async def process_add_product(callback: types.CallbackQuery):
-    await callback.message.edit_text(
-        text="message_text",
-        reply_markup=admin_kb.create_kb_admin_main()
-    )
+# @router.callback_query(F.data == 'press_add_product')
+# async def process_add_product(callback: types.CallbackQuery):
+#     await callback.message.edit_text(
+#         text="message_text",
+#         reply_markup=admin_kb.create_kb_admin_main()
+#     )
 
 
 @router.callback_query(F.data == 'press_delete_product')
 async def process_delete_product(callback: types.CallbackQuery):
-    await callback.message.edit_text(
-        text="message_text",
-        reply_markup=admin_kb.create_kb_admin_main()
-    )
-
-
-@router.callback_query(F.data == 'press_add_category')
-async def process_add_category(callback: types.CallbackQuery):
     await callback.message.edit_text(
         text="message_text",
         reply_markup=admin_kb.create_kb_admin_main()
