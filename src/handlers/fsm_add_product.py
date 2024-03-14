@@ -151,7 +151,7 @@ async def process_waiting_price_box(message: types.Message, state: FSMContext):
 async def process_error_price_box(message: types.Message, state: FSMContext):
     await message.answer(
         text='Отправленное значение не похоже на число, введите цену упаковки, используйте только цифры.',
-        reply_markup=fsm_add_new_product_kb.create_kb_availability()
+
     )
 
 
