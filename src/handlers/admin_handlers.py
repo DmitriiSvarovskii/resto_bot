@@ -19,6 +19,14 @@ async def press_admin_menu(callback: types.CallbackQuery):
     )
 
 
+@router.callback_query(F.data == 'press_employees')
+async def press_employees(callback: types.CallbackQuery):
+    await callback.answer(
+        text='В настоящий момент данный раздер в разработке',
+        show_alert=True
+    )
+
+
 async def back_admin_menu(message: types.Message):
     message_text = 'Главное админ-меню.\nВыберите необходимый пункт'
     await message.answer(
