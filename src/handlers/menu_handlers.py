@@ -14,7 +14,7 @@ router = Router(name=__name__)
 async def get_menu_category(callback: types.CallbackQuery):
     user_id = callback.message.chat.id
 
-    if time_utils.is_valid_time_warning():
+    if await time_utils.is_valid_time_warning():
         await callback.answer(
             text=LEXICON_RU['closing_time_reminder'], show_alert=True)
 

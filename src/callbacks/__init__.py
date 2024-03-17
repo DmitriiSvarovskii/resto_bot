@@ -3,6 +3,13 @@ from .product import (
     ProductIdCallbackFactory,
     ProductIdAdminCallbackFactory,
     AddProductAvailabilityCallbackFactory,
+    ProductChangeAdminCallbackFactory,
+    ProductChangeCategoryCallbackFactory,
+    ProductChangeNameCallbackFactory,
+    ProductChangeDescriptionCallbackFactory,
+    ProductChangePriceCallbackFactory,
+    ProductChangePriceBoxCallbackFactory,
+    ProductDeleteCallbackFactory,
 )
 from .category import (
     CategoryIdCallbackFactory,
@@ -10,6 +17,11 @@ from .category import (
     CategoryAdminAvailCallbackFactory,
     CategoryAdminAddCallbackFactory,
     AddCategoryAvailabilityCallbackFactory,
+    CategoryAdminChangeCallbackFactory,
+    ChangeCategoryProductCallbackFactory,
+    CategoryChangeNameCallbackFactory,
+    CategoryDeleteCallbackFactory,
+    CategoryChangeCallbackFactory,
 )
 from .order import (
     CreateOrderCallbackFactory,
@@ -20,6 +32,18 @@ from .order import (
 from .delivery import DeliveryIdCallbackFactory
 
 __all__ = [
+    'CategoryChangeCallbackFactory',
+    'ChangeCategoryProductCallbackFactory',
+    'CategoryChangeNameCallbackFactory',
+    'CategoryDeleteCallbackFactory',
+    'ProductChangeNameCallbackFactory',
+    'ProductChangeDescriptionCallbackFactory',
+    'ProductChangePriceCallbackFactory',
+    'ProductChangePriceBoxCallbackFactory',
+    'ProductDeleteCallbackFactory',
+    'ProductChangeCategoryCallbackFactory',
+    'ProductChangeAdminCallbackFactory',
+    'CategoryAdminChangeCallbackFactory',
     'AddCategoryAvailabilityCallbackFactory',
     'AddProductAvailabilityCallbackFactory',
     'CategoryAdminAddCallbackFactory',

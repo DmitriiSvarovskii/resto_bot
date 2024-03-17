@@ -1,6 +1,8 @@
+from datetime import datetime
+from typing import List, Optional
+
 from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
 
 from src.models import Category
 from src.schemas import category_schemas
@@ -12,9 +14,7 @@ async def crud_get_all_categories(
 ) -> List[category_schemas.GetCategory]:
     query = (
         select(Category).
-        where(
-            Category.deleted_flag is not True
-        ).
+        where(Category.deleted_flag.is_(False)).
         order_by(Category.id.desc())
     )
     if filter:
@@ -30,9 +30,7 @@ async def crud_change_avail_categories(
 ):
     stmt = (
         update(Category)
-        .where(
-            Category.id == category_id,
-        )
+        .where(Category.id == category_id)
         .values(availability=~Category.availability)
     )
     await session.execute(stmt)
@@ -51,3 +49,36 @@ async def crud_create_category(
     await session.execute(stmt)
     await session.commit()
     return {"message": "Создана новая категория"}
+
+
+async def crud_update_category_name(
+    category_id: int,
+    category_name: str,
+    session: AsyncSession
+):
+
+    stmt = (
+        update(Category).
+        where(Category.id == category_id).
+        values(name=category_name)
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success", }
+
+
+async def crud_change_delete_flag_category(
+    category_id: int,
+    session: AsyncSession,
+):
+    stmt = (
+        update(Category).
+        where(Category.id == category_id).
+        values(
+            deleted_flag=~Category.deleted_flag,
+            deleted_at=datetime.now()
+        )
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"message": "Статус для deleted_flag изменен"}

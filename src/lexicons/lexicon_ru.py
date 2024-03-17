@@ -210,7 +210,7 @@ LEXICON_COMMANDS_RU: dict[str, str] = {
 }
 
 
-def cart_text(
+def func_cart_text(
         bill: int,
         order_text: str,
         order_comment: Optional[str] = None,

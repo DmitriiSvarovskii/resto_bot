@@ -15,9 +15,44 @@ class CategoryAdminCallbackFactory(
     pass
 
 
+class CategoryAdminChangeCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="adm-ch"
+):
+    pass
+
+
+class CategoryChangeCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="cat-chan"
+):
+    pass
+
+
+class ChangeCategoryProductCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="chan-prod-cat"
+):
+    pass
+
+
 class CategoryAdminAvailCallbackFactory(
     CategoryIdCallbackFactory,
     prefix="adm-av"
+):
+    pass
+
+
+class CategoryChangeNameCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="adm-chan-name"
+):
+    pass
+
+
+class CategoryDeleteCallbackFactory(
+    CategoryIdCallbackFactory,
+    prefix="adm-del"
 ):
     pass
 

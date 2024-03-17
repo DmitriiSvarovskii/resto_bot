@@ -1,7 +1,7 @@
+from typing import Optional, Union, List
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
 
 from src.schemas import customer_schemas
 from src.models import Customer
@@ -24,21 +24,16 @@ async def get_user(
 async def get_user_info(
     session: AsyncSession,
     user_id: Optional[int] = None,
-    resourse: Optional[str] = None,
-
-) -> [customer_schemas.CustomerBase]:
+    resourse: Optional[str] = None
+) -> Union[customer_schemas.CustomerBase, List[customer_schemas.CustomerBase]]:
     query = select(Customer)
     if user_id:
-        query = query.where(
-            Customer.user_id == user_id,
-        )
+        query = query.where(Customer.user_id == user_id)
         result = await session.execute(query)
         response = result.scalar()
         return response
     if resourse:
-        query = query.where(
-            Customer.resourse == resourse,
-        )
+        query = query.where(Customer.resourse == resourse)
         result = await session.execute(query)
         response = result.fetchall()
         return response

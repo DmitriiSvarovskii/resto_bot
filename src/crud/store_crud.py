@@ -1,3 +1,4 @@
+from datetime import time
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
@@ -28,3 +29,21 @@ async def crud_change_is_active_bot(
     await session.execute(stmt)
     await session.commit()
     return {"message": "Статус для is_active изменен"}
+
+
+async def crud_update_opening_hours(
+    opening_time: time,
+    closing_time: time,
+    session: AsyncSession,
+):
+    stmt = (
+        update(Store)
+        .values(
+            opening_time=opening_time,
+            closing_time=closing_time
+        )
+    )
+
+    await session.execute(stmt)
+    await session.commit()
+    return {"message": "success"}

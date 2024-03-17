@@ -36,7 +36,7 @@ def my_func(mess_id: int):
     return my_dict
 
 
-cart_text_dict: dict[str, str] = {
+cart_dict: dict[str, str] = {
     'edit_cart': 'Отредактируйте выбранные товары используя кнопки: '
                  '"➕", "➖" или "✖️".\n\n'
                  '"➕" - добавить ещё 1 единицу товара в корзину\n\n'

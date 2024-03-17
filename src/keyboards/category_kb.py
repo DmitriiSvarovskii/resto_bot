@@ -1,12 +1,18 @@
-from aiogram.types import InlineKeyboardButton
+from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import (
+    InlineKeyboardButton,
+    KeyboardButton,
+    ReplyKeyboardMarkup
+)
 from typing import List
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import category_schemas
 from src.callbacks import (
     CategoryIdCallbackFactory,
-    CategoryAdminCallbackFactory,
+    CategoryChangeNameCallbackFactory,
+    CategoryDeleteCallbackFactory,
     CategoryAdminAvailCallbackFactory,
     CategoryAdminAddCallbackFactory,
 )
@@ -56,6 +62,7 @@ async def create_kb_category(
 
 async def create_kb_category_admin(
     categories: List[category_schemas.GetCategory],
+    callback_data: CallbackData
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -63,7 +70,7 @@ async def create_kb_category_admin(
     row_buttons = [
         InlineKeyboardButton(
             text=f'{category.name}',
-            callback_data=CategoryAdminCallbackFactory(
+            callback_data=callback_data(
                 category_id=category.id).pack()
         )
         for category in categories
@@ -153,6 +160,61 @@ async def create_kb_category_avail_admin(
             text=LEXICON_KEYBOARDS_RU['back'],
             callback_data='press_edit_menu'
         )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_kb_change_category(
+    category_id: int,
+):
+    keyboard = InlineKeyboardBuilder()
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text='Изменить название категории ✏️',
+            callback_data=CategoryChangeNameCallbackFactory(
+                category_id=category_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Удалить товар ✖',
+            callback_data=CategoryDeleteCallbackFactory(
+                category_id=category_id
+            ).pack()),
+        width=1
+    )
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data='press_admin'
+        )
+    )
+
+    return keyboard.as_markup()
+
+
+def create_kb_fsm_change_name() -> ReplyKeyboardMarkup:
+    button = KeyboardButton(text='Отменить изменение')
+    keyboard: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+        keyboard=[[button]],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
+async def create_kb_category_delete():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(
+        InlineKeyboardButton(
+            text='Подтвердить',
+            callback_data='press_approval_delete_category'
+        ),
+        InlineKeyboardButton(
+            text='Отменить',
+            callback_data='press_cancel_delete_category'
+        ),
+        width=2
     )
 
     return keyboard.as_markup()

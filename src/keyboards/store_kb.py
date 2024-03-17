@@ -34,6 +34,20 @@ def create_kb_toggle_bot(store_info: Optional[store_schemas.GetStore]):
 
     keyboard.row(
         InlineKeyboardButton(
+            text='Режим работы',
+            callback_data='press_toggle_working_bot'))
+    keyboard.row(
+        InlineKeyboardButton(
+            text=f'с {store_info.opening_time.strftime("%H:%M")} до {store_info.closing_time.strftime("%H:%M")}',
+            callback_data='press_toggle_working_bot'),
+        InlineKeyboardButton(
+            text='Редактировать',
+            callback_data='press_edit_hours'),
+        width=2
+    )
+
+    keyboard.row(
+        InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
             callback_data='press_admin'
         )

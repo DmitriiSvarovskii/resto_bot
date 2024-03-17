@@ -11,7 +11,14 @@ class ProductIdCallbackFactory(
 
 class ProductIdAdminCallbackFactory(
     ProductIdCallbackFactory,
-    prefix='prad',
+    prefix='prod',
+):
+    pass
+
+
+class ProductChangeAdminCallbackFactory(
+    ProductIdCallbackFactory,
+    prefix='prod-ch',
 ):
     pass
 
@@ -22,3 +29,45 @@ class AddProductAvailabilityCallbackFactory(
     sep='_'
 ):
     availability: bool
+
+
+class ProductChangeCategoryCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-chan-cat',
+):
+    pass
+
+
+class ProductChangeNameCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-chan-nam',
+):
+    pass
+
+
+class ProductChangeDescriptionCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-chan-des',
+):
+    pass
+
+
+class ProductChangePriceCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-chan-pric',
+):
+    pass
+
+
+class ProductChangePriceBoxCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-chan-pr-bx',
+):
+    pass
+
+
+class ProductDeleteCallbackFactory(
+    CartEditCallbackFactory,
+    prefix='prod-del',
+):
+    pass

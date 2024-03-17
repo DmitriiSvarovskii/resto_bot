@@ -20,7 +20,7 @@ class CreateCustomerInfo(BaseModel):
     guide: Optional[str] = None
 
 
-class OrderDetailTest(BaseModel):
+class ReadOrderDetail(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     category_name: Optional[str] = None

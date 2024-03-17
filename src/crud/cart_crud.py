@@ -54,9 +54,7 @@ async def crud_total_price_cart_by_id(
         )
         .join(Product, Cart.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
-        .where(
-            Cart.user_id == user_id,
-        )
+        .where(Cart.user_id == user_id)
     )
     result = await session.execute(query)
     scalar_result = result.scalar_one()

@@ -17,7 +17,7 @@ async def process_delivery_form_command(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    if time_utils.is_valid_time():
+    if await time_utils.is_valid_time():
         delivery_disctricts = await delivery_db.get_delivery_districts()
 
         keyboard = await delivery_kb.create_kb_delivery(

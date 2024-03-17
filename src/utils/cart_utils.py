@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from typing import Optional
 
-from src.lexicons import cart_text, LEXICON_RU
+from src.lexicons import func_cart_text, LEXICON_RU
 from src.callbacks import ProductIdCallbackFactory
 from src.db import cart_db
 from src.schemas import cart_schemas
@@ -76,7 +76,7 @@ async def update_cart_message(
         if item.box_price:
             box_price += item.box_price
 
-    message_text = cart_text(
+    message_text = func_cart_text(
         bill=bill,
         order_text=order_text,
         order_comment=order_comment,

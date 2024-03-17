@@ -12,7 +12,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from src.config import settings, TIMEZONE
 from src.handlers import router as main_router
-from src.handlers.admin_handlers import create_mail_group_auto
+from src.handlers.mailing import create_mail_group_auto
 from src.utils import set_menu
 
 

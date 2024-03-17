@@ -5,11 +5,11 @@ from src.lexicons import LEXICON_RU
 from src.callbacks import CartEditCallbackFactory
 from .main_kb import create_kb_main
 from src.db import cart_db
-from src.lexicons import cart_test_text
+from src.lexicons import cart_text
 
 
 def create_kb_cart(mess_id: int):
-    my_dict = cart_test_text.my_func(mess_id=mess_id)
+    my_dict = cart_text.my_func(mess_id=mess_id)
 
     keyboard = InlineKeyboardBuilder()
 

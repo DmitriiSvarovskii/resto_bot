@@ -134,7 +134,7 @@ async def crud_get_order_detail(
 async def crud_get_order_detail_report(
     order_id: int,
     session: AsyncSession
-) -> List[order_schemas.OrderDetailTest]:
+) -> List[order_schemas.ReadOrderDetail]:
     query = (
         select(
             Category.name,

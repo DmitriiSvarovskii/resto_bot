@@ -98,7 +98,7 @@ class CreateOrderDetail(BaseModel):
     unit_price: float
 
 
-class OrderDetailTest(BaseModel):
+class ReadOrderDetail(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     category_name: Optional[str] = None

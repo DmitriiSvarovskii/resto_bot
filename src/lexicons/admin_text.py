@@ -32,32 +32,28 @@ report_main_dict = {
 
 admin_main_dict = {
     'stop_list': {
-        'text': 'Стоп-лист',
+        'text': 'Стоп-лист ⛔️',
         'callback_data': 'press_stop_list'
     },
     'edit_menu': {
-        'text': 'Редактирование меню',
+        'text': 'Редактирование меню ✏️',
         'callback_data': 'press_edit_menu'
     },
     'reports': {
-        'text': 'Отчёты',
+        'text': 'Отчёты 📑',
         'callback_data': 'press_reports'
     },
     'employees': {
-        'text': 'Сотрудники',
+        'text': 'Сотрудники 🧑‍🍳',
         'callback_data': 'press_employees'
-    },
-    'edit_hours': {
-        'text': 'Редактировать режим работы',
-        'callback_data': 'press_edit_hours'
-    },
-    'toggle_bot': {
-        'text': 'Вкл/выкл бота',
-        'callback_data': 'press_toggle_bot'
     },
     'qr_code': {
         'text': 'Сгенерировать qr-code',
         'callback_data': 'press_qr_code'
+    },
+    'toggle_bot': {
+        'text': 'Настройки бота ⚙️',
+        'callback_data': 'press_toggle_bot'
     },
     'main_menu': {
         'text': '<<< назад',
@@ -78,17 +74,17 @@ edit_menu_dict = {
         'text': 'Добавить новый товар',
         'callback_data': 'press_add_product'
     },
-    'delete_product': {
-        'text': 'Удалить товар',
-        'callback_data': 'press_delete_product'
-    },
     'add_category': {
         'text': 'Добавить новую категорию',
         'callback_data': 'press_add_category'
     },
-    'delete_category': {
-        'text': 'Удалить категорию',
-        'callback_data': 'press_delete_category'
+    'change_product': {
+        'text': 'Редактировать товары ✏️',
+        'callback_data': 'press_change_product'
+    },
+    'change_category': {
+        'text': 'Редактировать категории ✏️',
+        'callback_data': 'press_change_category'
     },
     'back': {
         'text': '<<< назад',

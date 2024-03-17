@@ -37,3 +37,29 @@ async def change_avail_category(category_id):
         )
         break
     return {'status': 'ok'}
+
+
+async def db_update_category_name(
+    category_id: int,
+    category_name: str,
+):
+    async for session in get_async_session():
+        await cat_crud.crud_update_category_name(
+            category_id=category_id,
+            category_name=category_name,
+            session=session
+        )
+        break
+    return {'status': 'ok'}
+
+
+async def db_change_delete_flag_category(
+    category_id: int,
+):
+    async for session in get_async_session():
+        await cat_crud.crud_change_delete_flag_category(
+            category_id=category_id,
+            session=session
+        )
+        break
+    return {'status': 'ok'}

@@ -1,6 +1,8 @@
+from datetime import datetime
+from typing import List, Optional, Any
+
 from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
 
 from src.models import Product
 from src.schemas import product_schemas
@@ -14,12 +16,10 @@ async def crud_get_all_products(
     query = (
         select(Product).
         where(
-            Product.deleted_flag is not True,
+            Product.deleted_flag.is_(False),
             Product.category_id == category_id,
         ).
-        order_by(
-            Product.id.desc()
-        )
+        order_by(Product.id.desc())
     )
     if filter:
         query = query.where(Product.availability)
@@ -34,9 +34,7 @@ async def crud_change_avail_roducts(
 ):
     stmt = (
         update(Product)
-        .where(
-            Product.id == product_id,
-        )
+        .where(Product.id == product_id)
         .values(availability=~Product.availability)
     )
     await session.execute(stmt)
@@ -49,9 +47,7 @@ async def crud_get_stop_list(
 ) -> List[product_schemas.ReadProduct]:
     query = (
         select(Product).
-        where(
-            Product.availability.is_(False)
-        ).
+        where(Product.availability.is_(False)).
         order_by(
             Product.id.desc(),
             Product.category_id
@@ -65,24 +61,13 @@ async def crud_get_stop_list(
 async def crud_get_one_product(
     product_id: int,
     session: AsyncSession
-):
+) -> Optional[product_schemas.ReadProduct]:
     query = (
         select(Product).
-        where(Product.deleted_flag is not True).
-        where(Product.id == product_id)
-    )
-    result = await session.execute(query)
-    products = result.scalar()
-    return products
-
-
-async def get_one_product_test(
-    product_id: int,
-    session: AsyncSession
-):
-    query = (
-        select(Product.availability).
-        where(Product.id == product_id)
+        where(
+            Product.deleted_flag.is_(False),
+            Product.id == product_id
+        )
     )
     result = await session.execute(query)
     products = result.scalar()
@@ -100,3 +85,38 @@ async def crud_create_new_product(
     await session.execute(stmt)
     await session.commit()
     return {"status": 201, }
+
+
+async def crud_update_product(
+    product_id: int,
+    field_name: str,
+    new_value: Any,
+    session: AsyncSession
+):
+    update_data = {field_name: new_value}
+
+    stmt = (
+        update(Product).
+        where(Product.id == product_id).
+        values(**update_data)
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success", }
+
+
+async def crud_change_delete_flag_product(
+    product_id: int,
+    session: AsyncSession,
+):
+    stmt = (
+        update(Product).
+        where(Product.id == product_id).
+        values(
+            deleted_flag=~Product.deleted_flag,
+            deleted_at=datetime.now()
+        )
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"message": "Статус для deleted_flag изменен"}

@@ -1,14 +1,27 @@
 from typing import List
-from aiogram.types import InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import (
+    InlineKeyboardButton,
+    KeyboardButton,
+    ReplyKeyboardMarkup
+)
+
+from src.db import cart_db
+from src.schemas import product_schemas
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.callbacks import (
     ProductIdCallbackFactory,
-    ProductIdAdminCallbackFactory
+    ProductIdAdminCallbackFactory,
+    ProductChangeAdminCallbackFactory,
+    ProductChangeCategoryCallbackFactory,
+    ProductChangeNameCallbackFactory,
+    ProductChangeDescriptionCallbackFactory,
+    ProductChangePriceCallbackFactory,
+    ProductChangePriceBoxCallbackFactory,
+    ProductDeleteCallbackFactory,
+    CategoryAdminChangeCallbackFactory,
 )
-from src.schemas import product_schemas
-from src.db import cart_db
 
 
 async def create_kb_product(
@@ -135,6 +148,105 @@ async def create_kb_product_admin(
             text=LEXICON_KEYBOARDS_RU['back'],
             callback_data='press_modify_avail_prod'
         )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_kb_change_product_list(
+    products: List[product_schemas.ReadProduct],
+):
+    keyboard = InlineKeyboardBuilder()
+    for product in products:
+        keyboard.row(
+            InlineKeyboardButton(
+                text=f'{product.name}',
+                callback_data=ProductChangeAdminCallbackFactory(
+                    product_id=product.id,
+                    category_id=product.category_id
+                ).pack()))
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data='press_change_product'
+        )
+    )
+
+    return keyboard.as_markup()
+
+
+async def create_kb_change_product(
+    product_id: int,
+    category_id: int
+):
+    keyboard = InlineKeyboardBuilder()
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text='Изменить категорию товара ✏️',
+            callback_data=ProductChangeCategoryCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Изменить название товара ✏️',
+            callback_data=ProductChangeNameCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Изменить описание товара ✏️',
+            callback_data=ProductChangeDescriptionCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Изменить цену товара ✏️',
+            callback_data=ProductChangePriceCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Изменить цену упаковки ✏️',
+            callback_data=ProductChangePriceBoxCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        InlineKeyboardButton(
+            text='Удалить товар ✖',
+            callback_data=ProductDeleteCallbackFactory(
+                product_id=product_id
+            ).pack()),
+        width=1
+    )
+
+    keyboard.row(
+        InlineKeyboardButton(
+            text=LEXICON_KEYBOARDS_RU['back'],
+            callback_data=CategoryAdminChangeCallbackFactory(
+                category_id=category_id
+            ).pack()),
+    )
+
+    return keyboard.as_markup()
+
+
+def create_kb_fsm_change_name() -> ReplyKeyboardMarkup:
+    button = KeyboardButton(text='Отменить изменение')
+    keyboard: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+        keyboard=[[button]],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
+async def create_kb_product_delete():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(
+        InlineKeyboardButton(
+            text='Подтвердить',
+            callback_data='press_approval_delete'
+        ),
+        InlineKeyboardButton(
+            text='Отменить',
+            callback_data='press_cancel_delete'
+        ),
+        width=2
     )
 
     return keyboard.as_markup()
