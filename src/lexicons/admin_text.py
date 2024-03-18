@@ -39,6 +39,10 @@ admin_main_dict = {
         'text': 'Редактирование меню ✏️',
         'callback_data': 'press_edit_menu'
     },
+    'edit_delivery': {
+        'text': 'Редактирование районов доставки ✏️',
+        'callback_data': 'press_edit_delivery'
+    },
     'reports': {
         'text': 'Отчёты 📑',
         'callback_data': 'press_reports'
@@ -69,6 +73,10 @@ edit_menu_dict = {
     'modify_avail_categ': {
         'text': 'Изменить наличие (категории)',
         'callback_data': 'press_modify_avail_categ'
+    },
+    'modify_popular_prod': {
+        'text': 'Изменить популярное (товары)',
+        'callback_data': 'press_modify_popular_prod'
     },
     'add_product': {
         'text': 'Добавить новый товар',

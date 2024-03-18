@@ -30,8 +30,10 @@ from .order import (
     OrderStatusCallbackFactory,
 )
 from .delivery import DeliveryIdCallbackFactory
+from .store import StoreCbData
 
 __all__ = [
+    'StoreCbData',
     'CategoryChangeCallbackFactory',
     'ChangeCategoryProductCallbackFactory',
     'CategoryChangeNameCallbackFactory',

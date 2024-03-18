@@ -5,7 +5,7 @@ from aiogram.types import (
     KeyboardButton,
     ReplyKeyboardMarkup
 )
-from typing import List
+from typing import List, Optional
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import category_schemas
@@ -30,6 +30,13 @@ async def create_kb_category(
     keyboard = InlineKeyboardBuilder()
 
     row_buttons = []
+
+    row_buttons.append(
+        InlineKeyboardButton(
+            text='Популярное 🔥',
+            callback_data='press_popular_menu'
+        ),
+    )
 
     for category in categories:
 
@@ -62,7 +69,8 @@ async def create_kb_category(
 
 async def create_kb_category_admin(
     categories: List[category_schemas.GetCategory],
-    callback_data: CallbackData
+    callback_data: CallbackData,
+    popular: Optional[bool] = None
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -71,7 +79,7 @@ async def create_kb_category_admin(
         InlineKeyboardButton(
             text=f'{category.name}',
             callback_data=callback_data(
-                category_id=category.id).pack()
+                category_id=category.id, popular=popular).pack()
         )
         for category in categories
     ]

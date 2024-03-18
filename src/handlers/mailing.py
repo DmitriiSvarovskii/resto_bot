@@ -4,9 +4,8 @@ import os
 from aiogram import Bot, types, Router
 from aiogram.filters import Command
 
-from src.db import customer_db
+from src.db import customer_db, store_db
 from src.keyboards import admin_kb, main_kb
-from src.config import settings
 
 
 router = Router(name=__name__)
@@ -17,9 +16,10 @@ async def create_mail_group(message: types.Message, bot: Bot):
     user_info = await customer_db.get_user_info_by_id(
         user_id=message.chat.id
     )
+    store_info = await store_db.get_store_info()
     if user_info.admin:
         await bot.send_photo(
-            chat_id=settings.SALE_GROUP,
+            chat_id=store_info.sale_group,
             photo=message.photo[-1].file_id,
             caption=message.caption[2:],
             reply_markup=admin_kb.create_kb_sale_group()
@@ -41,6 +41,8 @@ async def create_mail_group(message: types.Message, bot: Bot):
 
 
 async def create_mail_group_auto(bot: Bot):
+    store_info = await store_db.get_store_info()
+
     text = ('Всем хорошего дня 🔥\n'
             'Эта кнопка для заказа через приложение Marcello 👇\n'
             'При заказе через приложение постоянная скидка на все меню 5% 👍')
@@ -58,7 +60,7 @@ async def create_mail_group_auto(bot: Bot):
     photo_file = types.FSInputFile(random_file_path)
 
     await bot.send_photo(
-        chat_id=settings.SALE_GROUP,
+        chat_id=store_info.sale_group,
         photo=photo_file,
         caption=text,
         reply_markup=admin_kb.create_kb_sale_group()

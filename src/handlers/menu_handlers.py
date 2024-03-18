@@ -59,3 +59,23 @@ async def get_menu_products(
     else:
         await callback.answer(text=LEXICON_RU['finish_category'],
                               show_alert=True)
+
+
+@router.callback_query(F.data == 'press_popular_menu')
+async def get_menu_products_popular(
+    callback: types.CallbackQuery
+):
+    products = await product_db.db_get_all_popular_products()
+
+    keyboard = await product_kb.create_kb_product(
+        products=products,
+        user_id=callback.message.chat.id,
+        popular=True
+    )
+
+    if products:
+        await callback.message.edit_text(text=LEXICON_RU['store'],
+                                         reply_markup=keyboard)
+    else:
+        await callback.answer(text=LEXICON_RU['finish_category'],
+                              show_alert=True)

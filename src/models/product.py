@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import relationship  # noqa: F401
 from typing import TYPE_CHECKING
 
@@ -28,6 +28,7 @@ class Product(Base):
     price: Mapped[int]
     price_box: Mapped[int | None]
     availability: Mapped[bool]
+    popular: Mapped[bool] = mapped_column(server_default=text("false"))
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
     deleted_flag: Mapped[deleted_flag]

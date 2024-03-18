@@ -1,7 +1,6 @@
 from aiogram import Bot, Router, F, types
 
-from src.db import order_db
-from src.config import settings
+from src.db import order_db, store_db
 from src.services import ORDER_TYPES, ORDER_STATUSES
 from src.callbacks import (
     CreateOrderCallbackFactory,
@@ -44,9 +43,9 @@ async def create_orders_takeaway(
                     callback.message.chat.id
                 )
             )
-
+            store_info = await store_db.get_store_info()
             await bot.send_message(
-                chat_id=settings.ADMINT_CHAT,
+                chat_id=store_info.manager_group,
                 text='❗️' + chat_text,
                 reply_markup=order_kb.create_kb_check_order(
                     order_type=order_type,
@@ -62,7 +61,7 @@ async def create_orders_takeaway(
                     order_info.delivery_latitude
                 ):
                     await bot.send_location(
-                        chat_id=settings.ADMINT_CHAT,
+                        chat_id=store_info.manager_group,
                         longitude=order_info.delivery_longitude,
                         latitude=order_info.delivery_latitude
                     )

@@ -18,3 +18,11 @@ class ReadDeliveryReport(BaseModel):
     delivery_area: str
     delivery_count: int
     total_sales: float
+
+
+class CreateDelivery(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    name: str
+    delivery_time: int
+    price: int

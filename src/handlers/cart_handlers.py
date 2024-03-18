@@ -17,20 +17,27 @@ async def adding_to_cart(
     callback: types.CallbackQuery,
     callback_data: ProductIdCallbackFactory,
 ):
-
     await cart_utils.process_cart_action(
         callback=callback,
         callback_data=callback_data,
     )
+    if callback_data.popular:
+        products = await product_db.db_get_all_popular_products()
 
-    products = await product_db.get_products_by_category(
-        category_id=callback_data.category_id
-    )
+        keyboard = await product_kb.create_kb_product(
+            products=products,
+            user_id=callback.message.chat.id,
+            popular=True
+        )
+    else:
+        products = await product_db.get_products_by_category(
+            category_id=callback_data.category_id
+        )
 
-    keyboard = await product_kb.create_kb_product(
-        products=products,
-        user_id=callback.message.chat.id
-    )
+        keyboard = await product_kb.create_kb_product(
+            products=products,
+            user_id=callback.message.chat.id
+        )
 
     if callback_data.type_pr != 'compound':
         await callback.message.edit_reply_markup(reply_markup=keyboard)

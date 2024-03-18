@@ -28,6 +28,25 @@ async def crud_get_all_products(
     return products
 
 
+async def crud_get_all_popular_products(
+    session: AsyncSession,
+    filter: Optional[bool] = None,
+) -> List[product_schemas.ReadProduct]:
+    query = (
+        select(Product).
+        where(
+            Product.deleted_flag.is_(False),
+            Product.popular
+        ).
+        order_by(Product.id.desc())
+    )
+    if filter:
+        query = query.where(Product.availability)
+    result = await session.execute(query)
+    products = result.scalars().all()
+    return products
+
+
 async def crud_change_avail_roducts(
     product_id: int,
     session: AsyncSession,
@@ -40,6 +59,20 @@ async def crud_change_avail_roducts(
     await session.execute(stmt)
     await session.commit()
     return {"message": "Статус для availability изменен"}
+
+
+async def crud_change_popular_roducts(
+    product_id: int,
+    session: AsyncSession,
+):
+    stmt = (
+        update(Product)
+        .where(Product.id == product_id)
+        .values(popular=~Product.popular)
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"message": "Статус для popular изменен"}
 
 
 async def crud_get_stop_list(

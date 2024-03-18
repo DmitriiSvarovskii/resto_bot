@@ -15,9 +15,6 @@ class Store(Base):
     closing_time: Mapped[datetime.time | None]
     latitude: Mapped[float | None]
     longitude: Mapped[float | None]
-    welcome_message_bot: Mapped[str_4048 | None]
     sale_group: Mapped[int | None] = mapped_column(BIGINT)
-    delivery_chat: Mapped[int | None] = mapped_column(BIGINT)
-    order_chat: Mapped[int | None] = mapped_column(BIGINT)
-    completed_orders_chat: Mapped[int | None] = mapped_column(BIGINT)
-    canceled_orders_chat: Mapped[int | None] = mapped_column(BIGINT)
+    manager_group: Mapped[int | None] = mapped_column(BIGINT)
+    welcome_message: Mapped[str_4048 | None]

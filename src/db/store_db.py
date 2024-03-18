@@ -28,3 +28,16 @@ async def db_update_opening_hours(
             session=session
         )
         return {'status': 'ok'}
+
+
+async def db_update_store(
+    store_id: int,
+    update_values: dict,
+):
+    async for session in get_async_session():
+        await store_crud.crud_update_store(
+            store_id=store_id,
+            update_values=update_values,
+            session=session
+        )
+        return {'status': 'ok'}

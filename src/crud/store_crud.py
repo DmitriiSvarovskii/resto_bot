@@ -47,3 +47,18 @@ async def crud_update_opening_hours(
     await session.execute(stmt)
     await session.commit()
     return {"message": "success"}
+
+
+async def crud_update_store(
+    store_id: int,
+    update_values: dict,
+    session: AsyncSession
+):
+    stmt = (
+        update(Store)
+        .where(Store.id == store_id)
+        .values(**update_values)
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success"}

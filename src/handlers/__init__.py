@@ -2,8 +2,13 @@ __all__ = ("router",)
 
 from aiogram import Router
 
+from .delivery_admin import router as delivery_router
 from .admin_handlers import router as admin_router
 from .mailing import router as mailing_router
+from .fsm_update_welcome_text import router as update_welcome_text_router
+from .fsm_update_manager_group import router as update_manager_group_router
+from .fsm_update_sale_group import router as update_sale_group_router
+from .fsm_update_location import router as update_location_router
 from .fsm_edit_opening_hours import router as edit_opening_hours_router
 from .fsm_product_change_name import router as product_change_name_router
 from .fsm_product_change_category import router as prod_change_categ_router
@@ -15,6 +20,7 @@ from .change_product_base import router as change_product_router
 from .fsm_category_delete import router as category_delete_router
 from .fsm_category_change_name import router as category_change_name_router
 from .change_category_base import router as change_category_router
+from .change_popular_product import router as change_popular_product_router
 from .reports import router as reports_router
 from .toggle_bot import router as toggle_router
 from .change_availability_category import router as avail_category_router
@@ -52,6 +58,7 @@ router.include_routers(
     fsm_add_prod_router,
     fsm_add_cat_router,
     fsm_resourse_report_router,
+    change_popular_product_router,
     avail_category_router,
     avail_product_router,
     reports_router,
@@ -68,4 +75,10 @@ router.include_routers(
     category_change_name_router,
     change_category_router,
     edit_opening_hours_router,
+    update_location_router,
+    update_welcome_text_router,
+    update_manager_group_router,
+    update_sale_group_router,
+    # change_delivery_router,
+    delivery_router,
 )

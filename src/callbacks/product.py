@@ -1,4 +1,6 @@
 from aiogram.filters.callback_data import CallbackData
+from typing import Optional
+
 from .cart import CartEditCallbackFactory
 
 
@@ -6,6 +8,7 @@ class ProductIdCallbackFactory(
     CartEditCallbackFactory,
     prefix='pr',
 ):
+    popular: Optional[bool] = None
     category_id: int
 
 

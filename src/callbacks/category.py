@@ -1,4 +1,5 @@
 from aiogram.filters.callback_data import CallbackData
+from typing import Optional
 
 
 class CategoryIdCallbackFactory(
@@ -12,7 +13,7 @@ class CategoryAdminCallbackFactory(
     CategoryIdCallbackFactory,
     prefix="adm"
 ):
-    pass
+    popular: Optional[bool] = None
 
 
 class CategoryAdminChangeCallbackFactory(
