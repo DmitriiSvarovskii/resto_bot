@@ -11,7 +11,7 @@ class CreateProduct(BaseModel):
     price: int
     price_box: Optional[int] = 0
     availability: bool
-    popular: bool
+    popular: Optional[bool] = False
 
 
 class ReadProduct(CreateProduct):
