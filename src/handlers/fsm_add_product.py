@@ -133,7 +133,7 @@ async def process_error_price(message: types.Message, state: FSMContext):
 
 @router.message(
     FSMAddNewProduct.price_box,
-    F.text.isdigit() | F.text == LEXICON_KEYBOARDS_RU['skip']
+    F.text.isdigit() | (F.text == LEXICON_KEYBOARDS_RU['skip'])
 )
 async def process_waiting_price_box(message: types.Message, state: FSMContext):
     if message.text.isdigit():

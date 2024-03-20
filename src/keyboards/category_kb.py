@@ -33,7 +33,7 @@ async def create_kb_category(
 
     row_buttons.append(
         InlineKeyboardButton(
-            text='Популярное 🔥',
+            text='Спецпредложение 🔥',
             callback_data='press_popular_menu'
         ),
     )
