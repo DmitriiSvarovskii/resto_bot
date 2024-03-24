@@ -103,7 +103,7 @@ async def generate_order_messages(
         order_header + order_details
     )
 
-    if data_order.order_type == "Доставка":
+    if data_order.order_type == "Delivery":
         delivery_price = delivery_village.price
 
         delivery_info = (
