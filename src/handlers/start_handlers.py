@@ -1,18 +1,19 @@
-from aiogram import Router, types
+from aiogram import Router, types, Bot
 from aiogram.filters import CommandStart
 
 from src.db import customer_db
+from src.config import settings
 from src.utils import customer_utils
 from src.keyboards import main_kb, admin_kb
 from src.lexicons import text_main_menu_en, text_main_menu_ru
 
 
 router = Router(name=__name__)
+bot: Bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
 
 
 @router.message(CommandStart())
 async def process_start_command(message: types.Message):
-    print(message.from_user.language_code)
     if message.from_user.language_code == 'ru':
         text_main_menu = text_main_menu_ru
     else:

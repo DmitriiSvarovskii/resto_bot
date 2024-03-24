@@ -1,4 +1,4 @@
-from aiogram import Bot, Router, F, types
+from aiogram import Bot, Router, types, F
 from aiogram.exceptions import TelegramBadRequest
 
 from src.config import settings
@@ -12,6 +12,7 @@ from src.callbacks import (
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,
 )
+from src.callbacks.order import OrderCallbackFactory
 from src.lexicons import (
     text_order_ru,
     text_order_en,
@@ -24,9 +25,11 @@ from src.utils import OrderStatus, OrderTypes
 router = Router(name=__name__)
 
 
-@router.callback_query(CreateOrderCallbackFactory.filter())
+# @router.callback_query(CreateOrderCallbackFactory.filter())
+@router.callback_query(OrderCallbackFactory.filter(F.type_callback == 'create'))
 async def process_orders(callback: types.CallbackQuery,
-                         callback_data: CreateOrderCallbackFactory,
+                         callback_data: OrderCallbackFactory,
+                         #  callback_data: CreateOrderCallbackFactory,
                          bot: Bot):
     if settings.MODE == 'PROD':
         if await time_utils.is_valid_time():

@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from typing import Optional
 
-from src.lexicons import func_cart_text, LEXICON_RU,  text_cart_en, text_cart_ru
+from src.lexicons import LEXICON_RU,  text_cart_en, text_cart_ru
 from src.callbacks import ProductIdCallbackFactory
 from src.db import cart_db
 from src.schemas import cart_schemas
@@ -42,7 +42,9 @@ async def process_cart_action(
         compound_text = await cart_db.get_one_product(
             product_id=cart_data.product_id,
         )
-        description = compound_text.description_rus if callback.from_user.language_code == 'ru' else compound_text.description_en
+        description = (compound_text.description_rus
+                       if callback.from_user.language_code == 'ru'
+                       else compound_text.description_en)
 
         await callback.answer(
             text=description,

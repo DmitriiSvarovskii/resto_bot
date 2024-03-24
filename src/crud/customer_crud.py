@@ -7,6 +7,18 @@ from src.schemas import customer_schemas
 from src.models import Customer
 
 
+async def crud_get_users_list(
+    session: AsyncSession,
+
+) -> List[customer_schemas.ReadCustomerInfo]:
+    query = (
+        select(Customer)
+    )
+    result = await session.execute(query)
+    response = result.scalars().all()
+    return response
+
+
 async def get_user(
     user_id: int,
     session: AsyncSession,

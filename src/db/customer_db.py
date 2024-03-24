@@ -25,3 +25,12 @@ async def get_user_info_by_id(
         )
         break
     return response
+
+
+async def db_get_users_list():
+    async for session in get_async_session():
+        response = await cust_crud.crud_get_users_list(
+            session=session
+        )
+        break
+    return response

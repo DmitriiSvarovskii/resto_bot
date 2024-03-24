@@ -1,6 +1,7 @@
 from typing import Optional
 
 from src.callbacks import CreateOrderCallbackFactory
+from src.callbacks.order import OrderCallbackFactory
 from src.services import ORDER_TYPES, ORDER_STATUSES
 
 
@@ -12,7 +13,8 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
         },
         'takeaway': {
             'text': 'Самовывоз',
-            'callback_data': CreateOrderCallbackFactory(
+            'callback_data': OrderCallbackFactory(
+                type_callback='create',
                 order_type=ORDER_TYPES['takeaway']['id'],
                 status=ORDER_STATUSES['new']['id'],
                 mess_id=mess_id,

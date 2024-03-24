@@ -1,20 +1,13 @@
 from aiogram import types, Router, F
-from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 
-from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.db import delivery_db, category_db
+from src.db import delivery_db
 from src.keyboards import (
     admin_kb,
-    category_kb,
-
 )
-from src.utils import delivery_utils
+from src.schemas import delivery_schemas
 from .change_delivery_base import process_edit_delivery_message
 from src.state import FSMDeliveryAdmin
-from src.callbacks import (
-    CategoryAdminAddCallbackFactory,
-)
 
 
 router = Router(name=__name__)
@@ -100,7 +93,7 @@ async def process_waiting_description(
 ):
     await state.update_data(delivery_time=int(message.text))
     data = await state.get_data()
-    district_data = await delivery_utils.create_data_district(data)
+    district_data = delivery_schemas.CreateDelivery(**data)
     await delivery_db.db_create_new_district(data=district_data)
     await state.clear()
     await process_edit_delivery_message(

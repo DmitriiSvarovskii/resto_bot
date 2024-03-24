@@ -79,7 +79,6 @@ async def create_new_orders(
     )
 
     if callback_data.order_type in OrderTypes.DELIVERY.value.values():
-        # if callback_data.order_type == ORDER_TYPES['delivery']['id']:
         delivery_village = await delivery_db.get_delivery_one_district(
             delivery_id=user_data_del['delivery_id']
         )

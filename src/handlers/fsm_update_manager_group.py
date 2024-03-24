@@ -43,8 +43,7 @@ async def process_cancel_command_state(
 
 
 @router.message(
-    FSMStore.waiting_manager_group,
-    lambda message: is_number(message.text)
+    FSMStore.waiting_manager_group, is_number(F.text)
 )
 async def process_welcome_text_sent(
     message: types.Message,
