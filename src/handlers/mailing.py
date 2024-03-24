@@ -91,6 +91,9 @@ async def create_mail_chats(message: types.Message, bot: Bot):
             except Exception as e:
                 print(f"An error occurred: {e}")
                 continue
+        await message.answer(
+            text='Рассылка завершена'
+        )
     else:
         await message.answer(
             text='Данная команда доступна только для администраторов бота',
