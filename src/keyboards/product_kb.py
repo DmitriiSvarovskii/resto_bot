@@ -122,6 +122,7 @@ async def create_kb_product(
 
 async def create_kb_product_admin(
     products: List[product_schemas.ReadProduct],
+    language: str,
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -129,10 +130,11 @@ async def create_kb_product_admin(
         availability = "В наличии" if product.availability else "Отсутствует"
         indicator = '✅' if product.availability else '❌'
         action = "Убрать" if product.availability else "Добавить"
+        product_name = product.name_rus if language == 'ru' else product.name_en
 
         keyboard.row(
             InlineKeyboardButton(
-                text=f'{product.name}',
+                text=product_name,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
                     category_id=product.category_id
@@ -173,12 +175,14 @@ async def create_kb_product_admin(
 
 async def create_kb_change_product_list(
     products: List[product_schemas.ReadProduct],
+    language: str,
 ):
     keyboard = InlineKeyboardBuilder()
     for product in products:
+        product_name = product.name_rus if language == 'ru' else product.name_en
         keyboard.row(
             InlineKeyboardButton(
-                text=f'{product.name}',
+                text=product_name,
                 callback_data=ProductChangeAdminCallbackFactory(
                     product_id=product.id,
                     category_id=product.category_id
@@ -272,6 +276,7 @@ async def create_kb_product_delete():
 
 async def create_kb_product_popular_admin(
     products: List[product_schemas.ReadProduct],
+    language: str,
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -279,10 +284,11 @@ async def create_kb_product_popular_admin(
         availability = "Популяное"
         indicator = '✅' if product.popular else '❌'
         action = "Убрать" if product.popular else "Добавить"
+        product_name = product.name_rus if language == 'ru' else product.name_en
 
         keyboard.row(
             InlineKeyboardButton(
-                text=f'{product.name}',
+                text=product_name,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
                     category_id=product.category_id,

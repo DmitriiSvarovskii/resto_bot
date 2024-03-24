@@ -17,7 +17,8 @@ async def process_modify_availability_categories(
 ):
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_avail_admin(
-        categories=categories
+        categories=categories,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="Выберите категорию",
@@ -33,7 +34,8 @@ async def process_press_availability_categories(
     await category_db.change_avail_category(callback_data.category_id)
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_avail_admin(
-        categories=categories
+        categories=categories,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="message_text",

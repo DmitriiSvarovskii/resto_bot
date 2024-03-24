@@ -36,7 +36,8 @@ async def get_admin_products(
     )
 
     keyboard = await product_kb.create_kb_change_product_list(
-        products=products
+        products=products,
+        language=callback.from_user.language_code
     )
 
     await callback.message.edit_text(text='Продукты',
