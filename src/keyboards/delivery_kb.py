@@ -77,6 +77,7 @@ def create_kb_delivery_go(mess_id: int, language: str):
         InlineKeyboardButton(
             text=text_delivery.delivery_fsm_text['confirm_delivery'],
             callback_data=CreateOrderCallbackFactory(
+                type_callback='create',
                 order_type=OrderTypes.DELIVERY.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
