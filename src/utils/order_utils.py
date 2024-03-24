@@ -10,14 +10,21 @@ from typing import List, Union
 from aiogram.types import CallbackQuery
 
 from src.services import ORDER_STATUSES
-from src.lexicons import new_order_mess_text_order_chat
+from src.lexicons import text_order_ru, text_order_en
 from src.schemas import order_schemas, customer_schemas, cart_schemas
+from .order_constants import OrderTypes, OrderStatus
 
 
 async def create_new_orders(
     callback: CallbackQuery,
     callback_data: CreateOrderCallbackFactory,
+    language: str
 ):
+    if language == 'ru':
+        text_order = text_order_ru
+    else:
+        text_order = text_order_en
+
     delivery_village = None
     user_id = callback.message.chat.id
 
@@ -31,6 +38,7 @@ async def create_new_orders(
         user_id=user_id,
         callback_data=callback_data,
         total_price=cart_items.total_price,
+        language=language,
     )
 
     order_id = await order_db.create_orders(
@@ -46,7 +54,7 @@ async def create_new_orders(
         data=order_details,
     )
 
-    order_text = await create_order_text(
+    order_text = await text_order.create_order_text(
         cart_items=cart_items.cart_items
     )
 
@@ -70,7 +78,8 @@ async def create_new_orders(
         data=order_info
     )
 
-    if callback_data.order_type == ORDER_TYPES['delivery']['id']:
+    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
+        # if callback_data.order_type == ORDER_TYPES['delivery']['id']:
         delivery_village = await delivery_db.get_delivery_one_district(
             delivery_id=user_data_del['delivery_id']
         )
@@ -79,7 +88,7 @@ async def create_new_orders(
         user_id=user_id
     )
 
-    chat_text, user_text = await new_order_mess_text_order_chat(
+    chat_text, user_text = await text_order.generate_order_messages(
         order_text=order_text,
         data_order=data_order,
         callback=callback,
@@ -91,31 +100,36 @@ async def create_new_orders(
 
 
 async def create_text(
-    callback: CallbackQuery,
     callback_data: Union[
         CheckOrdersCallbackFactory,
         OrderStatusCallbackFactory,
     ],
+    language: str
 ):
+    if language == 'ru':
+        text_order = text_order_ru
+    else:
+        text_order = text_order_en
+
     delivery_village = None
     order_id = callback_data.order_id
 
     data_order = await order_db.get_order(order_id=order_id)
 
-    user_info = await customer_db.get_user_info_by_id(user_id=data_order.user_id) # noqa: E:501
+    user_info = await customer_db.get_user_info_by_id(user_id=data_order.user_id)  # noqa: E:501
 
     order_info = await order_db.get_order_info(order_id=order_id)
 
     cart_items = await order_db.get_order_detail(order_id=order_id)
 
-    if callback_data.order_type == ORDER_TYPES['delivery']['id']:
+    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
         delivery_village = await delivery_db.get_delivery_one_district(
             delivery_id=order_info.delivery_id
         )
 
-    order_text = await create_order_text(cart_items=cart_items)
+    order_text = await text_order.create_order_text(cart_items=cart_items)
 
-    chat_text, user_text = await new_order_mess_text_order_chat(
+    chat_text, user_text = await text_order.generate_order_messages(
         order_text=order_text,
         data_order=data_order,
         user_info=user_info,
@@ -129,11 +143,17 @@ async def create_text(
 async def create_data_order(
     user_id: int,
     total_price: int,
-    callback_data: CreateOrderCallbackFactory
+    language: str,
+    callback_data: CreateOrderCallbackFactory,
 ):
-    order_status = await get_status_name_by_id(callback_data.status)
-
-    order_type = await get_order_type_name_by_id(callback_data.order_type)
+    order_type = OrderTypes.get_name_by_id(
+        target_id=callback_data.order_type,
+        language=language
+    )
+    order_status = OrderStatus.get_name_by_id(
+        target_id=callback_data.status,
+        language=language
+    )
 
     data_order = order_schemas.CreateOrder(
         user_id=user_id,
@@ -178,7 +198,9 @@ async def create_data_customer_info(
     return data_customer_info
 
 
-async def create_order_text(cart_items: List[cart_schemas.CartItem]) -> str:
+async def create_order_text(
+    cart_items: List[cart_schemas.CartItem],
+) -> str:
     order_lines = [
         f'- {cart_item.category_name} - {cart_item.name} x '
         f'{cart_item.quantity} - {cart_item.unit_price} ₹'

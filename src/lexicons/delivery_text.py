@@ -1,4 +1,4 @@
-edit_delivery_dict: dict[str, str] = {
+edit_delivery_dict: dict[str, dict[str, str]] = {
     'change_district_name': {
         'text': 'Изменить название ✏️',
         'callback_data': 'press_change_district_name'

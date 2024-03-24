@@ -118,8 +118,10 @@ async def crud_get_order_detail(
     query = (
         select(
             Product.id.label("product_id"),
-            Category.name.label("category_name"),
-            Product.name.label("name"),
+            Category.name_rus.label("category_name_rus"),
+            Product.name_rus,
+            Category.name_en.label("category_name_en"),
+            Product.name_en,
             OrderDetail.quantity.label("quantity"),
             OrderDetail.unit_price.label("unit_price"),
         )

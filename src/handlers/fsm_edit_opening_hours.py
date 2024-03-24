@@ -1,9 +1,10 @@
-from datetime import datetime
 import re
+from datetime import datetime
 
 from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
-
+from aiogram.filters import StateFilter
+from aiogram.fsm.state import default_state
 
 from src.handlers import admin_handlers
 from src.state import FSMOpeningHours
@@ -27,7 +28,10 @@ async def process_edit_hours(
     await state.set_state(FSMOpeningHours.opening_time)
 
 
-@router.message(F.text == 'Отменить редактирование')
+@router.message(
+    F.text == 'Отменить редактирование',
+    ~StateFilter(default_state)
+)
 async def process_cancel_command_state(
     message: types.Message,
     state: FSMContext

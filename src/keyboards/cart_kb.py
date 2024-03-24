@@ -5,18 +5,24 @@ from src.lexicons import LEXICON_RU
 from src.callbacks import CartEditCallbackFactory
 from .main_kb import create_kb_main
 from src.db import cart_db
-from src.lexicons import cart_text
+from src.lexicons import text_cart_en, text_cart_ru
 
 
-def create_kb_cart(mess_id: int):
-    my_dict = cart_text.my_func(mess_id=mess_id)
+def create_kb_cart(mess_id: int, language: str):
+    if language == 'ru':
+        text_cart = text_cart_ru
+    else:
+        text_cart = text_cart_en
+
+    cart_text_dict = text_cart.create_btn_cart(
+        mess_id=mess_id, language=language)
 
     keyboard = InlineKeyboardBuilder()
 
     buttons = [InlineKeyboardButton(
         text=value['text'],
         callback_data=value['callback_data']
-    ) for value in my_dict.values()]
+    ) for value in cart_text_dict.values()]
 
     row_lengths = [1, 2, 3]
 
@@ -29,32 +35,57 @@ def create_kb_cart(mess_id: int):
     return keyboard.as_markup()
 
 
-async def create_kbs_products_cart(callback, user_id):
+async def create_kbs_products_cart(
+        callback,
+        user_id: int,
+        language: str
+):
 
     cart_info = await cart_db.get_cart_items_and_totals(
         user_id=user_id
     )
 
+    if language == 'ru':
+        text_cart = text_cart_ru.edit_cart_dict
+        edit_btn_cart = text_cart_ru.edit_btn_cart_dict
+        create_total = text_cart_ru.create_total_btn
+    else:
+        text_cart = text_cart_en.edit_cart_dict
+        edit_btn_cart = text_cart_en.edit_btn_cart_dict
+        create_total = text_cart_en.create_total_btn
+
     if cart_info.cart_items:
         bill = cart_info.total_price
 
-        keyboard_build = InlineKeyboardBuilder()
+        keyboard = InlineKeyboardBuilder()
 
         for item in cart_info.cart_items:
-            keyboard_build.row(
+            product_name = item.name_rus if language == 'ru' else item.name_en
+            category_name = item.category_name_rus if language == 'ru' else item.category_name_en
+            unit_price = 'Сумма' if language == 'ru' else 'Unit price'
+            piece = 'шт' if language == 'ru'else 'pc'
+            keyboard.row(
                 InlineKeyboardButton(
                     text=(
-                        f'{item.category_name} - '
-                        f'{item.name} - '
-                        f'{item.unit_price} ₹ - '
-                        f'{item.quantity} шт'
+                        f'{category_name} - '
+                        f'{product_name} - '
                     ),
                     callback_data=CartEditCallbackFactory(
                         type_pr='plus',
                         product_id=item.product_id
                     ).pack()))
+            keyboard.row(
+                InlineKeyboardButton(
+                    text=f'{unit_price}: {item.unit_price} ₹',
+                    callback_data='press_pass'
+                ),
+                InlineKeyboardButton(
+                    text=f'{item.quantity} {piece}',
+                    callback_data='press_pass'),
+                width=2
+            )
 
-            keyboard_build.row(
+            keyboard.row(
                 InlineKeyboardButton(
                     text='✖️',
                     callback_data=CartEditCallbackFactory(
@@ -78,38 +109,33 @@ async def create_kbs_products_cart(callback, user_id):
                 ),
                 width=3
             )
+        create_total_dict = create_total(bill)
 
-        keyboard_build.row(
-            InlineKeyboardButton(
-                text=f'Итого: {bill} ₹',
-                callback_data='press_pass')
-        )
+        button_total = [InlineKeyboardButton(
+            text=value['text'],
+            callback_data=value['callback_data']
+        ) for value in create_total_dict.values()]
 
-        keyboard_build.row(
-            InlineKeyboardButton(
-                text='Главное меню',
-                callback_data='press_main_menu'
-            ),
-            InlineKeyboardButton(
-                text='Очистить',
-                callback_data='press_empty'
-            ),
-            InlineKeyboardButton(
-                text='Оформить',
-                callback_data='press_cart'
-            ),
-            width=3
-        )
+        keyboard.row(*button_total)
+
+        buttons = [InlineKeyboardButton(
+            text=value['text'],
+            callback_data=value['callback_data']
+        ) for value in edit_btn_cart.values()]
+
+        keyboard.row(*buttons, width=3)
 
         await callback.message.edit_text(
-            text=LEXICON_RU['edit_cart'],
-            reply_markup=keyboard_build.as_markup()
+            text=text_cart['edit_cart'],
+            reply_markup=keyboard.as_markup()
         )
 
         return {'status': 'success'}
     else:
         await callback.message.edit_text(
-            text=LEXICON_RU['empty_cart'],
-            reply_markup=await create_kb_main(callback.message.chat.id)
+            text=text_cart['empty_cart'],
+            reply_markup=await create_kb_main(
+                language=callback.from_user.language_code,
+                user_id=callback.message.chat.id)
         )
         return {'status': 'success'}

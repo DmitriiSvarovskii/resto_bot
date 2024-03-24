@@ -15,7 +15,8 @@ class Delivery(Base):
     __tablename__ = "deliveries"
 
     id: Mapped[intpk]
-    name: Mapped[str_64]
+    name_rus: Mapped[str_64]
+    name_en: Mapped[str_64 | None]
     delivery_time: Mapped[int]
     price: Mapped[int]
     created_at: Mapped[created_at]

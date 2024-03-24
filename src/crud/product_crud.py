@@ -19,7 +19,7 @@ async def crud_get_all_products(
             Product.deleted_flag.is_(False),
             Product.category_id == category_id,
         ).
-        order_by(Product.id.desc())
+        order_by(Product.id.asc())
     )
     if filter:
         query = query.where(Product.availability)
@@ -38,7 +38,7 @@ async def crud_get_all_popular_products(
             Product.deleted_flag.is_(False),
             Product.popular
         ).
-        order_by(Product.id.desc())
+        order_by(Product.id.asc())
     )
     if filter:
         query = query.where(Product.availability)
@@ -82,7 +82,7 @@ async def crud_get_stop_list(
         select(Product).
         where(Product.availability.is_(False)).
         order_by(
-            Product.id.desc(),
+            Product.id.asc(),
             Product.category_id
         )
     )

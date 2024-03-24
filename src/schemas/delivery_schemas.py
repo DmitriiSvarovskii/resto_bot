@@ -4,7 +4,8 @@ from pydantic import BaseModel, ConfigDict
 class DeliveryBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: str
+    name_rus: str
+    name_en: str
     price: int
 
 
@@ -23,6 +24,7 @@ class ReadDeliveryReport(BaseModel):
 class CreateDelivery(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: str
+    name_rus: str
+    name_en: str
     delivery_time: int
     price: int

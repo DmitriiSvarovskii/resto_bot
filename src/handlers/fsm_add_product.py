@@ -27,7 +27,8 @@ async def process_add_new_product(
 ):
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_admin_add_prod(
-        categories=categories
+        categories=categories,
+        language=callback.from_user.language_code
     )
     await callback.message.answer(
         text='Выберите категорию, к которой относится товар. Если необходимой '
@@ -203,7 +204,9 @@ async def process_waiting_make_changes(
     await callback.message.delete()
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_admin_add_prod(
-        categories=categories
+        categories=categories,
+        language=callback.from_user.language_code
+
     )
     await callback.message.answer(
         text='Выберите категорию, к которой относится товар. Если необходимой '

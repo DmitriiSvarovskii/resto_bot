@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from src.crud import delivery_crud, order_crud
-from src.services import ORDER_TYPES
+from src.utils import OrderTypes
 from src.db.database import get_async_session
 from src.schemas import order_schemas, cart_schemas
 
@@ -74,7 +74,7 @@ async def update_order_status(
         )
         if (order_type is not None
             and
-                order_type == ORDER_TYPES['delivery']['id']):
+                order_type in OrderTypes.DELIVERY.value.values()):
             response = await delivery_crud.get_delivery_time_by_order_id(
                 order_id=order_id,
                 session=session

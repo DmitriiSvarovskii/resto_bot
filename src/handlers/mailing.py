@@ -28,14 +28,16 @@ async def create_mail_group(message: types.Message, bot: Bot):
         await message.answer(
             text='Пост опубликован успешно',
             reply_markup=await main_kb.create_kb_main(
-                message.chat.id
+                language=message.from_user.language_code,
+                user_id=message.chat.id
             )
         )
     else:
         await message.answer(
             text='Данная команда доступна только для администраторов бота',
             reply_markup=await main_kb.create_kb_main(
-                message.chat.id
+                language=message.from_user.language_code,
+                user_id=message.chat.id
             )
         )
 

@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from typing import Optional
 
-from src.lexicons import func_cart_text, LEXICON_RU
+from src.lexicons import func_cart_text, LEXICON_RU,  text_cart_en, text_cart_ru
 from src.callbacks import ProductIdCallbackFactory
 from src.db import cart_db
 from src.schemas import cart_schemas
@@ -42,8 +42,10 @@ async def process_cart_action(
         compound_text = await cart_db.get_one_product(
             product_id=cart_data.product_id,
         )
+        description = compound_text.description_rus if callback.from_user.language_code == 'ru' else compound_text.description_en
+
         await callback.answer(
-            text=compound_text.description,
+            text=description,
             show_alert=True
         )
 
@@ -56,8 +58,14 @@ async def process_cart_action(
 
 async def update_cart_message(
     user_id: int,
+    language: str,
     order_comment: Optional[str] = None
 ) -> None:
+    if language == 'ru':
+        text_cart = text_cart_ru
+    else:
+        text_cart = text_cart_en
+
     response = await cart_db.get_cart_items_and_totals(
         user_id=user_id
     )
@@ -67,16 +75,18 @@ async def update_cart_message(
     box_price = 0
 
     for item in response.cart_items:
+        category_name = item.category_name_rus if language == 'ru' else item.category_name_en
+        product_name = item.name_rus if language == 'ru' else item.name_en
         order_text += (
-            f'{item.category_name} - '
-            f'{item.name} x '
+            f'{category_name} - '
+            f'{product_name} x '
             f'{item.quantity} - '
             f'{item.unit_price} ₹\n\n'
         )
         if item.box_price:
             box_price += item.box_price
 
-    message_text = func_cart_text(
+    message_text = text_cart.create_cart_text(
         bill=bill,
         order_text=order_text,
         order_comment=order_comment,

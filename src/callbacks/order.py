@@ -9,6 +9,7 @@ class CreateOrderCallbackFactory(
     order_type: Optional[int] = None
     status: int
     mess_id: Optional[int] = None
+    language: str
 
 
 class CheckOrdersCallbackFactory(

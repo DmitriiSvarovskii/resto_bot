@@ -22,7 +22,7 @@ async def crud_create_new_district(
 async def crud_read_delivery_districts(session: AsyncSession):
     query = (
         select(Delivery).
-        order_by(Delivery.id.desc())
+        order_by(Delivery.price.asc())
     )
     result = await session.execute(query)
     delivery_districts = result.scalars().all()

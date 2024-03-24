@@ -16,8 +16,10 @@ async def crud_read_cart_items_and_totals(
     query = (
         select(
             Product.id.label("product_id"),
-            Category.name.label("category_name"),
-            Product.name,
+            Category.name_rus.label("category_name_rus"),
+            Product.name_rus,
+            Category.name_en.label("category_name_en"),
+            Product.name_en,
             Cart.quantity,
             (Cart.quantity * Product.price).label("unit_price"),
             (Cart.quantity * Product.price_box).label("box_price"),
@@ -29,7 +31,7 @@ async def crud_read_cart_items_and_totals(
             Cart.quantity > 0
         )
         .group_by(Category.id, Product.id, Cart.quantity,
-                  Product.name, Cart.user_id)
+                  Product.name_rus, Cart.user_id)
     )
     result = await session.execute(query)
 

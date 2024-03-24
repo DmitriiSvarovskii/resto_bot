@@ -23,8 +23,10 @@ class Product(Base):
     id: Mapped[intpk]
     category_id: Mapped[int] = mapped_column(
         ForeignKey("categories.id", ondelete="CASCADE"))
-    name: Mapped[str_64]
-    description: Mapped[str_256 | None]
+    name_rus: Mapped[str_64]
+    description_rus: Mapped[str_256 | None]
+    name_en: Mapped[str_64 | None]
+    description_en: Mapped[str_256 | None]
     price: Mapped[int]
     price_box: Mapped[int | None]
     availability: Mapped[bool]

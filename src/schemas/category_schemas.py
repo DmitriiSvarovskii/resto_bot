@@ -1,11 +1,13 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class GetCategory(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    name: str
+    name_rus: str
+    name_en: Optional[str] = None
     availability: bool
     deleted_flag: bool
 
@@ -13,5 +15,5 @@ class GetCategory(BaseModel):
 class CreateCategory(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: str
+    name_rus: str
     availability: bool

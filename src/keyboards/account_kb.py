@@ -1,9 +1,9 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.services import ORDER_STATUSES
 from src.db import order_db, cart_db
 from src.callbacks import OrderStatusCallbackFactory
+from src.utils import OrderStatus
 
 
 async def create_kb_account(user_id: int):
@@ -19,11 +19,11 @@ async def create_kb_account(user_id: int):
             callback_data=OrderStatusCallbackFactory(
                 order_id=item.id,
                 user_id=user_id,
-                status=ORDER_STATUSES['cancelled']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
             ).pack()
 
         )
-        if item.order_status == ORDER_STATUSES['completed']['name']:
+        if item.order_status in OrderStatus.COMPLETED.value.values():
             button = InlineKeyboardButton(
                 text=f'Статус: {item.order_status}',
                 callback_data='press_pass'

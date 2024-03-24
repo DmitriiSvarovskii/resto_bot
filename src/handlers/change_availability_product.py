@@ -18,7 +18,8 @@ async def process_modify_availability_products(callback: types.CallbackQuery):
     categories = await category_db.get_all_categories()
     keyboard = await category_kb.create_kb_category_admin(
         categories=categories,
-        callback_data=CategoryAdminCallbackFactory
+        callback_data=CategoryAdminCallbackFactory,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="Выберите категорию",
@@ -31,7 +32,6 @@ async def get_admin_products(
     callback: types.CallbackQuery,
     callback_data: CategoryAdminCallbackFactory
 ):
-    print(3)
     products = await product_db.get_products_by_category_admin(
         category_id=callback_data.category_id
     )

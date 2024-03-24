@@ -30,7 +30,6 @@ async def process_press_availability_categories(
     callback: types.CallbackQuery,
     callback_data: CategoryAdminCallbackFactory
 ):
-    print(2)
     await category_db.change_avail_category(callback_data.category_id)
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_avail_admin(

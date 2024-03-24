@@ -25,8 +25,10 @@ class CartItem(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     product_id: Optional[int] = None
-    category_name: Optional[str] = None
-    name: Optional[str] = None
+    category_name_en: Optional[str] = None
+    name_en: Optional[str] = None
+    category_name_rus: Optional[str] = None
+    name_rus: Optional[str] = None
     quantity: Optional[int] = None
     unit_price: Optional[int] = None
     box_price: Optional[int] = None

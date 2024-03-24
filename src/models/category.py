@@ -15,7 +15,8 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id: Mapped[intpk]
-    name: Mapped[str_64]
+    name_rus: Mapped[str_64]
+    name_en: Mapped[str_64 | None]
     availability: Mapped[bool]
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]

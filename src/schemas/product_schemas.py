@@ -6,8 +6,10 @@ class CreateProduct(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     category_id: int
-    name: str
-    description: str
+    name_rus: str
+    description_rus: str
+    name_en: str
+    description_en: str
     price: int
     price_box: Optional[int] = 0
     availability: bool

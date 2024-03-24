@@ -3,7 +3,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from typing import Optional
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.services import ORDER_STATUSES
+from src.lexicons import text_order_ru, text_order_en
+from src.utils import OrderStatus
 from src.callbacks import (
     CheckOrdersCallbackFactory,
     TimeOrdersCallbackFactory,
@@ -12,41 +13,37 @@ from src.callbacks import (
 )
 
 
-def create_kb_back_main():
-    button_menu: InlineKeyboardButton = InlineKeyboardButton(
-        text=LEXICON_KEYBOARDS_RU['back_menu'],
-        callback_data='press_back_main_menu')
-
-    keyboard_back_builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
-    keyboard_back_builder.add(button_menu,)
-    return keyboard_back_builder.as_markup()
-
-
 def create_kb_check_order(
     order_type: int,
     order_id: int,
     user_id: int,
     mess_id: int,
+    language: str
 ):
+    text_order = (text_order_ru
+                  if language == 'ru'
+                  else text_order_en)
     buttons = [
         InlineKeyboardButton(
-            text=LEXICON_KEYBOARDS_RU['accept_order'],
+            text=text_order.order_messages_dict['accept_order'],
             callback_data=CheckOrdersCallbackFactory(
                 order_type=order_type,
                 order_id=order_id,
                 user_id=user_id,
-                status=ORDER_STATUSES['accepted']['id'],
+                status=OrderStatus.ACCEPTED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text=LEXICON_KEYBOARDS_RU['reject_order'],
+            text=text_order.order_messages_dict['reject_order'],
             callback_data=CheckOrdersCallbackFactory(
                 order_type=order_type,
                 order_id=order_id,
                 user_id=user_id,
-                status=ORDER_STATUSES['cancelled']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
     ]
@@ -58,22 +55,27 @@ def create_kb_check_order(
 def create_kb_time_cooking(
     data: CheckOrdersCallbackFactory,
     mess_id: int,
+    language: str,
     time_del: Optional[int] = None,
 ):
+    text_order = (text_order_ru
+                  if language == 'ru'
+                  else text_order_en)
     keyboard = InlineKeyboardBuilder()
 
     button_menu = InlineKeyboardButton(
-        text='Время приготовления:',
+        text=text_order.order_messages_dict['cooking_time'],
         callback_data='press_pass')
 
     cancel_button = InlineKeyboardButton(
-        text='Отменить',
+        text=text_order.order_messages_dict['cancelled'],
         callback_data=CheckOrdersCallbackFactory(
             order_type=data.order_type,
             order_id=data.order_id,
             user_id=data.user_id,
-            status=ORDER_STATUSES['cancelled']['id'],
+            status=OrderStatus.CANCELLED.value['id'],
             mess_id=mess_id,
+            language=language
         ).pack()
     )
 
@@ -81,15 +83,16 @@ def create_kb_time_cooking(
 
     for time in range(15, 91, 15):
         button_time = InlineKeyboardButton(
-            text=f'{time} мин',
+            text=f"{time} {text_order.order_messages_dict['time_min']}",
             callback_data=TimeOrdersCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['accepted']['id'],
+                status=OrderStatus.ACCEPTED.value['id'],
                 mess_id=mess_id,
                 time=time,
                 time_del=time_del,
+                language=language
             ).pack()
         )
         button_time_list.append(button_time)
@@ -105,38 +108,45 @@ def create_kb_time_cooking(
 def create_order_status_keyboard(
     data: TimeOrdersCallbackFactory,
     mess_id: int,
+    language: str,
 ):
+    text_order = (text_order_ru
+                  if language == 'ru'
+                  else text_order_en)
     keyboard = InlineKeyboardBuilder()
 
     buttons = [
         InlineKeyboardButton(
-            text='Готов к выдачи',
+            text=text_order.order_messages_dict['ready_for_pickup'],
             callback_data=OrderStatusCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['ready_for_pickup']['id'],
+                status=OrderStatus.READY_FOR_PICKUP.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text='Отменить',
+            text=text_order.order_messages_dict['cancelled'],
             callback_data=CheckOrdersCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['cancelled']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text='Выполнен',
+            text=text_order.order_messages_dict['completed'],
             callback_data=OrderStatusCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['completed']['id'],
+                status=OrderStatus.COMPLETED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
     ]
@@ -147,39 +157,46 @@ def create_order_status_keyboard(
 
 def create_order_status_delivery_keyboard(
     mess_id: int,
-    data: TimeOrdersCallbackFactory
+    data: TimeOrdersCallbackFactory,
+    language: str
 ):
+    text_order = (text_order_ru
+                  if language == 'ru'
+                  else text_order_en)
     keyboard = InlineKeyboardBuilder()
 
     buttons = [
         InlineKeyboardButton(
-            text='Передан курьеру',
+            text=text_order.order_messages_dict['courier_assigned'],
             callback_data=OrderStatusCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['courier_assigned']['id'],
+                status=OrderStatus.COURIER_ASSIGNED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text='Отменить',
+            text=text_order.order_messages_dict['cancelled'],
             callback_data=CheckOrdersCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['cancelled']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text='Выполнен',
+            text=text_order.order_messages_dict['completed'],
             callback_data=OrderStatusCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['completed']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
     ]
@@ -191,28 +208,34 @@ def create_order_status_delivery_keyboard(
 def create_status_redy_order_keyboard(
     data: OrderStatusCallbackFactory,
     mess_id: int,
+    language: str
 ):
+    text_order = (text_order_ru
+                  if language == 'ru'
+                  else text_order_en)
     keyboard = InlineKeyboardBuilder()
 
     buttons = [
         InlineKeyboardButton(
-            text='Отменить',
+            text=text_order.order_messages_dict['cancelled'],
             callback_data=CheckOrdersCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['cancelled']['id'],
+                status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
         InlineKeyboardButton(
-            text='Выполнен',
+            text=text_order.order_messages_dict['completed'],
             callback_data=OrderStatusCallbackFactory(
                 order_type=data.order_type,
                 order_id=data.order_id,
                 user_id=data.user_id,
-                status=ORDER_STATUSES['completed']['id'],
+                status=OrderStatus.COMPLETED.value['id'],
                 mess_id=mess_id,
+                language=language
             ).pack()
         ),
     ]

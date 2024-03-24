@@ -17,52 +17,54 @@ from src.callbacks import (
     CategoryAdminAddCallbackFactory,
 )
 from src.db import cart_db
+from src.lexicons import text_menu_en, text_menu_ru
 
 
 async def create_kb_category(
     categories: List[category_schemas.GetCategory],
     user_id: int,
+    language: str
 ):
     bill = await cart_db.get_total_price_cart(
         user_id=user_id
     )
 
     keyboard = InlineKeyboardBuilder()
+    if language == 'ru':
+        text_menu = text_menu_ru
+    else:
+        text_menu = text_menu_en
 
-    row_buttons = []
+    text_menu_btn = text_menu.create_navigation_btn(bill=bill)
 
-    row_buttons.append(
-        InlineKeyboardButton(
-            text='Спецпредложение 🔥',
-            callback_data='press_popular_menu'
-        ),
-    )
+    row_buttons = [InlineKeyboardButton(
+        text=value['text'],
+        callback_data=value['callback_data']
+    ) for value in text_menu.special_offer_dict.values()]
 
     for category in categories:
-
-        button = InlineKeyboardButton(
-            text=f'{category.name}',
-            callback_data=CategoryIdCallbackFactory(
-                category_id=category.id).pack()
+        category_name = (category.name_rus
+                         if language == 'ru'
+                         else category.name_en)
+        row_buttons.append(
+            InlineKeyboardButton(
+                text=f'{category_name}',
+                callback_data=CategoryIdCallbackFactory(
+                    category_id=category.id).pack()
+            )
         )
-        row_buttons.append(button)
 
     if len(row_buttons) % 2 == 1:
         row_buttons.append(InlineKeyboardButton(
             text=' ', callback_data='press_pass'))
 
-    keyboard.row(*row_buttons, width=2)
+    for value in text_menu_btn.values():
+        row_buttons.append(InlineKeyboardButton(
+            text=value['text'],
+            callback_data=value['callback_data']
+        ))
 
-    keyboard.row(
-        InlineKeyboardButton(
-            text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_main_menu'
-        ),
-        InlineKeyboardButton(
-            text=f'Корзина 🛒 {bill} ₹',
-            callback_data='press_cart'
-        )
-    )
+    keyboard.row(*row_buttons, width=2)
 
     return keyboard.as_markup()
 
@@ -70,6 +72,7 @@ async def create_kb_category(
 async def create_kb_category_admin(
     categories: List[category_schemas.GetCategory],
     callback_data: CallbackData,
+    language: str,
     popular: Optional[bool] = None
 ):
 
@@ -77,11 +80,14 @@ async def create_kb_category_admin(
 
     row_buttons = [
         InlineKeyboardButton(
-            text=f'{category.name}',
+            text=f'{category_name}',
             callback_data=callback_data(
                 category_id=category.id, popular=popular).pack()
         )
         for category in categories
+        for category_name in [category.name_rus
+                              if language == 'ru'
+                              else category.name_en]
     ]
 
     if len(row_buttons) % 2 == 1:
@@ -102,19 +108,23 @@ async def create_kb_category_admin(
 
 async def create_kb_category_admin_add_prod(
     categories: List[category_schemas.GetCategory],
+    language: str,
 ):
 
     keyboard = InlineKeyboardBuilder()
 
     row_buttons = [
         InlineKeyboardButton(
-            text=f'{category.name}',
+            text=category_name,
             callback_data=CategoryAdminAddCallbackFactory(
                 category_id=category.id,
                 category_name=category.name
             ).pack()
         )
         for category in categories
+        for category_name in [category.name_rus
+                              if language == 'ru'
+                              else category.name_en]
     ]
 
     if len(row_buttons) % 2 == 1:
@@ -128,6 +138,7 @@ async def create_kb_category_admin_add_prod(
 
 async def create_kb_category_avail_admin(
     categories: List[category_schemas.GetCategory],
+    language: str
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -136,10 +147,10 @@ async def create_kb_category_avail_admin(
         availability = "В наличии" if category.availability else "Отсутствует"
         indicator = '✅' if category.availability else '❌'
         action = "Убрать" if category.availability else "Добавить"
-
+        category_name = category.name_rus if language == 'ru' else category.name_en
         keyboard.row(
             InlineKeyboardButton(
-                text=f'{category.name}',
+                text=category_name,
                 callback_data=CategoryAdminAvailCallbackFactory(
                     category_id=category.id).pack()
             ))

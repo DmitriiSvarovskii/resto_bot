@@ -7,6 +7,7 @@ from aiogram.types import (
     ReplyKeyboardMarkup
 )
 
+from src.lexicons import text_menu_en, text_menu_ru
 from src.db import cart_db
 from src.schemas import product_schemas
 from src.lexicons import LEXICON_KEYBOARDS_RU
@@ -27,6 +28,7 @@ from src.callbacks import (
 async def create_kb_product(
     products: List[product_schemas.ReadProduct],
     user_id: int,
+    language: str,
     popular: Optional[bool] = None
 ):
     cart_info = await cart_db.get_cart_items_and_totals(
@@ -36,13 +38,28 @@ async def create_kb_product(
     cart_items_dict = {
         item.product_id: item.quantity for item in cart_info.cart_items}
 
+    if language == 'ru':
+        text_menu = text_menu_ru
+    else:
+        text_menu = text_menu_en
+
+    text_menu_btn = text_menu.create_navigation_prod_btn(
+        bill=cart_info.total_price)
+
     keyboard = InlineKeyboardBuilder()
 
     for product in products:
+        product_name = (product.name_rus
+                        if language == 'ru'
+                        else product.name_en)
+
+        description = 'Состав' if language == 'ru' else 'Description'
+        price = 'Цена' if language == 'ru' else 'Price'
+        piece = 'шт' if language == 'ru'else 'pc'
 
         keyboard.row(
             InlineKeyboardButton(
-                text=f'{product.name}',
+                text=product_name,
                 callback_data=ProductIdCallbackFactory(
                     type_pr='plus',
                     product_id=product.id,
@@ -54,7 +71,7 @@ async def create_kb_product(
 
         keyboard.row(
             InlineKeyboardButton(
-                text='Состав',
+                text=description,
                 callback_data=ProductIdCallbackFactory(
                     type_pr='compound',
                     product_id=product.id,
@@ -62,11 +79,11 @@ async def create_kb_product(
                     popular=popular
                 ).pack()),
             InlineKeyboardButton(
-                text=f'Цена: {product.price} ₹',
+                text=f'{price}: {product.price} ₹',
                 callback_data='press_pass'
             ),
             InlineKeyboardButton(
-                text=f'{product_quantity} шт',
+                text=f'{product_quantity} {piece}',
                 callback_data='press_pass'),
             width=3
         )
@@ -93,16 +110,12 @@ async def create_kb_product(
             width=2
         )
 
-    keyboard.row(
-        InlineKeyboardButton(
-            text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_menu'
-        ),
-        InlineKeyboardButton(
-            text=f'Корзина 🛒 {cart_info.total_price} ₹',
-            callback_data='press_cart'
-        )
-    )
+    row_buttons = [InlineKeyboardButton(
+        text=value['text'],
+        callback_data=value['callback_data']
+    ) for value in text_menu_btn.values()]
+
+    keyboard.row(*row_buttons, width=2)
 
     return keyboard.as_markup()
 
