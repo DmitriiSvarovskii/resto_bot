@@ -52,6 +52,10 @@ async def create_mail_chats(message: types.Message, bot: Bot):
     # store_info = await store_db.get_store_info()
     customer_list = await customer_db.db_get_users_list()
     # if user_info.admin:
+    en = 0
+    ru = 0
+    err = 0
+    block = 0
     if 1 == 1:
         for user_data in customer_list:
             try:
@@ -71,6 +75,7 @@ async def create_mail_chats(message: types.Message, bot: Bot):
                             language='ru', user_id=user_data.user_id
                         )
                     )
+                    ru += 1
 
                 else:
                     await bot.send_message(
@@ -85,14 +90,16 @@ async def create_mail_chats(message: types.Message, bot: Bot):
                             language='en', user_id=user_data.user_id
                         )
                     )
+                    en += 1
             except TelegramForbiddenError:
                 await message.answer(text=f'{user_data.user_id} заблокировал бота')
+                block += 1
                 continue  # Переходим к следующей итерации цикла при возникновении ошибки TelegramForbiddenError
-            except Exception as e:
-                print(f"An error occurred: {e}")
+            except Exception:
+                err += 1
                 continue
         await message.answer(
-            text='Рассылка завершена'
+            text=f'Рассылка завершена.\nРусский язык {ru}\nАнглийский язык {en}\nЗаблочен {block}\nОшибка {err}'
         )
     else:
         await message.answer(
