@@ -20,12 +20,8 @@ async def create_new_orders(
     callback_data: CreateOrderCallbackFactory,
     language: str
 ):
-    if language == 'ru':
-        text_order = text_order_ru
-    else:
-        text_order = text_order_en
+    text_order = text_order_ru if language == 'ru' else text_order_en
 
-    delivery_village = None
     user_id = callback.message.chat.id
 
     user_data_del = user_dict.get(user_id)
@@ -78,10 +74,10 @@ async def create_new_orders(
         data=order_info
     )
 
-    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
-        delivery_village = await delivery_db.get_delivery_one_district(
-            delivery_id=user_data_del['delivery_id']
-        )
+    delivery_village = (await delivery_db.get_delivery_one_district(
+        delivery_id=order_info.delivery_id
+    ) if callback_data.order_type in OrderTypes.DELIVERY.value.values()
+        else None)
 
     await cart_db.delete_cart_items_by_user_id(
         user_id=user_id
@@ -105,12 +101,8 @@ async def create_text(
     ],
     language: str
 ):
-    if language == 'ru':
-        text_order = text_order_ru
-    else:
-        text_order = text_order_en
+    text_order = text_order_ru if language == 'ru' else text_order_en
 
-    delivery_village = None
     order_id = callback_data.order_id
 
     data_order = await order_db.get_order(order_id=order_id)
@@ -121,12 +113,14 @@ async def create_text(
 
     cart_items = await order_db.get_order_detail(order_id=order_id)
 
-    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
-        delivery_village = await delivery_db.get_delivery_one_district(
-            delivery_id=order_info.delivery_id
-        )
+    delivery_village = (await delivery_db.get_delivery_one_district(
+        delivery_id=order_info.delivery_id
+    ) if callback_data.order_type in OrderTypes.DELIVERY.value.values()
+        else None)
 
     order_text = await text_order.create_order_text(cart_items=cart_items)
+
+    box_price = sum(item.box_price or 0 for item in cart_items)
 
     chat_text, user_text = await text_order.generate_order_messages(
         order_text=order_text,
@@ -134,6 +128,7 @@ async def create_text(
         user_info=user_info,
         delivery_village=delivery_village,
         order_info=order_info,
+        box_price=box_price
     )
 
     return chat_text

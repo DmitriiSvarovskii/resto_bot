@@ -1,6 +1,8 @@
-from sqlalchemy import insert, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
+from sqlalchemy import insert, select, update
+from sqlalchemy.sql import func
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 from src.schemas import order_schemas, cart_schemas
 from src.models import (
@@ -124,10 +126,18 @@ async def crud_get_order_detail(
             Product.name_en,
             OrderDetail.quantity.label("quantity"),
             OrderDetail.unit_price.label("unit_price"),
+            (OrderDetail.quantity * Product.price_box).label("box_price"),
         )
         .join(OrderDetail, OrderDetail.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
         .where(OrderDetail.order_id == order_id)
+        .group_by(Product.id,
+                  Category.name_rus,
+                  Product.name_rus,
+                  Category.name_en,
+                  Product.name_en,
+                  OrderDetail.quantity,
+                  OrderDetail.unit_price,)
     )
     result = await session.execute(query)
     return [cart_schemas.CartItem(**row._asdict()) for row in result]

@@ -13,6 +13,7 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
         'takeaway': {
             'text': 'Takeaway',
             'callback_data': CreateOrderCallbackFactory(
+                type_callback='create',
                 order_type=ORDER_TYPES['takeaway']['id'],
                 status=ORDER_STATUSES['new']['id'],
                 mess_id=mess_id,

@@ -9,6 +9,7 @@ from src.schemas import (
     delivery_schemas,
     order_schemas
 )
+from src.utils import OrderTypes
 from src.callbacks import (
     TimeOrdersCallbackFactory,
     CheckOrdersCallbackFactory,
@@ -103,7 +104,7 @@ async def generate_order_messages(
         order_header + order_details
     )
 
-    if data_order.order_type == "Delivery":
+    if data_order.order_type in OrderTypes.DELIVERY.value.values():
         delivery_price = delivery_village.price
 
         delivery_info = (
