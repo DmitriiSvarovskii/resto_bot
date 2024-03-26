@@ -24,6 +24,19 @@ async def crud_get_all_categories(
     return categories
 
 
+async def crud_get_one_category(
+    category_id: int,
+    session: AsyncSession,
+) -> Optional[category_schemas.GetCategory]:
+    query = (
+        select(Category)
+        .where(Category.id == category_id)
+    )
+    result = await session.execute(query)
+    category = result.scalar()
+    return category
+
+
 async def crud_change_avail_categories(
     category_id: int,
     session: AsyncSession,
@@ -53,14 +66,15 @@ async def crud_create_category(
 
 async def crud_update_category_name(
     category_id: int,
-    category_name: str,
+    category_name_rus: str,
+    category_name_en: str,
     session: AsyncSession
 ):
 
     stmt = (
         update(Category).
         where(Category.id == category_id).
-        values(name=category_name)
+        values(name_rus=category_name_rus, name_en=category_name_en)
     )
     await session.execute(stmt)
     await session.commit()

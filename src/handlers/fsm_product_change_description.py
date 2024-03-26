@@ -20,10 +20,10 @@ async def process_waiting_new_product_name(
     await state.update_data(product_id=callback_data.product_id)
     await callback.message.delete()
     await callback.message.answer(
-        text='Напишите новое имя для продукта',
+        text='Напишите новое описание для продукта, на русском языке',
         reply_markup=product_kb.create_kb_fsm_change_name()
     )
-    await state.set_state(FSMProductChangeDescription.description)
+    await state.set_state(FSMProductChangeDescription.description_rus)
 
 
 @router.message(F.text == 'Отменить изменение')
@@ -41,20 +41,33 @@ async def process_cancel_command_state(
     )
 
 
-@router.message(FSMProductChangeDescription.description, F.text)
+@router.message(FSMProductChangeDescription.description_rus, F.text)
+async def process_waiting_new_description_rus(
+    message: types.Message,
+    state: FSMContext
+):
+    await state.update_data(description_rus=message.text)
+    await message.answer(
+        text='Напишите новое описание товара на английском языке',
+        reply_markup=product_kb.create_kb_fsm_change_name()
+    )
+    await state.set_state(FSMProductChangeDescription.description_en)
+
+
+@router.message(FSMProductChangeDescription.description_en, F.text)
 async def process_comment_sent(
     message: types.Message,
     state: FSMContext
 ):
+    await state.update_data(description_en=message.text)
     data = await state.get_data()
+    await product_db.db_update_product(
+        product_id=data['product_id'],
+        data=data
+    )
     await message.answer(
         text=LEXICON_RU['good'],
         reply_markup=types.ReplyKeyboardRemove()
-    )
-    await product_db.db_update_product(
-        product_id=data['product_id'],
-        field_name='description',
-        new_value=message.text
     )
     await state.clear()
 

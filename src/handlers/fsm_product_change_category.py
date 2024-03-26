@@ -29,7 +29,8 @@ async def process_waiting_new_product_name(
     categories = await category_db.get_all_categories()
     keyboard = await category_kb.create_kb_category_admin(
         categories=categories,
-        callback_data=ChangeCategoryProductCallbackFactory
+        callback_data=ChangeCategoryProductCallbackFactory,
+        language=callback.from_user.language_code
     )
     await callback.message.answer(
         text='Выберите новую категорию для товара',
@@ -62,6 +63,7 @@ async def process_comment_sent(
     callback_data: ChangeCategoryProductCallbackFactory,
     state: FSMContext
 ):
+    await state.update_data(category_id=callback_data.category_id)
     data = await state.get_data()
     await callback.message.answer(
         text=LEXICON_RU['good'],
@@ -69,8 +71,7 @@ async def process_comment_sent(
     )
     await product_db.db_update_product(
         product_id=data['product_id'],
-        field_name='category_id',
-        new_value=callback_data.category_id
+        data=data
     )
     await state.clear()
 

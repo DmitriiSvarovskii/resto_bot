@@ -118,7 +118,8 @@ async def create_kb_category_admin_add_prod(
             text=category_name,
             callback_data=CategoryAdminAddCallbackFactory(
                 category_id=category.id,
-                category_name=category.name
+                category_name_rus=category.name_rus,
+                category_name_en=category.name_en
             ).pack()
         )
         for category in categories

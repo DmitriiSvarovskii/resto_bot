@@ -6,11 +6,13 @@ class FSMProductChangeCategory(StatesGroup):
 
 
 class FSMProductChangeName(StatesGroup):
-    name = State()
+    name_rus = State()
+    name_en = State()
 
 
 class FSMProductChangeDescription(StatesGroup):
-    description = State()
+    description_rus = State()
+    description_en = State()
 
 
 class FSMProductChangePrice(StatesGroup):

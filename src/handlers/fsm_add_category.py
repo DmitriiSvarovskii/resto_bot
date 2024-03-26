@@ -2,8 +2,8 @@ from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.utils import create_category_utils
 from src.db import category_db
+from src.schemas import category_schemas
 from src.keyboards import (
     admin_kb,
     fsm_add_new_category_kb,
@@ -23,10 +23,10 @@ async def process_add_new_product(
     state: FSMContext
 ):
     await callback.message.answer(
-        text='Введите название новой категории',
+        text='Введите название новой категории на русском языке',
         reply_markup=fsm_add_new_category_kb.create_kb_fsm_canel()
     )
-    await state.set_state(FSMAddNewCategory.category_name)
+    await state.set_state(FSMAddNewCategory.category_name_rus)
 
 
 @router.message(F.text == LEXICON_KEYBOARDS_RU['cancel_add_category'])
@@ -46,7 +46,25 @@ async def process_cancel_command_state_order(
 
 
 @router.message(
-    FSMAddNewCategory.category_name,
+    FSMAddNewCategory.category_name_rus,
+    F.text
+)
+async def process_waiting_category_name(
+    message: types.Message,
+    state: FSMContext,
+):
+    await state.update_data(
+        name_rus=message.text
+    )
+    await message.answer(
+        text='Введите название новой категории на английском языке',
+        reply_markup=fsm_add_new_category_kb.create_kb_fsm_canel()
+    )
+    await state.set_state(FSMAddNewCategory.category_name_en)
+
+
+@router.message(
+    FSMAddNewCategory.category_name_en,
     F.text
 )
 async def process_waiting_category_id(
@@ -54,7 +72,7 @@ async def process_waiting_category_id(
     state: FSMContext,
 ):
     await state.update_data(
-        name=message.text
+        name_en=message.text
     )
     await message.answer(
         text='Укажите, данная категория сейчас есть в наличии или он отсутствует',
@@ -89,7 +107,8 @@ async def process_waiting_availability(
     )
     await callback.message.answer(
         text=(
-            f"Категория: {data['name']}\n"
+            f"Категория (рус): {data['name_rus']}\n"
+            f"Категория (англ): {data['name_en']}\n"
         ),
         reply_markup=fsm_add_new_category_kb.create_kb_approval()
     )
@@ -106,10 +125,10 @@ async def process_waiting_make_changes(
 ):
     await callback.message.delete()
     await callback.message.answer(
-        text='Выберите название новой категории',
+        text='Выберите название новой категории на русском языке',
         reply_markup=fsm_add_new_category_kb.create_kb_fsm_canel()
     )
-    await state.set_state(FSMAddNewCategory.category_name)
+    await state.set_state(FSMAddNewCategory.category_name_rus)
 
 
 @router.callback_query(
@@ -121,7 +140,7 @@ async def process_waiting_approval(
     state: FSMContext
 ):
     data = await state.get_data()
-    data_category = await create_category_utils.create_data_category(data=data)
+    data_category = category_schemas.CreateCategory(**data)
     await category_db.db_create_new_category(data=data_category)
     message_text = 'Выберите пункт меню'
     await callback.message.edit_reply_markup(

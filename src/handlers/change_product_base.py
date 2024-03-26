@@ -18,7 +18,8 @@ async def process_change_product(callback: types.CallbackQuery):
     categories = await category_db.get_all_categories()
     keyboard = await category_kb.create_kb_category_admin(
         categories=categories,
-        callback_data=CategoryAdminChangeCallbackFactory
+        callback_data=CategoryAdminChangeCallbackFactory,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="Выберите категорию",

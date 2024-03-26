@@ -46,6 +46,7 @@ async def process_comment_sent(
     message: types.Message,
     state: FSMContext
 ):
+    await state.update_data(price_box=int(message.text))
     data = await state.get_data()
     await message.answer(
         text=LEXICON_RU['good'],
@@ -53,8 +54,7 @@ async def process_comment_sent(
     )
     await product_db.db_update_product(
         product_id=data['product_id'],
-        field_name='price_box',
-        new_value=int(message.text)
+        data=data
     )
     await state.clear()
 

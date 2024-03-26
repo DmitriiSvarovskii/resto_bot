@@ -68,14 +68,12 @@ async def db_create_new_product(data: product_schemas.CreateProduct):
 
 async def db_update_product(
     product_id: int,
-    field_name: str,
-    new_value: Any,
+    data: dict
 ):
     async for session in get_async_session():
         await product_crud.crud_update_product(
             product_id=product_id,
-            field_name=field_name,
-            new_value=new_value,
+            data=data,
             session=session
         )
         break

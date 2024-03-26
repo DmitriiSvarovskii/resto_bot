@@ -12,6 +12,15 @@ async def get_all_categories():
         return categories
 
 
+async def db_get_one_category(category_id: int):
+    async for session in get_async_session():
+        categories = await cat_crud.crud_get_one_category(
+            category_id=category_id,
+            session=session
+        )
+        return categories
+
+
 async def db_create_new_category(data: category_schemas.CreateCategory):
     async for session in get_async_session():
         categories = await cat_crud.crud_create_category(
@@ -41,12 +50,14 @@ async def change_avail_category(category_id):
 
 async def db_update_category_name(
     category_id: int,
-    category_name: str,
+    category_name_rus: str,
+    category_name_en: str,
 ):
     async for session in get_async_session():
         await cat_crud.crud_update_category_name(
             category_id=category_id,
-            category_name=category_name,
+            category_name_rus=category_name_rus,
+            category_name_en=category_name_en,
             session=session
         )
         break

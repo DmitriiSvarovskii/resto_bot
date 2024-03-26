@@ -3,7 +3,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
-from src.utils import create_product
+from src.schemas import product_schemas
 from src.db import product_db, category_db
 from src.keyboards import (
     admin_kb,
@@ -66,8 +66,7 @@ async def process_waiting_category_id(
     callback_data: CategoryAdminAddCallbackFactory
 ):
     await state.update_data(
-        category_id=callback_data.category_id,
-        category_name=callback_data.category_name
+        category_id=callback_data.category_id
     )
     if callback.message:
         try:
@@ -75,35 +74,66 @@ async def process_waiting_category_id(
         except TelegramBadRequest:
             pass
     await callback.message.answer(
-        text='Введите название продукта',
+        text='Введите название продукта на русском языке',
         reply_markup=fsm_add_new_product_kb.create_kb_fsm_canel()
     )
-    await state.set_state(FSMAddNewProduct.product_name)
+    await state.set_state(FSMAddNewProduct.product_name_rus)
 
 
-@router.message(FSMAddNewProduct.product_name, F.text)
-async def process_waiting_product_name(
+@router.message(FSMAddNewProduct.product_name_rus, F.text)
+async def process_waiting_product_name_rus(
     message: types.Message,
     state: FSMContext
 ):
-    await state.update_data(name=message.text)
+    await state.update_data(name_rus=message.text)
     await message.answer(
-        text='Введите описание продукта, либо перейдите к следующему шагу',
+        text='Введите название продукта на английском языке',
         reply_markup=fsm_add_new_product_kb.create_kb_fsm_canel_and_skip()
 
     )
-    await state.set_state(FSMAddNewProduct.description)
+    await state.set_state(FSMAddNewProduct.product_name_en)
 
 
-@router.message(FSMAddNewProduct.description, F.text)
-async def process_waiting_description(
+@router.message(FSMAddNewProduct.product_name_en, F.text)
+async def process_waiting_product_name_en(
+    message: types.Message,
+    state: FSMContext
+):
+    await state.update_data(name_en=message.text)
+    await message.answer(
+        text='Введите описание продукта на русском языке, либо перейдите к следующему шагу',
+        reply_markup=fsm_add_new_product_kb.create_kb_fsm_canel_and_skip()
+
+    )
+    await state.set_state(FSMAddNewProduct.description_rus)
+
+
+@router.message(FSMAddNewProduct.description_rus, F.text)
+async def process_waiting_description_rus(
     message: types.Message,
     state: FSMContext
 ):
     if message.text == LEXICON_KEYBOARDS_RU['skip']:
-        await state.update_data(description='Описание отсутствует')
+        await state.update_data(description_rus='Описание отсутствует')
     else:
-        await state.update_data(description=message.text)
+        await state.update_data(description_rus=message.text)
+    await message.answer(
+        text='Введите описание продукта на русском языке, либо перейдите к следующему шагу',
+        reply_markup=fsm_add_new_product_kb.create_kb_fsm_canel_and_skip()
+
+    )
+    await state.set_state(FSMAddNewProduct.description_en)
+
+
+@router.message(FSMAddNewProduct.description_en, F.text)
+async def process_waiting_description_en(
+    message: types.Message,
+    state: FSMContext
+):
+    if message.text == LEXICON_KEYBOARDS_RU['skip']:
+        await state.update_data(description_en='Описание отсутствует')
+    else:
+        await state.update_data(description_en=message.text)
     await message.answer(
         text='Введите цену продукта',
         reply_markup=fsm_add_new_product_kb.create_kb_fsm_canel()
@@ -123,7 +153,7 @@ async def process_waiting_price(message: types.Message, state: FSMContext):
     await state.set_state(FSMAddNewProduct.price_box)
 
 
-@router.message(FSMAddNewProduct.price, F.text)
+@router.message(FSMAddNewProduct.price)
 async def process_error_price(message: types.Message, state: FSMContext):
     await message.answer(
         text='Отправленное значение не похоже на число, введите цену продукта, используйте только цифры.',
@@ -167,6 +197,9 @@ async def process_waiting_availability(
 ):
     await state.update_data(availability=callback_data.availability)
     data = await state.get_data()
+    data_category = await category_db.db_get_one_category(
+        category_id=data['category_id']
+    )
     await callback.message.edit_reply_markup(
         inline_message_id=callback.inline_message_id,
         reply_markup=None)
@@ -182,9 +215,12 @@ async def process_waiting_availability(
     )
     await callback.message.answer(
         text=(
-            f"Категория: {data['category_name']}\n"
-            f"Название товара: {data['name']}\n"
-            f"Описание товара: {data['description']}\n"
+            f"Категория (рус): {data_category.name_rus}\n"
+            f"Категория (англ): {data_category.name_en}\n"
+            f"Название товара (рус): {data['name_rus']}\n"
+            f"Название товара (англ): {data['name_en']}\n"
+            f"Описание товара (рус): {data['description_rus']}\n"
+            f"Описание товара (англ): {data['description_en']}\n"
             f"Цена товара: {data['price']}\n"
             f"Цена упаковки: {data['price_box']}\n"
         ),
@@ -227,7 +263,8 @@ async def process_waiting_approval(
     state: FSMContext
 ):
     data = await state.get_data()
-    data_product = await create_product.create_data_product(data=data)
+    data_product = product_schemas.CreateProduct(**data)
+    # data_product = await create_product.create_data_product(data=data)
     await product_db.db_create_new_product(data=data_product)
     message_text = 'Выберите пункт меню'
     await callback.message.edit_reply_markup(

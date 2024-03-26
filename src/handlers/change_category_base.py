@@ -17,7 +17,8 @@ async def process_change_category(callback: types.CallbackQuery):
     categories = await category_db.get_all_categories()
     keyboard = await category_kb.create_kb_category_admin(
         categories=categories,
-        callback_data=CategoryChangeCallbackFactory
+        callback_data=CategoryChangeCallbackFactory,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="Выберите категорию",

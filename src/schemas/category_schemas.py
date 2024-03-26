@@ -16,4 +16,5 @@ class CreateCategory(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     name_rus: str
+    name_en: str
     availability: bool

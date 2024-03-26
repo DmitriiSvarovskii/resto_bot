@@ -19,7 +19,8 @@ async def process_modify_popular_products(callback: types.CallbackQuery):
     keyboard = await category_kb.create_kb_category_admin(
         categories=categories,
         callback_data=CategoryAdminCallbackFactory,
-        popular=True
+        popular=True,
+        language=callback.from_user.language_code
     )
     await callback.message.edit_text(
         text="Выберите категорию",

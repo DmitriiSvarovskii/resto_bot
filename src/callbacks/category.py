@@ -62,7 +62,7 @@ class CategoryAdminAddCallbackFactory(
     CategoryIdCallbackFactory,
     prefix="adm-add"
 ):
-    category_name: str
+    pass
 
 
 class AddCategoryAvailabilityCallbackFactory(

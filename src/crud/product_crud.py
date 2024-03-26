@@ -122,16 +122,14 @@ async def crud_create_new_product(
 
 async def crud_update_product(
     product_id: int,
-    field_name: str,
-    new_value: Any,
+    data: dict,
     session: AsyncSession
 ):
-    update_data = {field_name: new_value}
-
+    # update_data = {field_name: new_value}
     stmt = (
         update(Product).
         where(Product.id == product_id).
-        values(**update_data)
+        values(**{key: value for key, value in data.items() if key != 'product_id'})
     )
     await session.execute(stmt)
     await session.commit()

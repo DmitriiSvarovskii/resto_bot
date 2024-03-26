@@ -20,10 +20,10 @@ async def process_waiting_new_category_name(
     await state.update_data(category_id=callback_data.category_id)
     await callback.message.delete()
     await callback.message.answer(
-        text='Напишите новое имя для продукта',
+        text='Напишите новое название категории на русском языке',
         reply_markup=product_kb.create_kb_fsm_change_name()
     )
-    await state.set_state(FSMCategoryChangeName.name)
+    await state.set_state(FSMCategoryChangeName.name_rus)
 
 
 @router.message(F.text == 'Отменить изменение')
@@ -41,20 +41,31 @@ async def process_cancel_command_state(
     )
 
 
-@router.message(FSMCategoryChangeName.name, F.text)
-async def process_comment_sent(
+@router.message(FSMCategoryChangeName.name_rus, F.text)
+async def process_waiting_new_category_name_rus(
     message: types.Message,
     state: FSMContext
 ):
+    await state.update_data(category_name_rus=message.text)
+    await message.answer(
+        text='Напишите новое название категории на английском языке',
+        reply_markup=product_kb.create_kb_fsm_change_name()
+    )
+    await state.set_state(FSMCategoryChangeName.name_en)
+
+
+@router.message(FSMCategoryChangeName.name_en, F.text)
+async def process_waiting_new_category_name_en(
+    message: types.Message,
+    state: FSMContext
+):
+    await state.update_data(category_name_en=message.text)
     data = await state.get_data()
     await message.answer(
         text=LEXICON_RU['good'],
         reply_markup=types.ReplyKeyboardRemove()
     )
-    await category_db.db_update_category_name(
-        category_id=data['category_id'],
-        category_name=message.text,
-    )
+    await category_db.db_update_category_name(**data)
     await state.clear()
 
     await admin_handlers.back_admin_menu(
