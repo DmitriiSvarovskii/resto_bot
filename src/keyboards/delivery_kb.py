@@ -7,6 +7,7 @@ from aiogram.types import (
 )
 
 from src.callbacks import DeliveryIdCallbackFactory, CreateOrderCallbackFactory
+from src.callbacks.order import OrderCallbackFactory
 from src.schemas import delivery_schemas
 from src.lexicons import (
     text_common_ru,
@@ -76,7 +77,7 @@ def create_kb_delivery_go(mess_id: int, language: str):
     keyboard.row(
         InlineKeyboardButton(
             text=text_delivery.delivery_fsm_text['confirm_delivery'],
-            callback_data=CreateOrderCallbackFactory(
+            callback_data=OrderCallbackFactory(
                 type_callback='create',
                 order_type=OrderTypes.DELIVERY.value['id'],
                 status=OrderStatus.NEW.value['id'],

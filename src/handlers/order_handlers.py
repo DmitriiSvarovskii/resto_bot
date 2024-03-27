@@ -57,11 +57,12 @@ async def process_orders(callback: types.CallbackQuery,
 
 async def create_orders_takeaway(
     callback: types.CallbackQuery,
-    callback_data: CreateOrderCallbackFactory,
+    callback_data: OrderCallbackFactory,
     bot: Bot
 ):
     try:
         order_type = callback_data.order_type
+        print(order_type)
 
         order_info, chat_text, user_text = (
             await order_utils.create_new_orders(
@@ -217,14 +218,14 @@ async def process_time_order(
         )
     )
 
-    if callback_data.order_type in OrderTypes.TAKEAWAY.value.values():
-        keyboard = order_kb.create_order_status_keyboard(
+    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
+        keyboard = order_kb.create_order_status_delivery_keyboard(
             data=callback_data,
             mess_id=message_id.message_id,
             language=callback_data.language
         )
     else:
-        keyboard = order_kb.create_order_status_delivery_keyboard(
+        keyboard = order_kb.create_order_status_keyboard(
             data=callback_data,
             mess_id=message_id.message_id,
             language=callback_data.language

@@ -167,7 +167,7 @@ def generate_order_info_time_text(callback_data: TimeOrdersCallbackFactory):
         f"{current_time.strftime('%d.%m.%Y')}\n"
         f"Preparation Time: {callback_data.time} minutes\n"
     )
-    if callback_data.order_type == 2:
+    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
         message += (
             f"Estimated Travel Time: {callback_data.time_del} minutes"
         )

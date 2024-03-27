@@ -3,6 +3,7 @@ from src.callbacks import (
     OrderStatusCallbackFactory,
     CreateOrderCallbackFactory,
 )
+from src.callbacks.order import OrderCallbackFactory
 from src.db import cart_db, order_db, delivery_db, customer_db
 from src.services.order_constants import ORDER_TYPES
 from src.state import user_dict_comment, user_dict
@@ -17,7 +18,7 @@ from .order_constants import OrderTypes, OrderStatus
 
 async def create_new_orders(
     callback: CallbackQuery,
-    callback_data: CreateOrderCallbackFactory,
+    callback_data: OrderCallbackFactory,
     language: str
 ):
     text_order = text_order_ru if language == 'ru' else text_order_en
@@ -138,7 +139,7 @@ async def create_data_order(
     user_id: int,
     total_price: int,
     language: str,
-    callback_data: CreateOrderCallbackFactory,
+    callback_data: OrderCallbackFactory,
 ):
     order_type = OrderTypes.get_name_by_id(
         target_id=callback_data.order_type,

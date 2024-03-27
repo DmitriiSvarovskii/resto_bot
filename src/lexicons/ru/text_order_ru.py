@@ -111,7 +111,8 @@ async def generate_order_messages(
     user_text = (
         order_header + order_details
     )
-
+    print(OrderTypes.DELIVERY.value['id'])
+    print(data_order.order_type)
     if data_order.order_type in OrderTypes.DELIVERY.value.values():
         delivery_price = delivery_village.price
 
@@ -175,7 +176,7 @@ def generate_order_info_time_text(callback_data: TimeOrdersCallbackFactory):
         f"{current_time.strftime('%d.%m.%Y')}\n"
         f"Время приготовления: {callback_data.time} минут\n"
     )
-    if callback_data.order_type == 2:
+    if callback_data.order_type in OrderTypes.DELIVERY.value.values():
         message += (
             f"Ориентировочное время поездки: {callback_data.time_del} минут"
         )

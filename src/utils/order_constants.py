@@ -45,6 +45,7 @@ class OrderStatus(Enum):
 class OrderTypes(Enum):
     TAKEAWAY = {'id': 1, 'name_rus': 'Самовывоз', 'name_en': 'Takeaway'}
     DELIVERY = {'id': 2, 'name_rus': 'Доставка', 'name_en': 'Delivery'}
+    DINEIN = {'id': 3, 'name_rus': 'В зале', 'name_en': 'Dine-in'}
 
     @classmethod
     def get_name_by_id(cls, target_id, language):

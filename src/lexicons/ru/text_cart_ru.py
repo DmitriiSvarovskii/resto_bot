@@ -2,7 +2,7 @@ from typing import Optional
 
 from src.callbacks import CreateOrderCallbackFactory
 from src.callbacks.order import OrderCallbackFactory
-from src.services import ORDER_TYPES, ORDER_STATUSES
+from src.utils import OrderTypes, OrderStatus
 
 
 def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
@@ -15,8 +15,18 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
             'text': 'Самовывоз',
             'callback_data': OrderCallbackFactory(
                 type_callback='create',
-                order_type=ORDER_TYPES['takeaway']['id'],
-                status=ORDER_STATUSES['new']['id'],
+                order_type=OrderTypes.TAKEAWAY.value['id'],
+                status=OrderStatus.NEW.value['id'],
+                mess_id=mess_id,
+                language=language
+            ).pack()
+        },
+        'dine_in': {
+            'text': 'В зале',
+            'callback_data': OrderCallbackFactory(
+                type_callback='create',
+                order_type=OrderTypes.DINEIN.value['id'],
+                status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
                 language=language
             ).pack()

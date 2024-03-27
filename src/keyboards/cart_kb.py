@@ -24,7 +24,7 @@ def create_kb_cart(mess_id: int, language: str):
         callback_data=value['callback_data']
     ) for value in cart_text_dict.values()]
 
-    row_lengths = [1, 2, 3]
+    row_lengths = [1, 3, 3]
 
     current_index = 0
     for row_length in row_lengths:
