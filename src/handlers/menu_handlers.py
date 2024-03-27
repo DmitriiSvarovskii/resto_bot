@@ -104,7 +104,7 @@ async def get_menu_products_popular(
 
     if products:
         await callback.message.edit_text(
-            text=text_menu.menu_messages_dict['store'],
+            text=text_menu.menu_messages_dict['product'],
             reply_markup=keyboard
         )
     else:
