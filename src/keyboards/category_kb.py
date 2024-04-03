@@ -148,7 +148,9 @@ async def create_kb_category_avail_admin(
         availability = "В наличии" if category.availability else "Отсутствует"
         indicator = '✅' if category.availability else '❌'
         action = "Убрать" if category.availability else "Добавить"
-        category_name = category.name_rus if language == 'ru' else category.name_en
+        category_name = (
+            category.name_rus if language == 'ru' else category.name_en
+                         )
         keyboard.row(
             InlineKeyboardButton(
                 text=category_name,

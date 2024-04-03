@@ -53,8 +53,6 @@ async def press_cart(message: Union[types.CallbackQuery, types.Message]):
         text_cart = text_cart_en
     user_id = message.message.chat.id if isinstance(
         message, types.CallbackQuery) else message.chat.id
-    # language = message.from_user.language_code if isinstance(
-    #     message, types.CallbackQuery) else message.from_user.language_code
 
     order_comment = cart_utils.get_comment_value(
         user_id=user_id,

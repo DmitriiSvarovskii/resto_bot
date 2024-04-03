@@ -20,7 +20,7 @@ async def process_waiting_new_product_name(
     await state.update_data(product_id=callback_data.product_id)
     await callback.message.delete()
     await callback.message.answer(
-        text='Напишите новое имя для продукта',
+        text='Напишите новую цену упаковки для продукта',
         reply_markup=product_kb.create_kb_fsm_change_name()
     )
     await state.set_state(FSMProductChangePriceBox.price_box)
@@ -32,7 +32,7 @@ async def process_cancel_command_state(
     state: FSMContext
 ):
     await message.answer(
-        text='Вы отменили изменение имени',
+        text='Вы отменили изменение цены упаковки',
         reply_markup=types.ReplyKeyboardRemove()
     )
     await state.clear()
@@ -60,4 +60,13 @@ async def process_comment_sent(
 
     await admin_handlers.back_admin_menu(
         message=message,
+    )
+
+
+@router.message(FSMProductChangePriceBox.price_box)
+async def warning_not_price(
+    message: types.Message,
+):
+    await message.answer(
+        text='Возникла ошибка при вводе цены упаковки, пожалуйста, повторите попытку. Цену указывайте только цифрами, без использования знаков, букв и тп',
     )

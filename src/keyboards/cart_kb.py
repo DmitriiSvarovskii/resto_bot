@@ -61,7 +61,11 @@ async def create_kbs_products_cart(
 
         for item in cart_info.cart_items:
             product_name = item.name_rus if language == 'ru' else item.name_en
-            category_name = item.category_name_rus if language == 'ru' else item.category_name_en
+            category_name = (
+                item.category_name_rus
+                if language == 'ru'
+                else item.category_name_en
+            )
             unit_price = 'Сумма' if language == 'ru' else 'Unit price'
             piece = 'шт' if language == 'ru'else 'pc'
             keyboard.row(
