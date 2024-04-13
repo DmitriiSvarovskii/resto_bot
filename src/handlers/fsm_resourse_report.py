@@ -15,7 +15,10 @@ async def process_resourse_report(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text=message_text.report_text['resourse_fsm'],
     )

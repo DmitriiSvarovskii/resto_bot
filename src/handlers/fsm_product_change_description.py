@@ -18,7 +18,10 @@ async def process_waiting_new_product_name(
     state: FSMContext
 ):
     await state.update_data(product_id=callback_data.product_id)
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Напишите новое описание для продукта, на русском языке',
         reply_markup=product_kb.create_kb_fsm_change_name()

@@ -123,7 +123,10 @@ async def process_waiting_make_changes(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Выберите название новой категории на русском языке',
         reply_markup=fsm_add_new_category_kb.create_kb_fsm_canel()

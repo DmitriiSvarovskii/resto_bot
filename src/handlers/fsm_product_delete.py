@@ -20,7 +20,10 @@ async def process_waiting_new_product_name(
     state: FSMContext
 ):
     await state.update_data(product_id=callback_data.product_id)
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     keyboard = await product_kb.create_kb_product_delete()
     await callback.message.answer(
         text=('Вы действительно хотите удалить товар? Удаленный товар '

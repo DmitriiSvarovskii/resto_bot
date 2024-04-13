@@ -20,7 +20,10 @@ async def process_waiting_new_category_name(
     state: FSMContext
 ):
     await state.update_data(category_id=callback_data.category_id)
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     keyboard = await category_kb.create_kb_category_delete()
     await callback.message.answer(
         text=('Вы действительно хотите удалить товар? Удаленный товар '

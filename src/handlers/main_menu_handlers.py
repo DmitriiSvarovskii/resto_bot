@@ -20,7 +20,10 @@ async def press_get_location(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'press_del')
 async def press_del_location(callback: types.CallbackQuery):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
 
 
 @router.callback_query(F.data == 'press_contact')

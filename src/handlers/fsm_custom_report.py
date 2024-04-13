@@ -16,7 +16,10 @@ async def process_sales_period_custom(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text=(
             "Укажите дату начала отчёта.\n"

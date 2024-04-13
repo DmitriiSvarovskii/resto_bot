@@ -20,7 +20,10 @@ async def process_edit_hours(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Введите время начала работы в формате "чч:мм" (например: 14:00)',
         reply_markup=kb.create_kb_fsm_edit_openong_hours()

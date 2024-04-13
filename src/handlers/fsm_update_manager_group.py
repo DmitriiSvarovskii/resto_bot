@@ -19,7 +19,10 @@ async def process_waiting_new_welcome_text(
     state: FSMContext
 ):
     await state.update_data(store_id=callback_data.store_id)
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Пришлите id новой группы для заказов',
         reply_markup=product_kb.create_kb_fsm_change_name()

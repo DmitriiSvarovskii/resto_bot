@@ -15,7 +15,10 @@ async def process_view_order(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Отправьте номер заказа, который хотите посмотреть.',
     )

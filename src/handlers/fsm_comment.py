@@ -22,20 +22,21 @@ async def process_waiting_comment(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
+
+    text_comment = (text_comment_ru
+                    if callback.from_user.language_code == 'ru'
+                    else text_comment_en)
     try:
-        text_comment = (text_comment_ru
-                        if callback.from_user.language_code == 'ru'
-                        else text_comment_en)
         await callback.message.delete()
-        await callback.message.answer(
-            text=text_comment.create_comments_message(),
-            reply_markup=keyboard.create_kb_fsm_comment(
-                language=callback.from_user.language_code
-            )
-        )
-        await state.set_state(FSMComment.waiting_comment)
     except Exception as e:
         print(e)
+    await callback.message.answer(
+        text=text_comment.create_comments_message(),
+        reply_markup=keyboard.create_kb_fsm_comment(
+            language=callback.from_user.language_code
+        )
+    )
+    await state.set_state(FSMComment.waiting_comment)
 
 
 @router.message(

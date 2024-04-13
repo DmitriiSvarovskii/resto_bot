@@ -237,7 +237,10 @@ async def process_waiting_make_changes(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     categories = await category_db.get_all_categories_admin()
     keyboard = await category_kb.create_kb_category_admin_add_prod(
         categories=categories,

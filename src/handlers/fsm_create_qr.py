@@ -16,7 +16,10 @@ async def process_waiting_link(
     callback: types.CallbackQuery,
     state: FSMContext
 ):
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        print(e)
     await callback.message.answer(
         text='Пришлите ссылку для генерации в qr-code',
         reply_markup=keyboard.create_kb_fsm_qr_code()
