@@ -74,7 +74,7 @@ async def generate_res_report_text(resourse: str) -> str:
 async def generate_view_order_text(order_id: int) -> str:
     response = await order_db.get_order_detail(order_id=order_id)
     return f"Заказ № {order_id}:\n" + '\n'.join(
-        f'{items.category_name} - {items.name} х '
+        f'{items.category_name_rus} - {items.name_rus} х '
         f'{items.quantity} шт - {items.unit_price} ₹'
         for items in response
     ) if response else "Такого заказа нет."

@@ -58,10 +58,10 @@ async def create_kb_category_admin_add_prod(
 
     row_buttons = [
         InlineKeyboardButton(
-            text=f'{category.name}',
+            text=f'{category.name_rus}',
             callback_data=CategoryAdminAddCallbackFactory(
                 category_id=category.id,
-                category_name=category.name
+                category_name=category.name_rus
             ).pack()
         )
         for category in categories

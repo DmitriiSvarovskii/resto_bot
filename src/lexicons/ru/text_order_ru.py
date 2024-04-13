@@ -111,7 +111,6 @@ async def generate_order_messages(
     user_text = (
         order_header + order_details
     )
-    print(OrderTypes.DELIVERY.value['id'])
     print(data_order.order_type)
     if data_order.order_type in OrderTypes.DELIVERY.value.values():
         delivery_price = delivery_village.price

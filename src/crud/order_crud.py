@@ -1,6 +1,5 @@
 from typing import List, Optional
 from sqlalchemy import insert, select, update
-from sqlalchemy.sql import func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -10,7 +9,8 @@ from src.models import (
     Product,
     Order,
     OrderDetail,
-    OrderInfo
+    OrderInfo,
+    OrderMessageId
 )
 
 
@@ -26,6 +26,19 @@ async def crud_create_orders(
     result = await session.execute(stmt_order)
     await session.commit()
     return result.scalar()
+
+
+async def crud_create_order_messages_id(
+    data: order_schemas.CreateOrderMessageId,
+    session: AsyncSession,
+):
+    stmt = (
+        insert(OrderMessageId).
+        values(**data.model_dump())
+    )
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "Order message id created successfully"}
 
 
 async def crud_create_new_order_details(
@@ -88,15 +101,37 @@ async def crud_get_order(
 async def crud_get_order_list(
     user_id: int,
     session: AsyncSession,
-
 ) -> List[order_schemas.ReadOrder]:
-    query = (
-        select(Order)
+    # query = (
+    #     select(Order)
+    #     .where(Order.user_id == user_id)
+    #     .order_by(Order.id.desc())
+    #     .limit(5)
+    #     .order_by(Order.id.asc())
+    # )
+    # result = await session.execute(query)
+    # response = result.scalars().all()
+    subq = (
+        # select(Order)
+        select(
+            Order.id,
+            Order.user_id,
+            Order.order_type,
+            OrderMessageId.message_id,
+            Order.order_status,
+            Order.total_price,
+            Order.created_at,
+        )
+        .outerjoin(OrderMessageId, OrderMessageId.order_id == Order.id)
         .where(Order.user_id == user_id)
+        .order_by(Order.id.desc())
         .limit(5)
+        .subquery()
     )
+
+    query = select(subq.c).order_by(subq.c.id.asc())
     result = await session.execute(query)
-    response = result.scalars().all()
+    response = result.all()
     return response
 
 
@@ -149,8 +184,8 @@ async def crud_get_order_detail_report(
 ) -> List[order_schemas.ReadOrderDetail]:
     query = (
         select(
-            Category.name,
-            Product.name,
+            Category.name_rus,
+            Product.name_rus,
             OrderDetail.quantity,
             OrderDetail.unit_price,
         )

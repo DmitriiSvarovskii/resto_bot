@@ -12,6 +12,7 @@ class OrderCallbackFactory(
     mess_id: Optional[int] = None
     language: str
 
+
 class CreateOrderCallbackFactory(
     CallbackData,
     prefix='order',
@@ -28,6 +29,16 @@ class CheckOrdersCallbackFactory(
     prefix='check',
     sep='_'
 ):
+    order_id: int
+    user_id: int
+
+
+class AccountOrdersCbData(
+    CallbackData,
+    prefix='account',
+    sep='_'
+):
+    type_callback: Optional[str] = None
     order_id: int
     user_id: int
 

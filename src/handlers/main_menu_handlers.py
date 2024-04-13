@@ -1,7 +1,7 @@
 from aiogram import Router, F, types
 
 from src.lexicons import text_main_menu_en, text_main_menu_ru
-from src.keyboards import common_kb, main_kb
+from src.keyboards import common_kb, main_kb, account_kb
 
 
 router = Router(name=__name__)
@@ -55,15 +55,22 @@ async def get_delivery_info(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'press_account')
 async def open_personal_area(callback: types.CallbackQuery):
-    await callback.answer(
-        text='Данный раздел в разработке, для отмены заказа свяжитесь пожалуйста с менеджером ресторана',
-        show_alert=True
-    )
-    # keyboard = await personal_area(callback.message.chat.id)
-    # await callback.message.edit_text(
-    #     text=LEXICON_RU['personal_area'],
-    #     reply_markup=keyboard.as_markup()
+    # await callback.answer(
+    #     text='Данный раздел в разработке, для отмены заказа свяжитесь пожалуйста с менеджером ресторана',
+    #     show_alert=True
     # )
+    if callback.from_user.language_code == 'ru':
+        text_main_menu = text_main_menu_ru
+    else:
+        text_main_menu = text_main_menu_en
+    keyboard = await account_kb.create_kb_account(
+        user_id=callback.message.chat.id,
+        language=callback.from_user.language_code
+    )
+    await callback.message.edit_text(
+        text=text_main_menu.main_menu_dict['personal_area'],
+        reply_markup=keyboard
+    )
 
 
 @router.callback_query(F.data == 'press_main_menu')

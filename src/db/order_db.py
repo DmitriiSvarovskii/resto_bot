@@ -39,6 +39,17 @@ async def create_orders(
         return response
 
 
+async def db_create_order_messages_id(
+    data: order_schemas.CreateOrderMessageId,
+):
+    async for session in get_async_session():
+        response = await order_crud.crud_create_order_messages_id(
+            data=data,
+            session=session
+        )
+        return response
+
+
 async def create_new_order_details(
     data: order_schemas.CreateOrderDetails,
 ):

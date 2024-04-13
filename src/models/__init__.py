@@ -1,7 +1,7 @@
 from .category import Category
 from .product import Product
 from .cart import Cart
-from .order import Order
+from .order import Order, OrderMessageId
 from .order_detail import OrderDetail
 from .order_info import OrderInfo
 from .customer import Customer
@@ -15,6 +15,7 @@ __all__ = [
     'Delivery',
     'OrderDetail',
     'OrderInfo',
+    'OrderMessageId',
     'Order',
     'Cart',
     'Store',

@@ -3,11 +3,11 @@ from aiogram.exceptions import TelegramBadRequest
 
 from src.config import settings
 from src.db import order_db, store_db
-from src.keyboards import main_kb, order_kb
-from src.utils import time_utils, order_utils
+from src.keyboards import main_kb, order_kb, account_kb
+from src.utils import time_utils, order_utils, report_utils
 from src.state import user_dict_comment, user_dict
 from src.callbacks import (
-    CreateOrderCallbackFactory,
+    AccountOrdersCbData,
     CheckOrdersCallbackFactory,
     TimeOrdersCallbackFactory,
     OrderStatusCallbackFactory,
@@ -18,6 +18,8 @@ from src.lexicons import (
     text_order_en,
     text_menu_ru,
     text_menu_en,
+    text_main_menu_ru,
+    text_main_menu_en,
 )
 from src.utils import OrderStatus, OrderTypes
 
@@ -62,7 +64,6 @@ async def create_orders_takeaway(
 ):
     try:
         order_type = callback_data.order_type
-        print(order_type)
 
         order_info, chat_text, user_text = (
             await order_utils.create_new_orders(
@@ -81,7 +82,7 @@ async def create_orders_takeaway(
 
         store_info = await store_db.get_store_info()
 
-        await bot.send_message(
+        message_data = await bot.send_message(
             chat_id=store_info.manager_group,
             text='❗️' + chat_text,
             reply_markup=order_kb.create_kb_check_order(
@@ -92,6 +93,12 @@ async def create_orders_takeaway(
                 language=callback_data.language
             )
         )
+
+        await order_utils.create_order_messages_id(
+            order_id=order_info.order_id,
+            message_id=message_data.message_id
+        )
+
         if order_type in OrderTypes.DELIVERY.value.values():
             if (
                 order_info.delivery_longitude
@@ -233,6 +240,99 @@ async def process_time_order(
 
     await callback.message.edit_reply_markup(
         reply_markup=keyboard
+    )
+
+
+@router.callback_query(
+    AccountOrdersCbData.filter(
+        F.type_callback == 'order-details'
+    )
+)
+async def process_order_details_in_account(
+    callback: types.CallbackQuery,
+    callback_data: AccountOrdersCbData,
+):
+    try:
+        text = await report_utils.generate_view_order_text(
+            order_id=callback_data.order_id
+        )
+
+        keyboard = await account_kb.create_kb_account(
+            user_id=callback.message.chat.id,
+            language=callback.from_user.language_code
+        )
+        await callback.message.edit_text(
+            text=text,
+            reply_markup=keyboard
+        )
+    except Exception as e:
+        print(e)
+        await callback.answer(
+            text="повторный запрос"
+        )
+
+
+@router.callback_query(
+    OrderStatusCallbackFactory.filter(
+        F.type_callback == 'cancel-acc'
+    )
+)
+async def process_cancel_order_in_account(
+    callback: types.CallbackQuery,
+    callback_data: OrderStatusCallbackFactory,
+    bot: Bot
+):
+    if callback_data.language == 'ru':
+        text_order = text_order_ru
+        text_main_menu = text_main_menu_ru
+    else:
+        text_order = text_order_en
+        text_main_menu = text_main_menu_en
+
+    order_status = OrderStatus.get_name_by_id(
+        target_id=callback_data.status,
+        language=callback_data.language
+    )
+    await order_db.update_order_status(
+        order_status=order_status,
+        order_id=callback_data.order_id,
+        order_type=callback_data.order_type
+    )
+
+    text = await order_utils.create_text(
+        callback_data=callback_data,
+        language=callback.from_user.language_code
+    )
+
+    user_text = await text_order.generate_update_order_info_text(
+        order_status=order_status,
+        order_id=callback_data.order_id
+    )
+
+    store_info = await store_db.get_store_info()
+
+    await bot.edit_message_text(
+        chat_id=store_info.manager_group,
+        text='❗️⛔️' + text,
+        message_id=callback_data.mess_id,
+        reply_markup=None
+    )
+
+    await bot.send_message(
+        chat_id=store_info.manager_group,
+        text=user_text + '\n' + '❗️⛔️'*6,
+    )
+    keyboard = await account_kb.create_kb_account(
+        user_id=callback.message.chat.id,
+        language=callback.from_user.language_code
+    )
+    await callback.message.edit_reply_markup(
+        text=text_main_menu.main_menu_dict['personal_area'],
+        reply_markup=keyboard
+    )
+    await callback.answer(
+        text=f"ЗАКАЗ № {callback_data.order_id} ОТМЕНЁН!!!",
+        show_alert=True
     )
 
 

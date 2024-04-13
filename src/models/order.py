@@ -29,3 +29,14 @@ class Order(Base):
     # customers: Mapped['Customer'] = relationship(back_populates="orders")
     # order_details: Mapped['OrderDetail'] = relationship(
     #     back_populates="orders")
+
+
+class OrderMessageId(Base):
+    __tablename__ = "order_messages_id"
+
+    id: Mapped[intpk]
+    order_id: Mapped[int] = mapped_column(
+        ForeignKey("orders.id", ondelete="CASCADE")
+    )
+    message_id: Mapped[int | None]
+    created_at: Mapped[created_at]

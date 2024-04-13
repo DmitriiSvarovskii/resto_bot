@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
@@ -10,6 +11,13 @@ class CreateOrder(BaseModel):
 
     order_status: Optional[str] = 'Новый'
     total_price: Optional[int] = None
+
+
+class CreateOrderMessageId(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_id: int
+    message_id: int
 
 
 class CreateOrderDetails(BaseModel):
@@ -45,8 +53,11 @@ class ReadOrder(BaseModel):
     user_id: int
     order_type: str
 
+    message_id: Optional[int] = None
+
     order_status: str
     total_price: int
+    created_at: datetime
 
 
 class ReadOrderList(BaseModel):
