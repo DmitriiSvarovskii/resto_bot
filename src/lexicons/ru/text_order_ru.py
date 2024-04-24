@@ -74,35 +74,40 @@ async def generate_order_messages(
     order_header = (
         f"ЗАКАЗ №{order_info.order_id} от "
         f"{current_time.strftime('%d.%m.%Y')} в "
-        f"{current_time.strftime('%H:%M')}\n"
-        f"ТИП ЗАКАЗА: {data_order.order_type}\n"
-        "--------------------\n"
+        f"{current_time.strftime('%H:%M')}"
+        f"\nТИП ЗАКАЗА: {data_order.order_type}"
+        "\n--------------------"
     )
 
     customer_info = (
-        "Информация о клиенте:\n"
-        f"Код клиента: {user_id}\n"
-        f"Имя клиента: {first_name}\n"
-        f"Ссылка tg: @{username}\n"
-        "--------------------\n"
+        "\nИнформация о клиенте:"
+        f"\nКод клиента: {user_id}"
+        f"\nИмя клиента: {first_name}"
+        f"\nСсылка tg: @{username}"
+        "\n--------------------"
     )
 
     order_details = (
-        "Заказ:\n\n"
-        f"{order_text}"
-        f"\nКомментарий к заказу: {customer_comment}\n"
-        "--------------------"
-        f"\nСумма заказа: {total_price} ₹\n"
-        f'Скидка: {total_price*0.05} ₹\n'
-        f"\nСумма заказа с учётом скидки: {sale_price} ₹\n"
+        "\nЗаказ:"
+        f"\n\n{order_text}"
+        f"\nКомментарий к заказу: {customer_comment}"
+        "\n--------------------"
+        f"\nСумма заказа: {total_price} ₹"
+        f'\nСкидка: {total_price*0.05} ₹'
+        f"\nСумма заказа с учётом скидки: {sale_price} ₹"
     )
-    if box_price and box_price > 0:
-        sale_price += box_price
-        order_details += (
-            f'Дополнительная плата за упаковку: {box_price} ₹\n'
-            "--------------------\n"
-            f'Итоговая сумма к оплате:: {sale_price} ₹\n'
-        )
+
+    if data_order.order_type not in OrderTypes.DINEIN.value.values():
+        if box_price and box_price > 0:
+            sale_price += box_price
+            order_details += (
+                f'\nДополнительная плата за упаковку: {box_price} ₹'
+            )
+
+    order_details += (
+        "\n--------------------"
+        f'\nИтоговая сумма к оплате: {sale_price} ₹'
+    )
 
     chat_text = (
         order_header + customer_info + order_details
@@ -111,7 +116,7 @@ async def generate_order_messages(
     user_text = (
         order_header + order_details
     )
-    print(data_order.order_type)
+
     if data_order.order_type in OrderTypes.DELIVERY.value.values():
         delivery_price = delivery_village.price
 

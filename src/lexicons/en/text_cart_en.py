@@ -114,8 +114,10 @@ def create_cart_text(
         )
     if box_price and box_price > 0:
         message += (
-            f'Additional packaging fee: {box_price} ₹\n'
+            f'Additional packaging fee*: {box_price} ₹\n'
             "--------------------\n"
             f'Total amount to be paid: {bill * 0.95 + box_price} ₹\n'
+            "--------------------\n"
+            "*The packaging fee is charged only upon delivery or dine-in"
         )
     return message

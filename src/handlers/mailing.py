@@ -1,6 +1,9 @@
 import random
 import os
-
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.fsm.context import FSMContext
+from aiogram.filters import StateFilter
+from aiogram.fsm.state import default_state
 from aiogram import Bot, types, Router
 from aiogram.filters import Command
 from aiogram.exceptions import TelegramForbiddenError
@@ -44,18 +47,16 @@ async def create_mail_group(message: types.Message, bot: Bot):
 
 
 @router.message((Command('mail')))
-async def create_mail_chats(message: types.Message, bot: Bot):
-    # user_info = await customer_db.get_user_info_by_id(
-    #     user_id=message.chat.id
-    # )
+async def create_mail_chats(message: types.Message,
+                            bot: Bot,
+                            state: FSMContext):
+    user_info = await customer_db.get_user_info_by_id(
+        user_id=message.chat.id
+    )
 
     # store_info = await store_db.get_store_info()
     customer_list = await customer_db.db_get_users_list()
-    # if user_info.admin:
-    ru = 0
-    err = 0
-    block = 0
-    if 1 == 1:
+    if user_info.admin:
         for user_data in customer_list:
             try:
                 await bot.send_message(
@@ -70,16 +71,13 @@ async def create_mail_chats(message: types.Message, bot: Bot):
                         language='ru', user_id=user_data.user_id
                     )
                 )
-                ru += 1
 
             except TelegramForbiddenError:
-                block += 1
-                continue  # Переходим к следующей итерации цикла при возникновении ошибки TelegramForbiddenError
+                continue
             except Exception:
-                err += 1
                 continue
         await message.answer(
-            text=f'Рассылка завершена.\nРусский язык {ru}\nЗаблочен {block}\nОшибка {err}'
+            text='Рассылка завершена.'
         )
     else:
         await message.answer(

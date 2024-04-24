@@ -88,13 +88,16 @@ async def generate_order_messages(
         f'Sale Discount: {total_price * 0.05} ₹\n'
         f"\nTotal Price after Discount: {sale_price} ₹\n"
     )
-    if box_price and box_price > 0:
-        sale_price += box_price
-        order_details += (
-            f'Additional Box Packing Charge: {box_price} ₹\n'
-            "--------------------\n"
-            f'Total Amount Payable: {sale_price} ₹\n'
-        )
+    if data_order.order_type not in OrderTypes.DINEIN.value.values():
+        if box_price and box_price > 0:
+            sale_price += box_price
+            order_details += (
+                f'Additional Box Packing Charge: {box_price} ₹\n'
+                "--------------------\n"
+            )
+    order_details += (
+        f'Total Amount Payable: {sale_price} ₹\n'
+    )
 
     chat_text = (
         order_header + customer_info + order_details

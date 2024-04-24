@@ -21,9 +21,11 @@ from .state_category_change import (
 from .state_edit_opening_hours import FSMOpeningHours
 from .state_store import FSMStore
 from .state_delivery import FSMDeliveryAdmin
+from .fsm_mailling import FSMMailingPhoto
 
 
 __all__ = [
+    'FSMMailingPhoto',
     'FSMDeliveryAdmin',
     'FSMStore',
     'FSMOpeningHours',

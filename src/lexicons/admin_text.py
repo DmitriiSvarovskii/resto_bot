@@ -59,6 +59,10 @@ admin_main_dict = {
         'text': 'Настройки бота ⚙️',
         'callback_data': 'press_toggle_bot'
     },
+    'mailling': {
+        'text': 'Рассылка',
+        'callback_data': 'press_mailling'
+    },
     'main_menu': {
         'text': '<<< назад',
         'callback_data': 'press_main_menu'

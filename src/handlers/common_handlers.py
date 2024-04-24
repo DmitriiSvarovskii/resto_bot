@@ -19,11 +19,13 @@ async def process_pass(
     )
 
 
-async def send_echo(message: types.Message):
-    try:
-        pass
-    except TypeError:
-        pass
+# @router.message()
+# async def send_echo(message: types.Message):
+#     try:
+#         if message.text or message.voice:
+#             await message.delete()
+#     except TypeError:
+#         pass
 
 
 @router.message(Command('id'))
