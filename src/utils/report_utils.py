@@ -14,7 +14,7 @@ async def custom_summary_text(
 
     if custom_sales_summary:
         items_summary = [
-            f'{item.name} х {item.quantity} шт - {item.unit_price} ₹'
+            f'{item.name_rus} х {item.quantity} шт - {item.unit_price} ₹'
             for item in custom_sales_summary.order_items
         ]
         total_price = (

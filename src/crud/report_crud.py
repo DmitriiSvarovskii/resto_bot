@@ -21,13 +21,13 @@ async def create_main_query():
         select(
             Product.id,
             Product.category_id,
-            Product.name,
+            Product.name_rus,
             func.sum(OrderDetail.quantity).label('quantity'),
             func.sum(OrderDetail.unit_price).label('unit_price')
         )
         .join(OrderDetail, OrderDetail.product_id == Product.id)
         .join(Order, Order.id == OrderDetail.order_id)
-        .group_by(Product.id, Product.category_id, Product.name)
+        .group_by(Product.id, Product.category_id, Product.name_rus)
         .order_by(Product.id)
     )
 

@@ -7,7 +7,7 @@ class SalesSummary(BaseModel):
 
     id: int
     category_id: int
-    name: str
+    name_rus: str
     quantity: int
     unit_price: int
 
