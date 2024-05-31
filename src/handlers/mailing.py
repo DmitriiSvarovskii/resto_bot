@@ -1,12 +1,13 @@
+import asyncio
 import random
 import os
-from aiogram.exceptions import TelegramBadRequest
+
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
 from aiogram.fsm.state import default_state
 from aiogram import Bot, types, Router
 from aiogram.filters import Command
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 
 from src.db import customer_db, store_db
 from src.keyboards import admin_kb, main_kb
@@ -90,27 +91,36 @@ async def create_mail_chats(message: types.Message,
 
 
 async def create_mail_group_auto(bot: Bot):
-    store_info = await store_db.get_store_info()
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            store_info = await store_db.get_store_info()
 
-    text = ('Всем хорошего дня 🔥\n'
-            'Эта кнопка для заказа через приложение Marcello 👇\n'
-            'При заказе через приложение постоянная скидка на все меню 5% 👍')
+            text = ('Всем хорошего дня 🔥\n'
+                    'Эта кнопка для заказа через приложение Marcello 👇\n'
+                    'При заказе через приложение постоянная скидка на все меню 5% 👍')
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+            current_dir = os.path.dirname(os.path.abspath(__file__))
 
-    static_folder = os.path.join(current_dir, '..', 'static')
+            static_folder = os.path.join(current_dir, '..', 'static')
 
-    file_list = os.listdir(static_folder)
+            file_list = os.listdir(static_folder)
 
-    random_file = random.choice(file_list)
+            random_file = random.choice(file_list)
 
-    random_file_path = os.path.join(static_folder, random_file)
+            random_file_path = os.path.join(static_folder, random_file)
 
-    photo_file = types.FSInputFile(random_file_path)
+            photo_file = types.FSInputFile(random_file_path)
 
-    await bot.send_photo(
-        chat_id=store_info.sale_group,
-        photo=photo_file,
-        caption=text,
-        reply_markup=admin_kb.create_kb_sale_group()
-    )
+            await bot.send_photo(
+                chat_id=store_info.sale_group,
+                photo=photo_file,
+                caption=text,
+                reply_markup=admin_kb.create_kb_sale_group()
+            )
+            break
+        except TelegramBadRequest:
+            if attempt < max_retries - 1:
+                await asyncio.sleep(1)
+            else:
+                pass
