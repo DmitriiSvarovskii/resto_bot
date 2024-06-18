@@ -98,25 +98,25 @@ def create_cart_text(
         message = (
             'Your order:\n\n'
             f'{order_text}'
-            "--------------------\n"
+            "\n--------------------\n"
             f'Total without discount: {bill} ₹\n'
-            f'Discount: {bill*0.05} ₹\n'
-            f'Final price with discount: {bill*0.95} ₹\n'
+            f'Discount: {bill*0.1} ₹\n'
+            f'Final price with discount: {bill*0.9} ₹\n'
         )
     else:
         message = (
             'Your order:\n\n'
             f'{order_text}'
-            "--------------------\n"
+            "\n--------------------\n"
             f'Total without discount: {bill} ₹\n'
-            f'Total price with discount: {bill * 0.95} ₹\n'
+            f'Total price with discount: {bill * 0.9} ₹\n'
             f'Order Comment: {order_comment}\n'
         )
     if box_price and box_price > 0:
         message += (
             f'Additional packaging fee*: {box_price} ₹\n'
             "--------------------\n"
-            f'Total amount to be paid: {bill * 0.95 + box_price} ₹\n'
+            f'Total amount to be paid: {bill * 0.9 + box_price} ₹\n'
             "--------------------\n"
             "*The packaging fee is charged only upon delivery or dine-in"
         )

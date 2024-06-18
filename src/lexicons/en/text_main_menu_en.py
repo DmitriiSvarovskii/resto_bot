@@ -31,8 +31,11 @@ main_btn: dict[str, dict[str, str]] = {
 
 
 main_menu_dict: dict[str, str] = {
-    'start': "Welcome to our pizzeria! Enjoy authentic flavors and a variety "
-             "of fresh pizzas to suit every taste.",
+    'start': 'Welcome to our pizzeria 🍕🇮🇹'
+    '\nEnjoy authentic tastes and '
+    'a variety of Italian pizzas for everyone'
+    'taste right at home 🏠'
+    '\nThe delivery to your table is working 🍕🫶',
     'main_menu': "Welcome to our pizzeria! Experience true Italian flavors "
                  "from 14:00 to 23:00. Delicate dough, juicy fillings, "
                  "and a cozy atmosphere await you!\n\n",

@@ -219,25 +219,25 @@ def func_cart_text(
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            "--------------------\n"
+            "\n--------------------\n"
             f'Итого без скидки: {bill} ₹\n'
-            f'Скидка: {bill*0.05} ₹\n'
-            f'Итоговая цена со скидкой: {bill*0.95} ₹\n'
+            f'Скидка: {bill*0.1} ₹\n'
+            f'Итоговая цена со скидкой: {bill*0.9} ₹\n'
         )
     else:
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            "--------------------\n"
+            "\n--------------------\n"
             f'Итого без скидки: {bill} ₹\n'
-            f'Итого цена со скидкой: {bill * 0.95} ₹\n'
+            f'Итого цена со скидкой: {bill * 0.9} ₹\n'
             f'Комментарий к заказу: {order_comment}\n'
         )
     if box_price and box_price > 0:
         message += (
             f'Дополнительная плата за упаковку: {box_price} ₹\n'
             "--------------------\n"
-            f'Итоговая сумма к оплате:: {bill * 0.95 + box_price} ₹\n'
+            f'Итоговая сумма к оплате:: {bill * 0.9 + box_price} ₹\n'
         )
     return message
 
@@ -256,7 +256,7 @@ async def new_order_mess_text_order_chat(
     current_time = datetime.now(desired_timezone)
 
     total_price = data_order.total_price
-    sale_price = total_price*0.95
+    sale_price = total_price*0.9
 
     user_id = user_info.user_id if user_info else callback.message.chat.id
     first_name = user_info.first_name if user_info else callback.message.chat.first_name  # noqa: E501
@@ -290,7 +290,7 @@ async def new_order_mess_text_order_chat(
         f"\nКомментарий к заказу: {customer_comment}\n"
         "--------------------"
         f"\nСумма заказа: {total_price} ₹\n"
-        f'Скидка: {total_price*0.05} ₹\n'
+        f'Скидка: {total_price*0.1} ₹\n'
         f"\nСумма заказа с учётом скидки: {sale_price} ₹\n"
     )
     if box_price and box_price > 0:

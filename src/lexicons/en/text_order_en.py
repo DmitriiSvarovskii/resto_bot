@@ -51,7 +51,7 @@ async def generate_order_messages(
 ):
     current_time = datetime.now(TIMEZONE)
     total_price = data_order.total_price
-    sale_price = total_price * 0.95
+    sale_price = total_price * 0.9
 
     user_id = user_info.user_id if user_info else callback.message.chat.id
     first_name = user_info.first_name if user_info else callback.message.chat.first_name  # noqa: E:501
@@ -85,7 +85,7 @@ async def generate_order_messages(
         f"\nOrder Comment: {customer_comment}\n"
         "--------------------"
         f"\nOrder Total: {total_price} ₹\n"
-        f'Sale Discount: {total_price * 0.05} ₹\n'
+        f'Sale Discount: {total_price * 0.1} ₹\n'
         f"\nTotal Price after Discount: {sale_price} ₹\n"
     )
     if data_order.order_type not in OrderTypes.DINEIN.value.values():
