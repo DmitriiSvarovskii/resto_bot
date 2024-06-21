@@ -17,15 +17,15 @@ async def get_order_list(
         return response
 
 
-async def get_delivery_time(
-    order_id: int,
-):
-    async for session in get_async_session():
-        response = await delivery_crud.get_delivery_time_by_order_id(
-            order_id=order_id,
-            session=session
-        )
-        return response
+# async def get_delivery_time(
+#     order_id: int,
+# ):
+#     async for session in get_async_session():
+#         response = await delivery_crud.get_delivery_time_by_order_id(
+#             order_id=order_id,
+#             session=session
+#         )
+#         return response
 
 
 async def create_orders(

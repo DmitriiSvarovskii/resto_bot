@@ -1,5 +1,6 @@
 common_dict: dict[str, str] = {
     'cancel': 'Cancel ❌',
+    'cancel_delivery': 'Abort the design ❌',
     'skip': 'Skip step',
     'good': 'ok!',
     'invalid_request': 'Invalid request',

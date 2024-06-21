@@ -30,9 +30,9 @@ async def custom_summary_text(
     return message_text
 
 
-async def create_text_stop_list() -> str:
-    response = await report_db.get_stop_list()
-    order_text = '\n'.join(item.name for item in response)
+async def create_text_stop_list(store_id: int) -> str:
+    response = await report_db.get_stop_list(store_id=store_id)
+    order_text = '\n'.join(item.name_rus for item in response)
     return order_text
 
 

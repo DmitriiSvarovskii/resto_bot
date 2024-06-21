@@ -2,10 +2,11 @@ from aiogram.filters.callback_data import CallbackData
 from typing import Optional
 
 
-class CartEditCallbackFactory(
+class CartCallbackData(
     CallbackData,
     prefix='cart',
     sep='_'
 ):
-    type_pr: Optional[str] = None
-    product_id: int
+    type_press: Optional[str] = None
+    store_id: Optional[int] = None
+    product_id: Optional[int] = None

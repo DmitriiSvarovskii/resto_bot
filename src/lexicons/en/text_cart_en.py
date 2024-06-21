@@ -1,15 +1,22 @@
 from typing import Optional
 
-from src.callbacks import CreateOrderCallbackFactory
+from src.callbacks import CartCallbackData, StoreMenuCbData
 from src.callbacks.order import OrderCallbackFactory
 from src.utils import OrderTypes, OrderStatus
 
 
-def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
+def create_btn_cart(
+    store_id: int,
+    mess_id: int,
+    language: str
+) -> dict[str, dict[str, str]]:
     btn = {
         'add_comment': {
             'text': 'Add comment',
-            'callback_data': 'press_comment'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='comment-cart'
+            ).pack()
         },
         'takeaway': {
             'text': 'Takeaway',
@@ -18,7 +25,8 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
                 order_type=OrderTypes.TAKEAWAY.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
-                language=language
+                language=language,
+                store_id=store_id
             ).pack()
         },
         'dine_in': {
@@ -28,24 +36,37 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
                 order_type=OrderTypes.DINEIN.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
-                language=language
+                language=language,
+                store_id=store_id
             ).pack()
         },
         'delivery': {
             'text': 'Delivery 🚚',
-            'callback_data': 'press_delivery_pay'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='press-delivery'
+            ).pack()
         },
         'main_menu': {
             'text': 'Menu',
-            'callback_data': 'press_menu'
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='main-menu'
+            ).pack()
         },
         'clear': {
             'text': 'Clear',
-            'callback_data': 'press_empty'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='empty-cart'
+            ).pack()
         },
         'edit': {
             'text': 'Edit',
-            'callback_data': 'press_edit_cart'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='edit-cart'
+            ).pack()
         },
     }
     return btn
@@ -72,20 +93,33 @@ edit_cart_dict: dict[str, str] = {
     'cart_error': 'The item is not available in the cart!',
 }
 
-edit_btn_cart_dict: dict[str, dict[str, str]] = {
-    'main_menu': {
-        'text': 'Main menu',
-        'callback_data': 'press_main_menu'
-    },
-    'clear': {
-        'text': 'Clear',
-        'callback_data': 'press_empty'
-    },
-    'checkout': {
-        'text': 'Checkout',
-        'callback_data': 'press_cart'
+
+def create_edit_cart_btn(
+    store_id: int
+) -> dict[str, dict[str, str]]:
+    return {
+        'main_menu': {
+            'text': 'Main menu',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='main-menu'
+            ).pack()
+        },
+        'clear': {
+            'text': 'Clear',
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='empty-cart'
+            ).pack()
+        },
+        'checkout': {
+            'text': 'Checkout',
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='cart'
+            ).pack()
+        }
     }
-}
 
 
 def create_cart_text(
@@ -98,7 +132,7 @@ def create_cart_text(
         message = (
             'Your order:\n\n'
             f'{order_text}'
-            "\n--------------------\n"
+            "--------------------\n"
             f'Total without discount: {bill} ₹\n'
             f'Discount: {bill*0.1} ₹\n'
             f'Final price with discount: {bill*0.9} ₹\n'

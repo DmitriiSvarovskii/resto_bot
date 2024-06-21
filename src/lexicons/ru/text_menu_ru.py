@@ -1,35 +1,63 @@
-def create_navigation_btn(bill: int) -> dict[str, dict[str, str]]:
+from src.callbacks import StoreMenuCbData, CartCallbackData
+
+
+def create_navigation_btn(
+    bill: int,
+    store_id: int
+) -> dict[str, dict[str, str]]:
     return {
         'back': {
             'text': '<<< Назад',
-            'callback_data': 'press_main_menu'
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='main-menu'
+            ).pack()
         },
         'cart': {
             'text': f'Корзина 🛒 {bill} ₹',
-            'callback_data': 'press_cart'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='cart'
+            ).pack()
         }
     }
 
 
-def create_navigation_prod_btn(bill: int) -> dict[str, dict[str, str]]:
+def create_navigation_prod_btn(
+    bill: int,
+    store_id: int
+) -> dict[str, dict[str, str]]:
     return {
         'back': {
             'text': '<<< Назад',
-            'callback_data': 'press_menu'
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='menu'
+            ).pack()
         },
         'cart': {
             'text': f'Корзина 🛒 {bill} ₹',
-            'callback_data': 'press_cart'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='cart'
+            ).pack()
         }
     }
 
 
-special_offer_dict: dict[str, dict[str, str]] = {
-    'special_offer': {
-        'text': '🔥Спецпредложение',
-        'callback_data': 'press_popular_menu'
+def create_special_offer_btn(
+    store_id: int
+) -> dict[str, dict[str, str]]:
+    return {
+        'special_offer':
+            {
+                'text': '🔥Спецпредложение',
+                'callback_data': StoreMenuCbData(
+                    store_id=store_id,
+                    type='popular'
+                ).pack()
+            }
     }
-}
 
 
 menu_messages_dict: dict[str, str] = {

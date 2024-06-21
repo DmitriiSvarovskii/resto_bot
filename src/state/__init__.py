@@ -45,13 +45,5 @@ __all__ = [
     'FSMCheckOrder',
     'FSMAdReport',
     'FSMSalesPeriodCustom',
-    'user_dict_comment',
-    'user_dict',
     'admin_check_order',
 ]
-
-user_dict_comment: dict[int, dict[str, str | int | bool]] = {}
-
-user_dict: dict[int, dict[str, str | int | bool]] = {}
-
-admin_check_order: dict[int, dict[str, str | int | bool]] = {}

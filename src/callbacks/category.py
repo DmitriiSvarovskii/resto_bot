@@ -7,6 +7,7 @@ class CategoryIdCallbackFactory(
     prefix="ctg"
 ):
     category_id: int
+    store_id: int
 
 
 class CategoryAdminCallbackFactory(

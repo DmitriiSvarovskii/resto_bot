@@ -15,6 +15,7 @@ from src.callbacks import (
     CategoryDeleteCallbackFactory,
     CategoryAdminAvailCallbackFactory,
     CategoryAdminAddCallbackFactory,
+    StoreAdminCbData
 )
 from src.db import cart_db
 from src.lexicons import text_menu_en, text_menu_ru
@@ -23,10 +24,12 @@ from src.lexicons import text_menu_en, text_menu_ru
 async def create_kb_category(
     categories: List[category_schemas.GetCategory],
     user_id: int,
+    store_id: int,
     language: str
 ):
     bill = await cart_db.get_total_price_cart(
-        user_id=user_id
+        user_id=user_id,
+        store_id=store_id
     )
 
     keyboard = InlineKeyboardBuilder()
@@ -35,12 +38,19 @@ async def create_kb_category(
     else:
         text_menu = text_menu_en
 
-    text_menu_btn = text_menu.create_navigation_btn(bill=bill)
+    text_menu_btn = text_menu.create_navigation_btn(
+        bill=bill,
+        store_id=store_id
+    )
+
+    text_popular_btn = text_menu.create_special_offer_btn(
+        store_id=store_id
+    )
 
     row_buttons = [InlineKeyboardButton(
         text=value['text'],
         callback_data=value['callback_data']
-    ) for value in text_menu.special_offer_dict.values()]
+    ) for value in text_popular_btn.values()]
 
     for category in categories:
         category_name = (category.name_rus
@@ -50,7 +60,8 @@ async def create_kb_category(
             InlineKeyboardButton(
                 text=f'{category_name}',
                 callback_data=CategoryIdCallbackFactory(
-                    category_id=category.id).pack()
+                    category_id=category.id,
+                    store_id=store_id).pack()
             )
         )
 
@@ -73,6 +84,7 @@ async def create_kb_category_admin(
     categories: List[category_schemas.GetCategory],
     callback_data: CallbackData,
     language: str,
+    store_id: int,
     popular: Optional[bool] = None
 ):
 
@@ -82,7 +94,9 @@ async def create_kb_category_admin(
         InlineKeyboardButton(
             text=f'{category_name}',
             callback_data=callback_data(
-                category_id=category.id, popular=popular).pack()
+                category_id=category.id,
+                popular=popular,
+                store_id=store_id).pack()
         )
         for category in categories
         for category_name in [category.name_rus
@@ -99,7 +113,8 @@ async def create_kb_category_admin(
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_edit_menu'
+            callback_data=StoreAdminCbData(
+                store_id=store_id, type_press='edit-menu').pack()
         )
     )
 
@@ -109,6 +124,7 @@ async def create_kb_category_admin(
 async def create_kb_category_admin_add_prod(
     categories: List[category_schemas.GetCategory],
     language: str,
+    store_id: int,
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -118,8 +134,7 @@ async def create_kb_category_admin_add_prod(
             text=category_name,
             callback_data=CategoryAdminAddCallbackFactory(
                 category_id=category.id,
-                category_name_rus=category.name_rus,
-                category_name_en=category.name_en
+                store_id=store_id
             ).pack()
         )
         for category in categories
@@ -139,7 +154,8 @@ async def create_kb_category_admin_add_prod(
 
 async def create_kb_category_avail_admin(
     categories: List[category_schemas.GetCategory],
-    language: str
+    language: str,
+    store_id: int
 ):
 
     keyboard = InlineKeyboardBuilder()
@@ -150,29 +166,29 @@ async def create_kb_category_avail_admin(
         action = "Убрать" if category.availability else "Добавить"
         category_name = (
             category.name_rus if language == 'ru' else category.name_en
-                         )
+        )
         keyboard.row(
             InlineKeyboardButton(
                 text=category_name,
                 callback_data=CategoryAdminAvailCallbackFactory(
-                    category_id=category.id).pack()
+                    category_id=category.id, store_id=store_id).pack()
             ))
 
         keyboard.row(
             InlineKeyboardButton(
                 text=availability,
                 callback_data=CategoryAdminAvailCallbackFactory(
-                    category_id=category.id).pack()
+                    category_id=category.id, store_id=store_id).pack()
             ),
             InlineKeyboardButton(
                 text=indicator,
                 callback_data=CategoryAdminAvailCallbackFactory(
-                    category_id=category.id).pack()
+                    category_id=category.id, store_id=store_id).pack()
             ),
             InlineKeyboardButton(
                 text=action,
                 callback_data=CategoryAdminAvailCallbackFactory(
-                    category_id=category.id).pack()
+                    category_id=category.id, store_id=store_id).pack()
             ),
             width=3
         )
@@ -180,7 +196,8 @@ async def create_kb_category_avail_admin(
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_edit_menu'
+            callback_data=StoreAdminCbData(
+                store_id=store_id, type_press='edit-menu').pack()
         )
     )
 
@@ -189,6 +206,7 @@ async def create_kb_category_avail_admin(
 
 async def create_kb_change_category(
     category_id: int,
+    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -196,12 +214,12 @@ async def create_kb_change_category(
         InlineKeyboardButton(
             text='Изменить название категории ✏️',
             callback_data=CategoryChangeNameCallbackFactory(
-                category_id=category_id
+                category_id=category_id, store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Удалить товар ✖',
             callback_data=CategoryDeleteCallbackFactory(
-                category_id=category_id
+                category_id=category_id, store_id=store_id
             ).pack()),
         width=1
     )
@@ -209,7 +227,8 @@ async def create_kb_change_category(
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_admin'
+            callback_data=StoreAdminCbData(
+                store_id=store_id, type_press='edit-menu').pack()
         )
     )
 

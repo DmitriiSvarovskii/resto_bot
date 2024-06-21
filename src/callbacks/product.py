@@ -1,11 +1,11 @@
 from aiogram.filters.callback_data import CallbackData
 from typing import Optional
 
-from .cart import CartEditCallbackFactory
+from .cart import CartCallbackData
 
 
 class ProductIdCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='pr',
 ):
     popular: Optional[bool] = None
@@ -35,42 +35,42 @@ class AddProductAvailabilityCallbackFactory(
 
 
 class ProductChangeCategoryCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-chan-cat',
 ):
     pass
 
 
 class ProductChangeNameCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-chan-nam',
 ):
     pass
 
 
 class ProductChangeDescriptionCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-chan-des',
 ):
     pass
 
 
 class ProductChangePriceCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-chan-pric',
 ):
     pass
 
 
 class ProductChangePriceBoxCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-chan-pr-bx',
 ):
     pass
 
 
 class ProductDeleteCallbackFactory(
-    CartEditCallbackFactory,
+    CartCallbackData,
     prefix='prod-del',
 ):
     pass

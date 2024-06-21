@@ -6,6 +6,7 @@ from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.schemas import store_schemas
 from src.callbacks import (
     StoreCbData,
+    StoreAdminCbData
 )
 
 
@@ -19,20 +20,36 @@ def create_kb_toggle_bot(store_info: Optional[store_schemas.GetStore]):
     keyboard.row(
         InlineKeyboardButton(
             text=f'{store_info.name}',
-            callback_data='press_toggle_working_bot')
+            callback_data=StoreAdminCbData(
+                type_press='toggle-working',
+                store_id=store_info.id
+            ).pack()
+        )
     )
 
     keyboard.row(
         InlineKeyboardButton(
             text=is_active,
-            callback_data='press_toggle_working_bot'),
+            callback_data=StoreAdminCbData(
+                type_press='toggle-working',
+                store_id=store_info.id
+            ).pack()
+        ),
         InlineKeyboardButton(
             text=indicator,
-            callback_data='press_toggle_working_bot'),
+            callback_data=StoreAdminCbData(
+                type_press='toggle-working',
+                store_id=store_info.id
+            ).pack()
+        ),
         InlineKeyboardButton(
             text=action,
-            callback_data='press_toggle_working_bot'),
-        width=3
+            callback_data=StoreAdminCbData(
+                type_press='toggle-working',
+                store_id=store_info.id
+            ).pack(),
+            width=3
+        )
     )
 
     keyboard.row(
@@ -41,11 +58,17 @@ def create_kb_toggle_bot(store_info: Optional[store_schemas.GetStore]):
             callback_data='press_pass'))
     keyboard.row(
         InlineKeyboardButton(
-            text=f'с {store_info.opening_time.strftime("%H:%M")} до {store_info.closing_time.strftime("%H:%M")}',
+            text=(
+                f'с {store_info.opening_time.strftime("%H:%M")} '
+                f'до {store_info.closing_time.strftime("%H:%M")}'
+            ),
             callback_data='press_pass'),
         InlineKeyboardButton(
             text='Редактировать',
-            callback_data='press_edit_hours'),
+            callback_data=StoreAdminCbData(
+                type_press='edit-hours',
+                store_id=store_info.id
+            ).pack()),
         width=2
     )
     keyboard.row(
@@ -83,7 +106,10 @@ def create_kb_toggle_bot(store_info: Optional[store_schemas.GetStore]):
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_admin'
+            callback_data=StoreAdminCbData(
+                type_press='admin',
+                store_id=store_info.id
+            ).pack()
         )
     )
 

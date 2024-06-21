@@ -12,6 +12,8 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[intpk]
+    store_id: Mapped[int | None] = mapped_column(
+        ForeignKey("stories.id", ondelete="CASCADE"))
     user_id: Mapped[int] = mapped_column(
         ForeignKey(
             "customers.user_id",

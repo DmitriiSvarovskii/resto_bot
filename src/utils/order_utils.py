@@ -1,18 +1,18 @@
+from typing import List, Union
+from aiogram.types import CallbackQuery
+
+from src.callbacks.order import OrderCallbackFactory
+from src.db import cart_db, order_db, delivery_db, customer_db
+from src.services import ORDER_STATUSES
+from src.lexicons import text_order_ru, text_order_en
+from src.schemas import order_schemas, customer_schemas, cart_schemas
+from src.services.order_constants import ORDER_TYPES
 from src.callbacks import (
     CheckOrdersCallbackFactory,
     OrderStatusCallbackFactory,
 )
-from src.callbacks.order import OrderCallbackFactory
-from src.db import cart_db, order_db, delivery_db, customer_db
-from src.services.order_constants import ORDER_TYPES
-from src.state import user_dict_comment, user_dict
-from typing import List, Union
-from aiogram.types import CallbackQuery
-
-from src.services import ORDER_STATUSES
-from src.lexicons import text_order_ru, text_order_en
-from src.schemas import order_schemas, customer_schemas, cart_schemas
 from .order_constants import OrderTypes, OrderStatus
+from .redis_utils import get_data_from_redis
 
 
 async def create_new_orders(
@@ -24,11 +24,20 @@ async def create_new_orders(
 
     user_id = callback.message.chat.id
 
-    user_data_del = user_dict.get(user_id)
-    user_data_comment = user_dict_comment.get(user_id)
+    delivery_data = await get_data_from_redis(
+        key_prefix='delivery_comment',
+        user_id=user_id
+    )
+
+    order_comment = await get_data_from_redis(
+        key_prefix='order_comment',
+        user_id=user_id
+    )
 
     cart_items = await cart_db.get_cart_items_and_totals(
-        user_id=user_id)
+        user_id=user_id,
+        store_id=callback_data.store_id
+    )
 
     data_order = await create_data_order(
         user_id=user_id,
@@ -58,29 +67,32 @@ async def create_new_orders(
         cart_items=cart_items.cart_items
     )
 
-    if user_data_del is not None:
+    if delivery_data is not None:
         order_info_data = {**{'user_id': user_id,
-                              'order_id': order_id}, **user_data_del}
+                              'order_id': order_id}, **delivery_data}
         order_info = order_schemas.CreateOrderInfo(**order_info_data)
     else:
         order_info = order_schemas.CreateOrderInfo(
             user_id=user_id, order_id=order_id)
 
-    if user_data_comment is not None:
-        for key, value in user_data_comment.items():
+    if order_comment is not None:
+        for key, value in order_comment.items():
             setattr(order_info, key, value)
 
     await order_db.create_order_info(
         data=order_info
     )
 
-    delivery_village = (await delivery_db.get_delivery_one_district(
-        delivery_id=order_info.delivery_id
-    ) if callback_data.order_type in OrderTypes.DELIVERY.value.values()
+    delivery_village = (
+        await delivery_db.get_delivery_one_district(
+            delivery_id=order_info.delivery_id,
+            store_id=callback_data.store_id
+        ) if callback_data.order_type in OrderTypes.DELIVERY.value.values()
         else None)
 
     await cart_db.delete_cart_items_by_user_id(
-        user_id=user_id
+        user_id=user_id,
+        store_id=callback_data.store_id
     )
 
     chat_text, user_text = await text_order.generate_order_messages(
@@ -114,7 +126,8 @@ async def create_text(
     cart_items = await order_db.get_order_detail(order_id=order_id)
 
     delivery_village = (await delivery_db.get_delivery_one_district(
-        delivery_id=order_info.delivery_id
+        delivery_id=order_info.delivery_id,
+        store_id=callback_data.store_id
     ) if callback_data.order_type in OrderTypes.DELIVERY.value.values()
         else None)
 
@@ -163,7 +176,8 @@ async def create_data_order(
         user_id=user_id,
         order_type=order_type,
         order_status=order_status,
-        total_price=total_price
+        total_price=total_price,
+        store_id=callback_data.store_id
     )
 
     return data_order

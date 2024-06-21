@@ -11,20 +11,29 @@ from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.callbacks import (
     AddProductAvailabilityCallbackFactory,
     CategoryAdminAddCallbackFactory,
+    StoreAdminCbData
 )
 
 
-def create_kb_approval():
+def create_kb_approval(
+    store_id: int
+):
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
         InlineKeyboardButton(
             text='Подтвердить',
-            callback_data='press_approval_prod')
+            callback_data=StoreAdminCbData(
+                store_id=store_id,
+                type_press='approval-prod'
+            ).pack())
     )
     keyboard.row(
         InlineKeyboardButton(
             text='Внести изменения',
-            callback_data='press_make_changes_prod')
+            callback_data=StoreAdminCbData(
+                store_id=store_id,
+                type_press='make-changes-prod'
+            ).pack())
     )
 
     return keyboard.as_markup()
@@ -61,7 +70,6 @@ async def create_kb_category_admin_add_prod(
             text=f'{category.name_rus}',
             callback_data=CategoryAdminAddCallbackFactory(
                 category_id=category.id,
-                category_name=category.name_rus
             ).pack()
         )
         for category in categories

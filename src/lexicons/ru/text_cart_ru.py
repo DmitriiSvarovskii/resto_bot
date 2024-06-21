@@ -1,15 +1,22 @@
 from typing import Optional
 
-from src.callbacks import CreateOrderCallbackFactory
+from src.callbacks import CartCallbackData, StoreMenuCbData
 from src.callbacks.order import OrderCallbackFactory
 from src.utils import OrderTypes, OrderStatus
 
 
-def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
+def create_btn_cart(
+    store_id: int,
+    mess_id: int,
+    language: str
+) -> dict[str, dict[str, str]]:
     btn = {
         'add_comment': {
             'text': 'Добавить комментарий',
-            'callback_data': 'press_comment'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='comment-cart'
+            ).pack()
         },
         'takeaway': {
             'text': 'Самовывоз',
@@ -18,7 +25,8 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
                 order_type=OrderTypes.TAKEAWAY.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
-                language=language
+                language=language,
+                store_id=store_id
             ).pack()
         },
         'dine_in': {
@@ -28,24 +36,37 @@ def create_btn_cart(mess_id: int, language: str) -> dict[str, dict[str, str]]:
                 order_type=OrderTypes.DINEIN.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
-                language=language
+                language=language,
+                store_id=store_id
             ).pack()
         },
         'delivery': {
             'text': 'Доставка 🚚',
-            'callback_data': 'press_delivery_pay'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='press-delivery'
+            ).pack()
         },
         'main_menu': {
             'text': 'Меню',
-            'callback_data': 'press_menu'
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='main-menu'
+            ).pack()
         },
         'clear': {
             'text': 'Очистить',
-            'callback_data': 'press_empty'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='empty-cart'
+            ).pack()
         },
         'edit': {
             'text': 'Редактировать',
-            'callback_data': 'press_edit_cart'
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='edit-cart'
+            ).pack()
         },
     }
     return btn
@@ -73,20 +94,32 @@ edit_cart_dict: dict[str, str] = {
 }
 
 
-edit_btn_cart_dict: dict[str, dict[str, str]] = {
-    'main_menu': {
-        'text': 'Главное меню',
-        'callback_data': 'press_main_menu'
-    },
-    'clear': {
-        'text': 'Очистить',
-        'callback_data': 'press_empty'
-    },
-    'checkout': {
-        'text': 'Оформить',
-        'callback_data': 'press_cart'
+def create_edit_cart_btn(
+    store_id: int
+) -> dict[str, dict[str, str]]:
+    return {
+        'main_menu': {
+            'text': 'Главное меню',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='main-menu'
+            ).pack()
+        },
+        'clear': {
+            'text': 'Очистить',
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='empty-cart'
+            ).pack()
+        },
+        'checkout': {
+            'text': 'Оформить',
+            'callback_data': CartCallbackData(
+                store_id=store_id,
+                type_press='cart'
+            ).pack()
+        }
     }
-}
 
 
 def create_cart_text(
@@ -99,7 +132,7 @@ def create_cart_text(
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            "\n--------------------\n"
+            "--------------------\n"
             f'Итого без скидки: {bill} ₹\n'
             f'Скидка: {bill*0.1} ₹\n'
             f'Итоговая цена со скидкой: {bill*0.9} ₹\n'
@@ -108,7 +141,7 @@ def create_cart_text(
         message = (
             'Ваш заказ:\n\n'
             f'{order_text}'
-            "\n--------------------\n"
+            "--------------------\n"
             f'Итого без скидки: {bill} ₹\n'
             f'Итого цена со скидкой: {bill * 0.9} ₹\n'
             f'Комментарий к заказу: {order_comment}\n'
@@ -119,6 +152,7 @@ def create_cart_text(
             "--------------------\n"
             f'Итоговая сумма к оплате: {bill * 0.9 + box_price} ₹\n'
             "--------------------\n"
-            f'*Плата за упаковку взымается только при доставке или самовывозе\n'
+            f'*Плата за упаковку взымается только при доставке '
+            'или самовывозе\n'
         )
     return message

@@ -5,9 +5,11 @@ from src.schemas import cart_schemas
 
 async def get_cart_items_and_totals(
     user_id: int,
+    store_id: int,
 ):
     async for session in get_async_session():
         response = await cart_crud.crud_read_cart_items_and_totals(
+            store_id=store_id,
             user_id=user_id,
             session=session
         )
@@ -17,10 +19,12 @@ async def get_cart_items_and_totals(
 
 async def get_total_price_cart(
     user_id: int,
+    store_id: int
 ):
     async for session in get_async_session():
         response = await cart_crud.crud_total_price_cart_by_id(
             user_id=user_id,
+            store_id=store_id,
             session=session
         )
         break
@@ -29,10 +33,12 @@ async def get_total_price_cart(
 
 async def delete_cart_items_by_user_id(
     user_id: int,
+    store_id: int,
 ):
     async for session in get_async_session():
         await cart_crud.crud_delete_cart_items_by_user_id(
             user_id=user_id,
+            store_id=store_id,
             session=session
         )
         break
@@ -58,10 +64,14 @@ async def decrease_cart_item(data: cart_schemas.CartCreate):
     return response
 
 
-async def get_one_product(product_id: int):
+async def get_one_product(
+    product_id: int,
+    store_id: int
+):
     async for session in get_async_session():
         compound_text = await product_crud.crud_get_one_product(
             product_id=product_id,
+            store_id=store_id,
             session=session
         )
         break

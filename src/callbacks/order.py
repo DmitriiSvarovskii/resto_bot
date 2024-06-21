@@ -11,6 +11,7 @@ class OrderCallbackFactory(
     status: int
     mess_id: Optional[int] = None
     language: str
+    store_id: int
 
 
 class CreateOrderCallbackFactory(
@@ -20,6 +21,7 @@ class CreateOrderCallbackFactory(
     type_callback: Optional[str] = None
     order_type: Optional[int] = None
     status: int
+    store_id: int
     mess_id: Optional[int] = None
     language: str
 

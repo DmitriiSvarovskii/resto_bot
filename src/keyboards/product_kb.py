@@ -22,6 +22,7 @@ from src.callbacks import (
     ProductChangePriceBoxCallbackFactory,
     ProductDeleteCallbackFactory,
     CategoryAdminChangeCallbackFactory,
+    StoreAdminCbData
 )
 
 
@@ -29,10 +30,12 @@ async def create_kb_product(
     products: List[product_schemas.ReadProduct],
     user_id: int,
     language: str,
+    store_id: int,
     popular: Optional[bool] = None
 ):
     cart_info = await cart_db.get_cart_items_and_totals(
-        user_id=user_id
+        user_id=user_id,
+        store_id=store_id
     )
 
     cart_items_dict = {
@@ -44,7 +47,9 @@ async def create_kb_product(
         text_menu = text_menu_en
 
     text_menu_btn = text_menu.create_navigation_prod_btn(
-        bill=cart_info.total_price)
+        bill=cart_info.total_price,
+        store_id=store_id
+    )
 
     keyboard = InlineKeyboardBuilder()
 
@@ -61,10 +66,11 @@ async def create_kb_product(
             InlineKeyboardButton(
                 text=product_name,
                 callback_data=ProductIdCallbackFactory(
-                    type_pr='plus',
+                    type_press='plus',
                     product_id=product.id,
                     category_id=product.category_id,
-                    popular=popular
+                    popular=popular,
+                    store_id=store_id
                 ).pack()))
 
         product_quantity = cart_items_dict.get(product.id, 0)
@@ -73,10 +79,11 @@ async def create_kb_product(
             InlineKeyboardButton(
                 text=description,
                 callback_data=ProductIdCallbackFactory(
-                    type_pr='compound',
+                    type_press='compound',
                     product_id=product.id,
                     category_id=product.category_id,
-                    popular=popular
+                    popular=popular,
+                    store_id=store_id
                 ).pack()),
             InlineKeyboardButton(
                 text=f'{price}: {product.price} ₹',
@@ -92,19 +99,21 @@ async def create_kb_product(
             InlineKeyboardButton(
                 text='➖',
                 callback_data=ProductIdCallbackFactory(
-                    type_pr='minus',
+                    type_press='minus',
                     product_id=product.id,
                     category_id=product.category_id,
-                    popular=popular
+                    popular=popular,
+                    store_id=store_id
                 ).pack()
             ),
             InlineKeyboardButton(
                 text='➕',
                 callback_data=ProductIdCallbackFactory(
-                    type_pr='plus',
+                    type_press='plus',
                     product_id=product.id,
                     category_id=product.category_id,
-                    popular=popular
+                    popular=popular,
+                    store_id=store_id
                 ).pack()
             ),
             width=2
@@ -123,6 +132,7 @@ async def create_kb_product(
 async def create_kb_product_admin(
     products: List[product_schemas.ReadProduct],
     language: str,
+    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -137,7 +147,8 @@ async def create_kb_product_admin(
                 text=product_name,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
-                    category_id=product.category_id
+                    category_id=product.category_id,
+                    store_id=store_id
                 ).pack()))
 
         keyboard.row(
@@ -145,20 +156,23 @@ async def create_kb_product_admin(
                 text=availability,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
-                    category_id=product.category_id
+                    category_id=product.category_id,
+                    store_id=store_id
                 ).pack()),
             InlineKeyboardButton(
                 text=indicator,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
-                    category_id=product.category_id
+                    category_id=product.category_id,
+                    store_id=store_id
                 ).pack()
             ),
             InlineKeyboardButton(
                 text=action,
                 callback_data=ProductIdAdminCallbackFactory(
                     product_id=product.id,
-                    category_id=product.category_id
+                    category_id=product.category_id,
+                    store_id=store_id
                 ).pack()),
             width=3
         )
@@ -166,8 +180,10 @@ async def create_kb_product_admin(
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_modify_avail_prod'
-        )
+            callback_data=StoreAdminCbData(
+                type_press='modify-avail-prod',
+                store_id=store_id
+            ).pack())
     )
 
     return keyboard.as_markup()
@@ -176,6 +192,7 @@ async def create_kb_product_admin(
 async def create_kb_change_product_list(
     products: List[product_schemas.ReadProduct],
     language: str,
+    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
     for product in products:
@@ -185,13 +202,16 @@ async def create_kb_change_product_list(
                 text=product_name,
                 callback_data=ProductChangeAdminCallbackFactory(
                     product_id=product.id,
-                    category_id=product.category_id
+                    category_id=product.category_id,
+                    store_id=store_id
                 ).pack()))
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_change_product'
-        )
+            callback_data=StoreAdminCbData(
+                type_press='change-product',
+                store_id=store_id
+            ).pack())
     )
 
     return keyboard.as_markup()
@@ -199,7 +219,8 @@ async def create_kb_change_product_list(
 
 async def create_kb_change_product(
     product_id: int,
-    category_id: int
+    category_id: int,
+    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -207,32 +228,38 @@ async def create_kb_change_product(
         InlineKeyboardButton(
             text='Изменить категорию товара ✏️',
             callback_data=ProductChangeCategoryCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Изменить название товара ✏️',
             callback_data=ProductChangeNameCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Изменить описание товара ✏️',
             callback_data=ProductChangeDescriptionCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Изменить цену товара ✏️',
             callback_data=ProductChangePriceCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Изменить цену упаковки ✏️',
             callback_data=ProductChangePriceBoxCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         InlineKeyboardButton(
             text='Удалить товар ✖',
             callback_data=ProductDeleteCallbackFactory(
-                product_id=product_id
+                product_id=product_id,
+                store_id=store_id
             ).pack()),
         width=1
     )
@@ -241,7 +268,8 @@ async def create_kb_change_product(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
             callback_data=CategoryAdminChangeCallbackFactory(
-                category_id=category_id
+                category_id=category_id,
+                store_id=store_id
             ).pack()),
     )
 
@@ -277,6 +305,7 @@ async def create_kb_product_delete():
 async def create_kb_product_popular_admin(
     products: List[product_schemas.ReadProduct],
     language: str,
+    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
 
@@ -293,6 +322,7 @@ async def create_kb_product_popular_admin(
                     product_id=product.id,
                     category_id=product.category_id,
                     popular=True,
+                    store_id=store_id
                 ).pack()))
 
         keyboard.row(
@@ -302,6 +332,7 @@ async def create_kb_product_popular_admin(
                     product_id=product.id,
                     category_id=product.category_id,
                     popular=True,
+                    store_id=store_id
                 ).pack()),
             InlineKeyboardButton(
                 text=indicator,
@@ -309,6 +340,7 @@ async def create_kb_product_popular_admin(
                     product_id=product.id,
                     category_id=product.category_id,
                     popular=True,
+                    store_id=store_id
                 ).pack()
             ),
             InlineKeyboardButton(
@@ -317,6 +349,7 @@ async def create_kb_product_popular_admin(
                     product_id=product.id,
                     category_id=product.category_id,
                     popular=True,
+                    store_id=store_id
                 ).pack()),
             width=3
         )
@@ -324,8 +357,10 @@ async def create_kb_product_popular_admin(
     keyboard.row(
         InlineKeyboardButton(
             text=LEXICON_KEYBOARDS_RU['back'],
-            callback_data='press_modify_popular_prod'
-        )
+            callback_data=StoreAdminCbData(
+                type_press='modify-popular-prod',
+                store_id=store_id
+            ).pack())
     )
 
     return keyboard.as_markup()

@@ -3,18 +3,23 @@ from src.crud import delivery_crud as del_crud
 from src.schemas import delivery_schemas
 
 
-async def get_delivery_one_district(delivery_id: int):
+async def get_delivery_one_district(
+    store_id: int,
+    delivery_id: int
+):
     async for session in get_async_session():
         response = await del_crud.crud_read_delivery_one_district(
             delivery_id=delivery_id,
+            store_id=store_id,
             session=session
         )
         return response
 
 
-async def get_delivery_districts():
+async def get_delivery_districts(store_id: int):
     async for session in get_async_session():
         delivery_districts = await del_crud.crud_read_delivery_districts(
+            store_id=store_id,
             session=session
         )
         break
@@ -23,11 +28,13 @@ async def get_delivery_districts():
 
 async def db_update_district(
     delivery_id: int,
+    store_id: int,
     update_values: dict,
 ):
     async for session in get_async_session():
         await del_crud.crud_update_district(
             delivery_id=delivery_id,
+            store_id=store_id,
             update_values=update_values,
             session=session
         )
@@ -45,11 +52,13 @@ async def db_create_new_district(data: delivery_schemas.CreateDelivery):
 
 
 async def db_change_delete_flag_district(
-    delivery_id: int
+    delivery_id: int,
+    store_id: int,
 ):
     async for session in get_async_session():
         await del_crud.crud_change_delete_flag_district(
             delivery_id=delivery_id,
+            store_id=store_id,
             session=session
         )
         break

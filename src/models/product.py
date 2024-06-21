@@ -21,6 +21,8 @@ class Product(Base):
     __tablename__ = 'products'
 
     id: Mapped[intpk]
+    store_id: Mapped[int | None] = mapped_column(
+        ForeignKey("stories.id", ondelete="CASCADE"))
     category_id: Mapped[int] = mapped_column(
         ForeignKey("categories.id", ondelete="CASCADE"))
     name_rus: Mapped[str_64]

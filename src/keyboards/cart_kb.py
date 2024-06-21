@@ -2,20 +2,27 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.lexicons import LEXICON_RU
-from src.callbacks import CartEditCallbackFactory
+from src.callbacks import CartCallbackData
 from .main_kb import create_kb_main
 from src.db import cart_db
 from src.lexicons import text_cart_en, text_cart_ru
 
 
-def create_kb_cart(mess_id: int, language: str):
+def create_kb_cart(
+    mess_id: int,
+    language: str,
+    store_id: int
+):
     if language == 'ru':
         text_cart = text_cart_ru
     else:
         text_cart = text_cart_en
 
     cart_text_dict = text_cart.create_btn_cart(
-        mess_id=mess_id, language=language)
+        mess_id=mess_id,
+        language=language,
+        store_id=store_id
+    )
 
     keyboard = InlineKeyboardBuilder()
 
@@ -36,21 +43,20 @@ def create_kb_cart(mess_id: int, language: str):
 
 
 async def create_kbs_products_cart(
-        callback,
+        store_id: int,
         user_id: int,
         language: str
 ):
 
     cart_info = await cart_db.get_cart_items_and_totals(
-        user_id=user_id
+        user_id=user_id,
+        store_id=store_id
     )
 
     if language == 'ru':
-        text_cart = text_cart_ru.edit_cart_dict
-        edit_btn_cart = text_cart_ru.edit_btn_cart_dict
+        edit_btn_cart = text_cart_ru.create_edit_cart_btn(store_id=store_id)
         create_total = text_cart_ru.create_total_btn
     else:
-        text_cart = text_cart_en.edit_cart_dict
         edit_btn_cart = text_cart_en.edit_btn_cart_dict
         create_total = text_cart_en.create_total_btn
 
@@ -74,9 +80,10 @@ async def create_kbs_products_cart(
                         f'{category_name} - '
                         f'{product_name} - '
                     ),
-                    callback_data=CartEditCallbackFactory(
-                        type_pr='plus',
-                        product_id=item.product_id
+                    callback_data=CartCallbackData(
+                        type_press='plus',
+                        product_id=item.product_id,
+                        store_id=store_id
                     ).pack()))
             keyboard.row(
                 InlineKeyboardButton(
@@ -92,23 +99,26 @@ async def create_kbs_products_cart(
             keyboard.row(
                 InlineKeyboardButton(
                     text='✖️',
-                    callback_data=CartEditCallbackFactory(
-                        type_pr='del',
+                    callback_data=CartCallbackData(
+                        type_press='del',
                         product_id=item.product_id,
+                        store_id=store_id
                     ).pack()
                 ),
                 InlineKeyboardButton(
                     text='➖',
-                    callback_data=CartEditCallbackFactory(
-                        type_pr='minus',
+                    callback_data=CartCallbackData(
+                        type_press='minus',
                         product_id=item.product_id,
+                        store_id=store_id
                     ).pack()
                 ),
                 InlineKeyboardButton(
                     text='➕',
-                    callback_data=CartEditCallbackFactory(
-                        type_pr='plus',
+                    callback_data=CartCallbackData(
+                        type_press='plus',
                         product_id=item.product_id,
+                        store_id=store_id
                     ).pack()
                 ),
                 width=3
@@ -129,17 +139,7 @@ async def create_kbs_products_cart(
 
         keyboard.row(*buttons, width=3)
 
-        await callback.message.edit_text(
-            text=text_cart['edit_cart'],
-            reply_markup=keyboard.as_markup()
-        )
+        return keyboard.as_markup()
 
-        return {'status': 'success'}
     else:
-        await callback.message.edit_text(
-            text=text_cart['empty_cart'],
-            reply_markup=await create_kb_main(
-                language=callback.from_user.language_code,
-                user_id=callback.message.chat.id)
-        )
-        return {'status': 'success'}
+        return None

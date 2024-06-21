@@ -9,12 +9,14 @@ from src.schemas import category_schemas
 
 
 async def crud_get_all_categories(
+    store_id: int,
     session: AsyncSession,
     filter: Optional[bool] = None
 ) -> List[category_schemas.GetCategory]:
     query = (
         select(Category).
         where(Category.deleted_flag.is_(False)).
+        where(Category.store_id == store_id).
         order_by(Category.id.desc())
     )
     if filter:
@@ -26,11 +28,15 @@ async def crud_get_all_categories(
 
 async def crud_get_one_category(
     category_id: int,
+    store_id: int,
     session: AsyncSession,
 ) -> Optional[category_schemas.GetCategory]:
     query = (
         select(Category)
-        .where(Category.id == category_id)
+        .where(
+            Category.id == category_id,
+            Category.store_id == store_id
+        )
     )
     result = await session.execute(query)
     category = result.scalar()
@@ -39,11 +45,15 @@ async def crud_get_one_category(
 
 async def crud_change_avail_categories(
     category_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
         update(Category)
-        .where(Category.id == category_id)
+        .where(
+            Category.id == category_id,
+            Category.store_id == store_id
+        )
         .values(availability=~Category.availability)
     )
     await session.execute(stmt)
@@ -66,15 +76,19 @@ async def crud_create_category(
 
 async def crud_update_category_name(
     category_id: int,
+    store_id: int,
     category_name_rus: str,
     category_name_en: str,
     session: AsyncSession
 ):
 
     stmt = (
-        update(Category).
-        where(Category.id == category_id).
-        values(name_rus=category_name_rus, name_en=category_name_en)
+        update(Category)
+        .where(
+            Category.id == category_id,
+            Category.store_id == store_id
+        )
+        .values(name_rus=category_name_rus, name_en=category_name_en)
     )
     await session.execute(stmt)
     await session.commit()
@@ -83,12 +97,16 @@ async def crud_update_category_name(
 
 async def crud_change_delete_flag_category(
     category_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
-        update(Category).
-        where(Category.id == category_id).
-        values(
+        update(Category)
+        .where(
+            Category.id == category_id,
+            Category.store_id == store_id
+        )
+        .values(
             deleted_flag=~Category.deleted_flag,
             deleted_at=datetime.now()
         )

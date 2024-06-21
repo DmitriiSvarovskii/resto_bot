@@ -19,10 +19,14 @@ async def crud_create_new_district(
     return {"status": 201, }
 
 
-async def crud_read_delivery_districts(session: AsyncSession):
+async def crud_read_delivery_districts(
+    store_id: int,
+    session: AsyncSession
+):
     query = (
-        select(Delivery).
-        order_by(Delivery.price.asc())
+        select(Delivery)
+        .where(Delivery.store_id == store_id)
+        .order_by(Delivery.price.asc())
     )
     result = await session.execute(query)
     delivery_districts = result.scalars().all()
@@ -31,11 +35,15 @@ async def crud_read_delivery_districts(session: AsyncSession):
 
 async def crud_read_delivery_one_district(
     delivery_id: int,
+    store_id: int,
     session: AsyncSession
 ):
     query = (
         select(Delivery).
-        where(Delivery.id == delivery_id)
+        where(
+            Delivery.id == delivery_id,
+            Delivery.store_id == store_id
+        )
     )
     result = await session.execute(query)
     delivery_district = result.scalar()
@@ -60,11 +68,15 @@ async def get_delivery_time_by_order_id(
 async def crud_update_district(
     delivery_id: int,
     update_values: dict,
+    store_id: int,
     session: AsyncSession
 ):
     stmt = (
         update(Delivery)
-        .where(Delivery.id == delivery_id)
+        .where(
+            Delivery.id == delivery_id,
+            Delivery.store_id == store_id
+        )
         .values(**update_values)
     )
     await session.execute(stmt)
@@ -74,12 +86,16 @@ async def crud_update_district(
 
 async def crud_change_delete_flag_district(
     delivery_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
-        update(Delivery).
-        where(Delivery.id == delivery_id).
-        values(
+        update(Delivery)
+        .where(
+            Delivery.id == delivery_id,
+            Delivery.store_id == store_id
+        )
+        .values(
             deleted_flag=~Delivery.deleted_flag,
             deleted_at=datetime.now()
         )

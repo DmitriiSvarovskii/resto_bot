@@ -6,7 +6,7 @@ from src.db.database import Base, intpk, str_4048
 
 
 class Store(Base):
-    __tablename__ = "stores"
+    __tablename__ = "stories"
 
     id: Mapped[intpk]
     name: Mapped[str]

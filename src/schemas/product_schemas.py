@@ -5,6 +5,7 @@ from typing import Optional
 class CreateProduct(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    store_id: int
     category_id: int
     name_rus: str
     description_rus: str

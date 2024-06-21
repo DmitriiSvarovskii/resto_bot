@@ -24,6 +24,7 @@ class ReadDeliveryReport(BaseModel):
 class CreateDelivery(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    store_id: int
     name_rus: str
     name_en: str
     delivery_time: int

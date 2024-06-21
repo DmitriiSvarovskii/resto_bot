@@ -7,13 +7,14 @@ from datetime import datetime
 from apscheduler.triggers.cron import CronTrigger
 
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.redis import RedisStorage, Redis
+from aiogram.fsm.storage.redis import RedisStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from src.config import settings, TIMEZONE
 from src.handlers import router as main_router
-from src.handlers.mailing import create_mail_group_auto
+from src.handlers.admin_handlers import mailing
 from src.utils import set_menu
+from src.db.redis_connection import redis
 
 
 sys.path.insert(0, os.path.abspath(
@@ -37,12 +38,11 @@ async def main():
 
     logger.info('Starting bot')
     bot: Bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
-    redis = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
     storage = RedisStorage(redis=redis)
     dp: Dispatcher = Dispatcher(storage=storage)
     dp.include_router(main_router)
     scheduler = AsyncIOScheduler(timezone=TIMEZONE)
-    scheduler.add_job(create_mail_group_auto,
+    scheduler.add_job(mailing.create_mail_group_auto,
                       trigger=trigger, kwargs={'bot': bot})
 
     scheduler.start()

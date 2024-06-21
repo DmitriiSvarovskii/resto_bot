@@ -9,6 +9,7 @@ from src.schemas import product_schemas
 
 
 async def crud_get_all_products(
+    store_id: int,
     category_id: int,
     session: AsyncSession,
     filter: Optional[bool] = None,
@@ -18,6 +19,7 @@ async def crud_get_all_products(
         where(
             Product.deleted_flag.is_(False),
             Product.category_id == category_id,
+            Product.store_id == store_id
         ).
         order_by(Product.id.asc())
     )
@@ -29,6 +31,7 @@ async def crud_get_all_products(
 
 
 async def crud_get_all_popular_products(
+    store_id: int,
     session: AsyncSession,
     filter: Optional[bool] = None,
 ) -> List[product_schemas.ReadProduct]:
@@ -36,7 +39,8 @@ async def crud_get_all_popular_products(
         select(Product).
         where(
             Product.deleted_flag.is_(False),
-            Product.popular
+            Product.popular,
+            Product.store_id == store_id
         ).
         order_by(Product.id.asc())
     )
@@ -49,11 +53,13 @@ async def crud_get_all_popular_products(
 
 async def crud_change_avail_roducts(
     product_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
         update(Product)
-        .where(Product.id == product_id)
+        .where(Product.id == product_id,
+               Product.store_id == store_id)
         .values(availability=~Product.availability)
     )
     await session.execute(stmt)
@@ -63,11 +69,13 @@ async def crud_change_avail_roducts(
 
 async def crud_change_popular_roducts(
     product_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
         update(Product)
-        .where(Product.id == product_id)
+        .where(Product.id == product_id,
+               Product.store_id == store_id)
         .values(popular=~Product.popular)
     )
     await session.execute(stmt)
@@ -76,11 +84,13 @@ async def crud_change_popular_roducts(
 
 
 async def crud_get_stop_list(
+    store_id: int,
     session: AsyncSession
 ) -> List[product_schemas.ReadProduct]:
     query = (
         select(Product).
-        where(Product.availability.is_(False)).
+        where(Product.availability.is_(False),
+              Product.store_id == store_id).
         order_by(
             Product.id.asc(),
             Product.category_id
@@ -93,13 +103,15 @@ async def crud_get_stop_list(
 
 async def crud_get_one_product(
     product_id: int,
+    store_id: int,
     session: AsyncSession
 ) -> Optional[product_schemas.ReadProduct]:
     query = (
         select(Product).
         where(
             Product.deleted_flag.is_(False),
-            Product.id == product_id
+            Product.id == product_id,
+            Product.store_id == store_id
         )
     )
     result = await session.execute(query)
@@ -122,13 +134,15 @@ async def crud_create_new_product(
 
 async def crud_update_product(
     product_id: int,
+    store_id: int,
     data: dict,
     session: AsyncSession
 ):
     # update_data = {field_name: new_value}
     stmt = (
         update(Product).
-        where(Product.id == product_id).
+        where(Product.id == product_id,
+              Product.store_id == store_id).
         values(**{key: value for key, value in data.items() if key != 'product_id'})
     )
     await session.execute(stmt)
@@ -138,11 +152,13 @@ async def crud_update_product(
 
 async def crud_change_delete_flag_product(
     product_id: int,
+    store_id: int,
     session: AsyncSession,
 ):
     stmt = (
         update(Product).
-        where(Product.id == product_id).
+        where(Product.id == product_id,
+              Product.store_id == store_id).
         values(
             deleted_flag=~Product.deleted_flag,
             deleted_at=datetime.now()

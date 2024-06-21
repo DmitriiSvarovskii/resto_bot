@@ -66,12 +66,8 @@ class OrderTypes(Enum):
 
 
 # Пример использования
-name = OrderTypes.get_name_by_id(2, 'ru')
-order_type_id = OrderTypes.get_id_by_name('Самовывоз')
 # print(OrderTypes.TAKEAWAY.value['id'])
 # print(type(OrderTypes.TAKEAWAY.value['id']))
-print(OrderStatus.ACCEPTED.value['id'])
-print(type(OrderStatus.ACCEPTED.value['id']))
 # print(OrderTypes.TAKEAWAY.value.values('Самовывоз'))
 # print('Самовывоз' is OrderTypes.TAKEAWAY.value.keys())
 # values = OrderTypes.TAKEAWAY.value.values()

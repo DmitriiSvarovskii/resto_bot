@@ -18,7 +18,8 @@ def create_kb_check_order(
     order_id: int,
     user_id: int,
     mess_id: int,
-    language: str
+    language: str,
+    store_id: int
 ):
     text_order = (text_order_ru
                   if language == 'ru'
@@ -32,7 +33,8 @@ def create_kb_check_order(
                 user_id=user_id,
                 status=OrderStatus.ACCEPTED.value['id'],
                 mess_id=mess_id,
-                language=language
+                store_id=store_id,
+                language=language,
             ).pack()
         ),
         InlineKeyboardButton(
@@ -43,6 +45,7 @@ def create_kb_check_order(
                 user_id=user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=store_id,
                 language=language
             ).pack()
         ),
@@ -75,6 +78,7 @@ def create_kb_time_cooking(
             user_id=data.user_id,
             status=OrderStatus.CANCELLED.value['id'],
             mess_id=mess_id,
+            store_id=data.store_id,
             language=language
         ).pack()
     )
@@ -90,6 +94,7 @@ def create_kb_time_cooking(
                 user_id=data.user_id,
                 status=OrderStatus.ACCEPTED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 time=time,
                 time_del=time_del,
                 language=language
@@ -124,6 +129,7 @@ def create_order_status_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.READY_FOR_PICKUP.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -135,6 +141,7 @@ def create_order_status_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -146,6 +153,7 @@ def create_order_status_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.COMPLETED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -174,6 +182,7 @@ def create_order_status_delivery_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.COURIER_ASSIGNED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -185,6 +194,7 @@ def create_order_status_delivery_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -196,6 +206,7 @@ def create_order_status_delivery_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -224,6 +235,7 @@ def create_status_redy_order_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),
@@ -235,6 +247,7 @@ def create_status_redy_order_keyboard(
                 user_id=data.user_id,
                 status=OrderStatus.COMPLETED.value['id'],
                 mess_id=mess_id,
+                store_id=data.store_id,
                 language=language
             ).pack()
         ),

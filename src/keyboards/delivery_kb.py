@@ -44,7 +44,7 @@ def create_kb_delivery_fsm(language: str):
                    if language == 'ru'
                    else text_common_en)
     buttons = [
-        [KeyboardButton(text=text_common.common_dict['cancel']),
+        [KeyboardButton(text=text_common.common_dict['cancel_delivery']),
          KeyboardButton(text=text_common.common_dict['skip'])]
     ]
     keyboard = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -69,7 +69,11 @@ def create_kb_delivery_fsm_location(language: str):
     return keyboard
 
 
-def create_kb_delivery_go(mess_id: int, language: str):
+def create_kb_delivery_go(
+    mess_id: int,
+    language: str,
+    store_id: int,
+):
     text_delivery = (text_fsm_delivery_ru
                      if language == 'ru'
                      else text_fsm_delivery_en)
@@ -82,6 +86,7 @@ def create_kb_delivery_go(mess_id: int, language: str):
                 order_type=OrderTypes.DELIVERY.value['id'],
                 status=OrderStatus.NEW.value['id'],
                 mess_id=mess_id,
+                store_id=store_id,
                 language=language,
             ).pack()
         )

@@ -1,4 +1,6 @@
-from sqlalchemy.orm import relationship, Mapped  # noqa: F401
+from sqlalchemy.orm import relationship, Mapped, mapped_column  # noqa: F401
+from sqlalchemy import ForeignKey
+
 from typing import TYPE_CHECKING
 
 from src.db.database import (
@@ -15,6 +17,8 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id: Mapped[intpk]
+    store_id: Mapped[int | None] = mapped_column(
+        ForeignKey("stories.id", ondelete="CASCADE"))
     name_rus: Mapped[str_64]
     name_en: Mapped[str_64 | None]
     availability: Mapped[bool]

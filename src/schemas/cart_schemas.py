@@ -6,6 +6,7 @@ class CartBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     product_id: int
+    store_id: int
 
 
 class CartCreate(CartBase):

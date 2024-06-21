@@ -8,6 +8,7 @@ class CreateOrder(BaseModel):
 
     user_id: int
     order_type: str
+    store_id: int
 
     order_status: Optional[str] = 'Новый'
     total_price: Optional[int] = None

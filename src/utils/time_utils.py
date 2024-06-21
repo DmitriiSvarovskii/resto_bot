@@ -1,12 +1,11 @@
 from datetime import datetime, timezone, timedelta
-from datetime import datetime, timedelta
 
 from src.config import TIMEZONE
 from src.db import store_db
 
 
-async def is_valid_time_warning():
-    data = await store_db.get_store_info()
+async def is_valid_time_warning(store_id: int):
+    data = await store_db.get_store_info(store_id=store_id)
 
     closing_time = data.closing_time
 
@@ -22,8 +21,8 @@ async def is_valid_time_warning():
     return time_until_closing <= timedelta(minutes=30)
 
 
-async def is_valid_time():
-    data = await store_db.get_store_info()
+async def is_valid_time(store_id: int):
+    data = await store_db.get_store_info(store_id=store_id)
 
     opening_time_base = data.opening_time
     closing_time = data.closing_time
@@ -50,16 +49,12 @@ async def is_valid_time():
 
 
 async def check_time(timestamp):
-    # Преобразовываем время из базы данных в объект datetime с часовым поясом
     db_time = timestamp.replace(tzinfo=timezone.utc).astimezone(TIMEZONE)
 
-    # Получаем текущее время с часовым поясом
     current_time = datetime.now(TIMEZONE)
 
-    # Вычисляем разницу между текущим временем и временем из базы данных
     time_difference = current_time - db_time
 
-    # Проверяем, если прошло больше 15 минут
     if time_difference > timedelta(minutes=15):
         return False
     else:

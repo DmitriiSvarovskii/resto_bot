@@ -7,21 +7,30 @@ from aiogram.types import (
 
 from src.lexicons import LEXICON_KEYBOARDS_RU
 from src.callbacks import (
-    AddCategoryAvailabilityCallbackFactory
+    AddCategoryAvailabilityCallbackFactory,
+    StoreAdminCbData
 )
 
 
-def create_kb_approval():
+def create_kb_approval(
+    store_id: int
+):
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
         InlineKeyboardButton(
             text='Подтвердить',
-            callback_data='press_approval_cat')
+            callback_data=StoreAdminCbData(
+                store_id=store_id,
+                type_press='approval-cat'
+            ).pack())
     )
     keyboard.row(
         InlineKeyboardButton(
             text='Внести изменения',
-            callback_data='press_make_changes_cat')
+            callback_data=StoreAdminCbData(
+                store_id=store_id,
+                type_press='make-changes-cat'
+            ).pack())
     )
 
     return keyboard.as_markup()

@@ -1,6 +1,6 @@
 from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
+# from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 from typing import Optional
 
@@ -11,6 +11,7 @@ from src.lexicons import LEXICON_RU
 
 async def crud_read_cart_items_and_totals(
     user_id: int,
+    store_id: int,
     session: AsyncSession
 ) -> Optional[cart_schemas.CartResponse]:
     query = (
@@ -28,7 +29,8 @@ async def crud_read_cart_items_and_totals(
         .join(Category, Category.id == Product.category_id)
         .where(
             Cart.user_id == user_id,
-            Cart.quantity > 0
+            Cart.quantity > 0,
+            Cart.store_id == store_id,
         )
         .group_by(Category.id, Product.id, Cart.quantity,
                   Product.name_rus, Cart.user_id)
@@ -48,6 +50,7 @@ async def crud_read_cart_items_and_totals(
 
 async def crud_total_price_cart_by_id(
     user_id: int,
+    store_id: int,
     session: AsyncSession
 ) -> Optional[cart_schemas.CartItemTotal]:
     query = (
@@ -56,7 +59,10 @@ async def crud_total_price_cart_by_id(
         )
         .join(Product, Cart.product_id == Product.id)
         .join(Category, Category.id == Product.category_id)
-        .where(Cart.user_id == user_id)
+        .where(
+            Cart.user_id == user_id,
+            Cart.store_id == store_id
+        )
     )
     result = await session.execute(query)
     scalar_result = result.scalar_one()
@@ -71,7 +77,8 @@ async def crud_add_to_cart(
         select(Cart).
         where(
             Cart.user_id == data.user_id,
-            Cart.product_id == data.product_id
+            Cart.product_id == data.product_id,
+            Cart.store_id == data.store_id
         )
     )
     result = await session.execute(query)
@@ -82,7 +89,8 @@ async def crud_add_to_cart(
             update(Cart).
             where(
                 Cart.user_id == data.user_id,
-                Cart.product_id == data.product_id
+                Cart.product_id == data.product_id,
+                Cart.store_id == data.store_id
             ).
             values(quantity=func.coalesce(Cart.quantity, 0) + 1)
         )
@@ -105,7 +113,8 @@ async def crud_decrease_cart_item(
         select(Cart).
         where(
             Cart.user_id == data.user_id,
-            Cart.product_id == data.product_id
+            Cart.product_id == data.product_id,
+            Cart.store_id == data.store_id
         )
     )
     result = await session.execute(query)
@@ -130,7 +139,8 @@ async def update_cart_item_quantity(
         update(Cart).
         where(
             Cart.user_id == data.user_id,
-            Cart.product_id == data.product_id
+            Cart.product_id == data.product_id,
+            Cart.store_id == data.store_id
         ).
         values(quantity=Cart.quantity - 1)
     )
@@ -147,7 +157,8 @@ async def crud_delete_cart_item(
         delete(Cart).
         where(
             Cart.user_id == data.user_id,
-            Cart.product_id == data.product_id
+            Cart.product_id == data.product_id,
+            Cart.store_id == data.store_id
         )
     )
     await session.execute(stmt)
@@ -156,12 +167,16 @@ async def crud_delete_cart_item(
 
 
 async def crud_delete_cart_items_by_user_id(
+    store_id: int,
     user_id: int,
-    session: Session
+    session: AsyncSession
 ):
     stmt = (
         delete(Cart).
-        where(Cart.user_id == user_id)
+        where(
+            Cart.user_id == user_id,
+            Cart.store_id == store_id
+        )
     )
     await session.execute(stmt)
     await session.commit()

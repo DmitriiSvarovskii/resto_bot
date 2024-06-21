@@ -15,6 +15,7 @@ class GetCategory(BaseModel):
 class CreateCategory(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    store_id: int
     name_rus: str
     name_en: str
     availability: bool

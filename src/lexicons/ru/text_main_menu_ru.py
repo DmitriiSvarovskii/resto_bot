@@ -1,33 +1,81 @@
-main_btn: dict[str, dict[str, str]] = {
-    'menu': {
-        'text': 'Наше меню',
-        'callback_data': 'press_menu'
-    },
-    'contact': {
-        'text': 'Наши контакты',
-        'callback_data': 'press_contact'
-    },
-    'delivery': {
-        'text': 'Условия доставки',
-        'callback_data': 'press_delivery'
-    },
-    'location': {
-        'text': 'Наша геолокация',
-        'callback_data': 'press_location'
-    },
-    'personal_account': {
-        'text': 'Личный кабинет',
-        'callback_data': 'press_account'
-    },
-    'group_telegram': {
-        'text': 'Наша группа',
-        'url': 'https://t.me/PizzaGoaFood'
-    },
-    'admin': {
-        'text': 'Админка',
-        'callback_data': 'press_admin'
-    },
-}
+from typing import List
+
+from src.callbacks import StoreMenuCbData, StoreCbDataList, StoreAdminCbData
+from src.schemas import delivery_schemas
+
+
+def create_main_btn(store_id: int) -> dict[str, dict[str, str]]:
+    btn = {
+        'menu': {
+            'text': 'Наше меню',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='menu'
+            ).pack()
+        },
+        'contact': {
+            'text': 'Наши контакты',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='contact'
+            ).pack()
+        },
+        'delivery': {
+            'text': 'Условия доставки',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='delivery'
+            ).pack()
+        },
+        'location': {
+            'text': 'Наша геолокация',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='location'
+            ).pack()
+        },
+        'personal_account': {
+            'text': 'Личный кабинет',
+            'callback_data': StoreMenuCbData(
+                store_id=store_id,
+                type='account'
+            ).pack()
+        },
+        'group_telegram': {
+            'text': 'Наша группа',
+            'url': 'https://t.me/PizzaGoaFood'
+        },
+        'back': {
+            'text': '<<< Назад',
+            'callback_data': StoreCbDataList(
+                store_id=store_id,
+                type_press='view-list'
+            ).pack()
+        },
+        'admin': {
+            'text': 'Админка',
+            'callback_data': StoreAdminCbData(
+                store_id=store_id,
+                type_press='admin'
+            ).pack()
+        },
+    }
+    return btn
+
+
+def create_delivery_info(
+    districts: List[delivery_schemas.ReadDelivery]
+) -> str:
+    delivery_info = 'Информация по доставке 🛵\n\nСтомость доставки по районам:'
+
+    for district in districts:
+        delivery_info += f'\n{district.name_rus} {district.price} ₹'
+
+    delivery_info += (
+        '\n\nP.s. При оформении доставки следуйте подсказкам нашего бота)'
+    )
+
+    return delivery_info
 
 
 main_menu_dict: dict[str, str] = {
@@ -82,14 +130,20 @@ delete_location_btn: dict[str, dict[str, str]] = {
 }
 
 
-def create_navigation_main_btn() -> dict[str, dict[str, str]]:
+def create_navigation_main_btn(store_id: int) -> dict[str, dict[str, str]]:
     return {
         'back': {
             'text': '<<< Назад',
-            'callback_data': 'press_main_menu'
+            'callback_data': StoreCbDataList(
+                store_id=store_id,
+                type_press='select-one'
+            ).pack()
         },
         'cart': {
             'text': 'Главное меню',
-            'callback_data': 'press_main_menu'
+            'callback_data': StoreCbDataList(
+                store_id=store_id,
+                type_press='select-one'
+            ).pack()
         }
     }

@@ -26,13 +26,13 @@ def create_kb_del(language: str):
     return keyboard.as_markup()
 
 
-def create_kb_back(language: str):
+def create_kb_back(language: str, store_id: int):
     if language == 'ru':
         text_menu = text_main_menu_ru
     else:
         text_menu = text_main_menu_en
 
-    text_menu_btn = text_menu.create_navigation_main_btn()
+    text_menu_btn = text_menu.create_navigation_main_btn(store_id=store_id)
 
     keyboard = InlineKeyboardBuilder()
 

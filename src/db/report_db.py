@@ -18,9 +18,12 @@ async def get_sales_period_summary(
         return response
 
 
-async def get_stop_list():
+async def get_stop_list(
+    store_id: int
+):
     async for session in get_async_session():
         response = await product_crud.crud_get_stop_list(
+            store_id=store_id,
             session=session
         )
         return response

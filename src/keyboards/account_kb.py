@@ -2,13 +2,23 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.db import order_db, cart_db
-from src.callbacks import OrderStatusCallbackFactory, AccountOrdersCbData
 from src.utils import OrderStatus, time_utils
+from src.callbacks import (
+    OrderStatusCallbackFactory,
+    AccountOrdersCbData,
+    StoreCbDataList,
+    CartCallbackData
+)
 
 
-async def create_kb_account(user_id: int, language: str):
+async def create_kb_account(
+    user_id: int,
+    language: str,
+    store_id: int
+):
     order_list = await order_db.get_order_list(user_id=user_id)
-    bill_data = await cart_db.get_total_price_cart(user_id=user_id)
+    bill_data = await cart_db.get_total_price_cart(user_id=user_id,
+                                                   store_id=store_id)
 
     keyboard_build = InlineKeyboardBuilder()
 
@@ -22,6 +32,7 @@ async def create_kb_account(user_id: int, language: str):
                 user_id=user_id,
                 status=OrderStatus.CANCELLED.value['id'],
                 mess_id=mess_id,
+                store_id=store_id,
                 language=language
             ).pack()
 
@@ -56,11 +67,17 @@ async def create_kb_account(user_id: int, language: str):
     keyboard_build.row(
         InlineKeyboardButton(
             text='<<< Назад',
-            callback_data='press_main_menu'
+            callback_data=StoreCbDataList(
+                store_id=store_id,
+                type_press='select-one'
+            ).pack()
         ),
         InlineKeyboardButton(
             text=f'Корзина 🛒 {bill_data} ₹',
-            callback_data='press_cart'
+            callback_data=CartCallbackData(
+                store_id=store_id,
+                type_press='cart'
+            ).pack()
         ),
         width=2
     )

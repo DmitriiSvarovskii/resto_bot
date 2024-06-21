@@ -16,18 +16,19 @@ async def process_cart_action(
 
     cart_data = cart_schemas.CartCreate(
         product_id=product_id,
-        user_id=user_id
+        user_id=user_id,
+        store_id=callback_data.store_id,
     )
 
-    type_pr = callback_data.type_pr
+    type_press = callback_data.type_press
 
-    if type_pr == 'plus':
+    if type_press == 'plus':
         response = await cart_db.add_to_cart(
             data=cart_data,
         )
         await callback.answer(text=response['message'])
 
-    elif type_pr == 'minus':
+    elif type_press == 'minus':
         response = await cart_db.decrease_cart_item(
             data=cart_data,
         )
@@ -38,9 +39,10 @@ async def process_cart_action(
             )
         await callback.answer(text=response['message'])
 
-    elif type_pr == 'compound':
+    elif type_press == 'compound':
         compound_text = await cart_db.get_one_product(
             product_id=cart_data.product_id,
+            store_id=cart_data.store_id
         )
         description = (compound_text.description_rus
                        if callback.from_user.language_code == 'ru'
@@ -51,7 +53,7 @@ async def process_cart_action(
             show_alert=True
         )
 
-    elif type_pr == 'del':
+    elif type_press == 'del':
         await cart_db.delete_cart_item(
             data=cart_data,
         )
@@ -61,6 +63,7 @@ async def process_cart_action(
 async def update_cart_message(
     user_id: int,
     language: str,
+    store_id: int,
     order_comment: Optional[str] = None
 ) -> None:
     if language == 'ru':
@@ -69,7 +72,8 @@ async def update_cart_message(
         text_cart = text_cart_en
 
     response = await cart_db.get_cart_items_and_totals(
-        user_id=user_id
+        user_id=user_id,
+        store_id=store_id
     )
 
     bill = response.total_price
@@ -96,18 +100,3 @@ async def update_cart_message(
     )
 
     return message_text, bill
-
-
-def get_comment_value(user_id, user_dict_comment):
-    if (user_id in user_dict_comment and
-            "order_comment" in user_dict_comment[user_id]):
-        return user_dict_comment[user_id]["order_comment"]
-    else:
-        return None
-
-
-def get_user_info(user_id, user_dict):
-    if user_id in user_dict:
-        return user_dict[user_id]
-    else:
-        return None
