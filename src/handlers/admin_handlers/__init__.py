@@ -32,6 +32,7 @@ from .fsm_custom_report import router as fsm_custom_report_router
 from .fsm_resourse_report import router as fsm_resourse_report_router
 from .change_delivery_base import router as change_delivery_router
 from .fsm_add_district import router as fsm_add_district_router
+from .fsm_mailling import router as fsm_mailling_router
 
 router = Router(name=__name__)
 
@@ -66,4 +67,5 @@ router.include_routers(
     update_sale_group_router,
     change_delivery_router,
     fsm_add_district_router,
+    fsm_mailling_router,
 )
