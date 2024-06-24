@@ -32,7 +32,7 @@ async def handle_delivery_form_command(
     state: FSMContext
 ):
     if settings.MODE == 'PROD':
-        if await time_utils.is_valid_time():
+        if await time_utils.is_valid_time(store_id=callback_data.store_id):
             await process_delivery_form_command(
                 callback=callback,
                 callback_data=callback_data,
