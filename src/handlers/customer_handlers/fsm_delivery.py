@@ -6,7 +6,7 @@ from aiogram.fsm.state import default_state
 
 from src.state import FSMDeliveryInfo
 from src.callbacks import DeliveryIdCallbackFactory, CartCallbackData
-from src.db import delivery_db
+from src.db import delivery_db, store_db
 from src.config import settings
 from src.utils import time_utils, redis_utils
 from src.keyboards import delivery_kb, main_kb
@@ -39,12 +39,17 @@ async def handle_delivery_form_command(
                 state=state
             )
         else:
+            data = await store_db.get_store_info(
+                store_id=callback_data.store_id
+            )
             if callback.from_user.language_code == 'ru':
-                text_menu = text_menu_ru
+                text_non_working = text_menu_ru.create_non_working_hours_text(
+                    data.opening_time, data.closing_time)
             else:
-                text_menu = text_menu_en
+                text_non_working = text_menu_en.create_non_working_hours_text(
+                    data.opening_time, data.closing_time)
             await callback.answer(
-                text=text_menu.menu_messages_dict['non_working_hours'],
+                text=text_non_working,
                 show_alert=True
             )
     else:
