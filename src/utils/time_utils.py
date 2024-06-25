@@ -31,6 +31,9 @@ async def is_valid_time(store_id: int):
 
     opening_datetime = datetime.combine(datetime.today(), opening_time_base)
 
+    print(opening_datetime)
+    print(closing_time)
+    print(current_time)
     opening_time = opening_datetime - timedelta(minutes=15)
 
     start_hour, start_minute = opening_time.hour, opening_time.minute

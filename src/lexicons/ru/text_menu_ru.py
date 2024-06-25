@@ -1,3 +1,5 @@
+from datetime import time
+
 from src.callbacks import StoreMenuCbData, CartCallbackData
 
 
@@ -77,3 +79,15 @@ menu_messages_dict: dict[str, str] = {
                          'Будем рады накормить вас в рабочие часы)',
 
 }
+
+
+def create_non_working_hours_text(
+    opening_time: time,
+    closing_time: time,
+) -> str:
+    return (
+        'Упс...((\n\nИзвините, оформить заказ не получится.\n'
+        f'Мы работаем с {opening_time.strftime("%H:%M")} '
+        f'до {closing_time.strftime("%H:%M")}.\n'
+        'Будем рады накормить вас в рабочие часы)'
+    )

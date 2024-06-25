@@ -151,7 +151,6 @@ async def create_order_messages_id(
     order_id: int,
     message_id: int
 ):
-    print(order_id, message_id)
     data = order_schemas.CreateOrderMessageId(
         order_id=order_id, message_id=message_id)
     await order_db.db_create_order_messages_id(data)

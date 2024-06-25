@@ -1,3 +1,4 @@
+from datetime import time
 from src.callbacks import StoreMenuCbData, CartCallbackData
 
 
@@ -54,6 +55,18 @@ def create_special_offer_btn(
                 ).pack()
             }
     }
+
+
+def create_non_working_hours_text(
+    opening_time: time,
+    closing_time: time,
+) -> str:
+    return (
+        "Oops...((\n\nSorry, you can't place an order now.\n"
+        f'We are open from {opening_time.strftime("%H:%M")} '
+        f'to {closing_time.strftime("%H:%M")}.\n'
+        'We will be happy to serve you during working hours)'
+    )
 
 
 menu_messages_dict: dict[str, str] = {

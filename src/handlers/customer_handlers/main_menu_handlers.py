@@ -109,7 +109,7 @@ async def press_main_menu(
         text_main_menu = text_main_menu_en
 
     await callback.message.edit_text(
-        text=text_main_menu.main_menu_dict['main_menu'],
+        text=text_main_menu.main_menu_dict['start'],
         reply_markup=await main_kb.create_kb_main(
             store_id=callback_data.store_id,
             language=callback.from_user.language_code,
@@ -126,7 +126,7 @@ async def press_back_main_menu(callback: types.CallbackQuery):
         text_main_menu = text_main_menu_en
 
     await callback.message.answer(
-        text=text_main_menu.main_menu_dict['main_menu'],
+        text=text_main_menu.main_menu_dict['start'],
         reply_markup=await main_kb.create_kb_main(
             language=callback.from_user.language_code,
             user_id=callback.message.chat.id
