@@ -94,7 +94,7 @@ async def create_mail_group_auto(bot: Bot):
     max_retries = 5
     for attempt in range(max_retries):
         try:
-            store_info = await store_db.get_store_info()
+            store_info = await store_db.get_store_info(store_id=1)
 
             text = ('Всем хорошего дня 🔥\n'
                     'Эта кнопка для заказа через приложение Marcello 👇\n'
