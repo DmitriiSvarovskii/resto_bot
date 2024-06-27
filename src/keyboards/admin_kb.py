@@ -57,7 +57,6 @@ def create_kb_edit_delivery(
 
 
 def create_kb_sale_group(
-    store_id: int
 ):
     keyboard = InlineKeyboardBuilder()
     button_url_bot = InlineKeyboardButton(

@@ -90,6 +90,7 @@ async def create_mail_chats(message: types.Message,
         )
 
 
+@router.message((Command('13')))
 async def create_mail_group_auto(bot: Bot):
     max_retries = 5
     for attempt in range(max_retries):
@@ -102,7 +103,7 @@ async def create_mail_group_auto(bot: Bot):
 
             current_dir = os.path.dirname(os.path.abspath(__file__))
 
-            static_folder = os.path.join(current_dir, '..', 'static')
+            static_folder = os.path.join(current_dir, '../..', 'static')
 
             file_list = os.listdir(static_folder)
 
