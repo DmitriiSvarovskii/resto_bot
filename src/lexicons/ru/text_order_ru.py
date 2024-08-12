@@ -59,7 +59,7 @@ async def generate_order_messages(
     current_time = datetime.now(TIMEZONE)
 
     total_price = data_order.total_price
-    sale_price = total_price*0.9
+    sale_price = total_price*0.95
 
     user_id = user_info.user_id if user_info else callback.message.chat.id
     first_name = user_info.first_name if user_info else callback.message.chat.first_name  # noqa: E501
@@ -93,7 +93,7 @@ async def generate_order_messages(
         f"\nКомментарий к заказу: {customer_comment}"
         "\n--------------------"
         f"\nСумма заказа: {total_price} ₹"
-        f'\nСкидка: {total_price*0.1} ₹'
+        f'\nСкидка: {total_price*0.05} ₹'
         f"\nСумма заказа с учётом скидки: {sale_price} ₹"
     )
 

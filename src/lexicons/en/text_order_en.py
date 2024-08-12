@@ -85,7 +85,7 @@ async def generate_order_messages(
         f"\nOrder Comment: {customer_comment}\n"
         "--------------------"
         f"\nOrder Total: {total_price} ₹\n"
-        f'Sale Discount: {total_price * 0.1} ₹\n'
+        f'Sale Discount: {total_price * 0.05} ₹\n'
         f"\nTotal Price after Discount: {sale_price} ₹\n"
     )
     if data_order.order_type not in OrderTypes.DINEIN.value.values():

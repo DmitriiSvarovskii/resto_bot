@@ -23,8 +23,11 @@ sys.path.insert(0, os.path.abspath(
 
 execution_time = datetime.now(TIMEZONE).replace(hour=13, minute=0)
 
-trigger = CronTrigger(hour=execution_time.hour,
-                      minute=execution_time.minute, timezone=TIMEZONE)
+trigger = CronTrigger(
+    hour=execution_time.hour,
+    minute=execution_time.minute,
+    timezone=TIMEZONE
+)
 
 logger = logging.getLogger(__name__)
 
