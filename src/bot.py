@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), "../src")))
 
 
-execution_time = datetime.now(TIMEZONE).replace(hour=10, minute=18)
+execution_time = datetime.now(TIMEZONE).replace(hour=10, minute=21)
 
 trigger = CronTrigger(
     hour=execution_time.hour,
