@@ -92,37 +92,49 @@ async def create_mail_chats(message: types.Message,
 
 @router.message((Command('13')))
 async def create_mail_group_auto(bot: Bot):
-    max_retries = 5
+    max_retries = 7
+    print(1)
     for attempt in range(max_retries):
+        print(2)
         try:
+            print(3)
             store_info = await store_db.get_store_info(store_id=1)
-
+            print(4)
             text = ('Всем хорошего дня 🔥'
                     'Эта кнопка для заказа через приложение Marcello 👇'
                     'При заказе через приложение постоянная скидка на все меню 5% 👍'
                     'Новая локация + лучший кофе ☕️ и кондиционер 🫶')
 
             current_dir = os.path.dirname(os.path.abspath(__file__))
-
+            print(5)
             static_folder = os.path.join(current_dir, '../..', 'static')
+            print(6)
 
             file_list = os.listdir(static_folder)
+            print(7)
 
             random_file = random.choice(file_list)
+            print(8)
 
             random_file_path = os.path.join(static_folder, random_file)
+            print(9)
 
             photo_file = types.FSInputFile(random_file_path)
-
+            print(10)
+            print(store_info)
+            print(store_info.sale_group)
             await bot.send_photo(
                 chat_id=store_info.sale_group,
                 photo=photo_file,
                 caption=text,
                 reply_markup=admin_kb.create_kb_sale_group()
             )
+            print(11)
             break
-        except TelegramBadRequest:
+        except TelegramBadRequest as e:
+            print(12)
             if attempt < max_retries - 1:
                 await asyncio.sleep(1)
             else:
+                print(e)
                 pass
