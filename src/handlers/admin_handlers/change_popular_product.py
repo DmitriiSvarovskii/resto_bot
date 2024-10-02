@@ -21,6 +21,7 @@ async def process_modify_popular_products(
     callback: types.CallbackQuery,
     callback_data: StoreAdminCbData
 ):
+    print('tyt')
     categories = await category_db.get_all_categories(
         store_id=callback_data.store_id
     )

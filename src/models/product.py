@@ -38,7 +38,8 @@ class Product(Base):
     deleted_flag: Mapped[deleted_flag]
     deleted_at: Mapped[deleted_at]
 
-    # category: Mapped['Category'] = relationship(back_populates="products")
+    category: Mapped["Category"] = relationship(
+        "Category", back_populates="products")
     # carts: Mapped['Cart'] = relationship(
     #     back_populates="product")
     # order_details: Mapped['OrderDetail'] = relationship(

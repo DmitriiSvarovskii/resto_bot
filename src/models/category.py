@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship, Mapped, mapped_column  # noqa: F401
 from sqlalchemy import ForeignKey
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from src.db.database import (
     Base, intpk, str_64,
@@ -27,4 +27,5 @@ class Category(Base):
     deleted_flag: Mapped[deleted_flag]
     deleted_at: Mapped[deleted_at]
 
-    # products: Mapped['Product'] = relationship(back_populates="category")
+    products: Mapped[List["Product"]] = relationship(
+        "Product", back_populates="category")
