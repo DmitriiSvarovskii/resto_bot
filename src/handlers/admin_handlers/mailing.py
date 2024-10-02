@@ -1,6 +1,14 @@
 import asyncio
 import random
 import os
+from aiogram import Bot, types
+from aiogram.filters import Command
+from aiogram.types import FSInputFile
+from aiogram.exceptions import TelegramBadRequest
+import asyncio
+import os
+import random
+import logging
 
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
@@ -14,6 +22,8 @@ from src.keyboards import admin_kb, main_kb
 
 
 router = Router(name=__name__)
+
+logger = logging.getLogger(__name__)
 
 
 @router.message((Command('m')))
@@ -90,51 +100,69 @@ async def create_mail_chats(message: types.Message,
         )
 
 
-@router.message((Command('13')))
+@router.message(Command('13'))
 async def create_mail_group_auto(bot: Bot):
     max_retries = 7
-    print(1)
+    logger.info("Handler 'create_mail_group_auto' started")
+
     for attempt in range(max_retries):
-        print(2)
+        logger.info(f"Attempt {attempt + 1} of {max_retries}")
         try:
-            print(3)
+            logger.debug("Fetching store information")
             store_info = await store_db.get_store_info(store_id=1)
-            print(4)
-            text = ('Всем хорошего дня 🔥'
-                    'Эта кнопка для заказа через приложение Marcello 👇'
-                    'При заказе через приложение постоянная скидка на все меню 5% 👍'
-                    'Новая локация + лучший кофе ☕️ и кондиционер 🫶')
+            logger.info(f"Store info retrieved: {store_info}")
+
+            text = (
+                'Всем хорошего дня 🔥\n'
+                'Эта кнопка для заказа через приложение Marcello 👇\n'
+                'При заказе через приложение постоянная скидка на все меню 5% 👍\n'
+                'Новая локация + лучший кофе ☕️ и кондиционер 🫶'
+            )
 
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            print(5)
-            static_folder = os.path.join(current_dir, '../..', 'static')
-            print(6)
+            static_folder = os.path.abspath(
+                os.path.join(current_dir, '../../static'))
+            logger.debug(f"Static folder path: {static_folder}")
+
+            if not os.path.isdir(static_folder):
+                logger.error(
+                    f"Папка static не найдена по пути: {static_folder}")
+                return
 
             file_list = os.listdir(static_folder)
-            print(7)
+            logger.debug(f"Files in static folder: {file_list}")
+
+            if not file_list:
+                logger.warning("В папке static нет файлов для отправки.")
+                return
 
             random_file = random.choice(file_list)
-            print(8)
+            logger.info(f"Selected file: {random_file}")
 
             random_file_path = os.path.join(static_folder, random_file)
-            print(9)
+            if not os.path.isfile(random_file_path):
+                logger.error(f"Файл не найден: {random_file_path}")
+                return
 
-            photo_file = types.FSInputFile(random_file_path)
-            print(10)
-            print(store_info)
-            print(store_info.sale_group)
+            photo_file = FSInputFile(random_file_path)
+            logger.debug(f"Photo file prepared: {photo_file}")
+
             await bot.send_photo(
                 chat_id=store_info.sale_group,
                 photo=photo_file,
                 caption=text,
                 reply_markup=admin_kb.create_kb_sale_group()
             )
-            print(11)
-            break
+            logger.info("Photo sent successfully.")
+            break  # Выход из цикла при успешной отправке
         except TelegramBadRequest as e:
-            print(12)
+            logger.error(f"TelegramBadRequest: {e}")
             if attempt < max_retries - 1:
+                logger.info("Retrying after TelegramBadRequest...")
                 await asyncio.sleep(1)
             else:
-                print(e)
-                pass
+                logger.critical(
+                    "Максимальное количество попыток достигнуто. Сообщение не отправлено.")
+        except Exception as e:
+            logger.exception(f"Произошла непредвиденная ошибка: {e}")
+            break
