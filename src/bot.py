@@ -113,7 +113,7 @@ async def main():
     dp.include_router(main_router)
 
     # Настройка планировщика
-    execution_time = datetime.now(TIMEZONE).replace(hour=16, minute=48)
+    execution_time = datetime.now(TIMEZONE).replace(hour=9, minute=0)
 
     trigger = CronTrigger(
         hour=execution_time.hour,
