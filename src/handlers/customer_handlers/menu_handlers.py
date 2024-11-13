@@ -53,7 +53,8 @@ async def get_menu_category(
         await callback.message.edit_reply_markup(
             reply_markup=await main_kb.create_kb_main(
                 language=callback.from_user.language_code,
-                user_id=user_id
+                user_id=user_id,
+                store_id=callback_data.store_id
             )
         )
 
