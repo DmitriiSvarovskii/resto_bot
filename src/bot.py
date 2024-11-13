@@ -88,7 +88,8 @@ async def main():
     print("Starting main function")
     try:
         # Инициализация бота, диспетчера и планировщика
-        bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
+        # bot = Bot(token=settings.BOT_TOKEN, parse_mode='HTML')
+        bot = Bot(token="7820869644:AAGaGu5n61BX1OUqT6PwZzimE_-ycoZJDrc", parse_mode='HTML')
         logger.info('Bot initialized')
         print("Bot initialized")
 
