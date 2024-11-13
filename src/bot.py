@@ -50,6 +50,7 @@ def setup_logging():
     return logger
 
 logger = setup_logging()
+logger.info("Logger initialized successfully.")
 
 async def main():
     logger.info('Starting main function')
@@ -84,6 +85,7 @@ async def main():
         logger.exception("Unhandled exception occurred in main: %s", e)
 
 if __name__ == '__main__':
+    logger.info("Starting main program.")
     try:
         asyncio.run(main())
     except Exception as e:
