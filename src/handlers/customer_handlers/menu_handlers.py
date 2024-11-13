@@ -50,13 +50,13 @@ async def get_menu_category(
             text=text_menu.menu_messages_dict['store_not_active'],
             show_alert=True
         )
-        await callback.message.edit_reply_markup(
-            reply_markup=await main_kb.create_kb_main(
-                language=callback.from_user.language_code,
-                user_id=user_id,
-                store_id=callback_data.store_id
-            )
-        )
+        # await callback.message.edit_reply_markup(
+        #     reply_markup=await main_kb.create_kb_main(
+        #         language=callback.from_user.language_code,
+        #         user_id=user_id,
+        #         store_id=callback_data.store_id
+        #     )
+        # )
 
 
 @router.callback_query(CategoryIdCallbackFactory.filter())
