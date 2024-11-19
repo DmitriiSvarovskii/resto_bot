@@ -32,22 +32,24 @@ async def create_main_query():
     )
 
 
-async def create_total_price_query():
+async def create_total_price_query(store_id: int):
     return (
         select(
             func.sum(OrderDetail.unit_price).over().label("total_price"))
         .join(Order, Order.id == OrderDetail.order_id)
-        .where(Order.order_status == "Выполнен")
+        .where(Order.order_status == "Выполнен",
+               Order.store_id == store_id)
     )
 
 
 async def crud_get_sales_period_summary(
+        store_id: int,
         session: AsyncSession,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
 ) -> Optional[report_schemas.SalesSummaryList]:
     query = await create_main_query()
-    query_total_price = await create_total_price_query()
+    query_total_price = await create_total_price_query(store_id=store_id)
 
     query, query_total_price = await apply_date_filters(
         query=query,

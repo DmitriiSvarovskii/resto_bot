@@ -5,13 +5,17 @@ from aiogram.exceptions import TelegramBadRequest
 from src.lexicons import LEXICON_RU
 from src.keyboards import report_kb
 from src.utils import report_utils
+from src.callbacks import StoreAdminCbData
 
 
 router = Router(name=__name__)
 
 
-@router.callback_query(F.data == 'press_sales_today')
-async def process_sales_today(callback: types.CallbackQuery):
+@router.callback_query(StoreAdminCbData.filter(F.data == 'press_sales_today'))
+async def process_sales_today(
+    callback: types.CallbackQuery,
+    callback_data: StoreAdminCbData
+):
     try:
         today = datetime.now().strftime('%Y-%m-%d')
 
@@ -22,7 +26,9 @@ async def process_sales_today(callback: types.CallbackQuery):
 
         await callback.message.edit_text(
             text=message,
-            reply_markup=report_kb.create_kb_report()
+            reply_markup=report_kb.create_kb_report(
+                store_id=callback_data.store_id
+            )
         )
     except TelegramBadRequest:
         await callback.answer(

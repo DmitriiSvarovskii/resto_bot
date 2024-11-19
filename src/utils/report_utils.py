@@ -4,10 +4,12 @@ from src.db import report_db, order_db
 
 
 async def custom_summary_text(
+    store_id: int,
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
 ) -> str:
     custom_sales_summary = await report_db.get_sales_period_summary(
+        store_id=store_id,
         start_date=start_date,
         end_date=end_date,
     )

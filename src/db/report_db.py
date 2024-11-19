@@ -6,11 +6,13 @@ from src.schemas import delivery_schemas, customer_schemas
 
 
 async def get_sales_period_summary(
+    store_id: int,
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
 ):
     async for session in get_async_session():
         response = await report_crud.crud_get_sales_period_summary(
+            store_id=store_id,
             start_date=start_date,
             end_date=end_date,
             session=session
