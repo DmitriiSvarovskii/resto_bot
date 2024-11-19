@@ -11,7 +11,7 @@ from src.callbacks import StoreAdminCbData
 router = Router(name=__name__)
 
 
-@router.callback_query(StoreAdminCbData.filter(F.data == 'sales-today'))
+@router.callback_query(StoreAdminCbData.filter(F.type_press == 'sales-today'))
 async def process_sales_today(
     callback: types.CallbackQuery,
     callback_data: StoreAdminCbData
@@ -20,6 +20,7 @@ async def process_sales_today(
         today = datetime.now().strftime('%Y-%m-%d')
 
         message = await report_utils.custom_summary_text(
+            store_id=callback_data.store_id,
             start_date=today,
             end_date=today
         )
