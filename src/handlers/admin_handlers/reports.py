@@ -11,7 +11,7 @@ from src.callbacks import StoreAdminCbData
 router = Router(name=__name__)
 
 
-@router.callback_query(StoreAdminCbData.filter(F.data == 'press_sales_today'))
+@router.callback_query(StoreAdminCbData.filter(F.data == 'sales-today'))
 async def process_sales_today(
     callback: types.CallbackQuery,
     callback_data: StoreAdminCbData
