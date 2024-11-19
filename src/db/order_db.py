@@ -128,9 +128,12 @@ async def get_order_detail(
         return response
 
 
-async def get_pending_orders_list() -> List[order_schemas.ReadOrderList]:
+async def get_pending_orders_list(
+    store_id: int
+) -> List[order_schemas.ReadOrderList]:
     async for session in get_async_session():
         response = await order_crud.crud_get_pending_orders_list(
+            store_id=store_id,
             session=session
         )
         return response

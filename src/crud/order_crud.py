@@ -198,12 +198,14 @@ async def crud_get_order_detail_report(
 
 
 async def crud_get_pending_orders_list(
+        store_id: int,
         session: AsyncSession,
 ) -> List[order_schemas.ReadOrderList]:
     query = (
         select(Order)
         .where(Order.order_status != "Выполнен",
-               Order.order_status != "Отменён")
+               Order.order_status != "Отменён",
+               Order.store_id == store_id)
         .order_by(Order.id)
     )
 

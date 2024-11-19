@@ -38,8 +38,10 @@ async def create_text_stop_list(store_id: int) -> str:
     return order_text
 
 
-async def generate_pending_orders_text() -> str:
-    order_list = await order_db.get_pending_orders_list()
+async def generate_pending_orders_text(store_id: int) -> str:
+    order_list = await order_db.get_pending_orders_list(
+        store_id=store_id
+    )
 
     message_text = '\n'.join(
         f'- заказ №{items.id} на сумму {items.total_price}'
