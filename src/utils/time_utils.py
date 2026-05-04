@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, time
 from datetime import datetime, timezone, timedelta
 
 from src.config import TIMEZONE
@@ -24,31 +25,26 @@ async def is_valid_time_warning(store_id: int):
 async def is_valid_time(store_id: int):
     data = await store_db.get_store_info(store_id=store_id)
 
-    opening_time_base = data.opening_time
+    opening_time = data.opening_time
     closing_time = data.closing_time
 
-    current_time = datetime.now(TIMEZONE)
+    current_datetime = datetime.now(TIMEZONE)
+    current_time = current_datetime.time()
 
-    opening_datetime = datetime.combine(datetime.today(), opening_time_base)
-
-    print(opening_datetime)
-    print(closing_time)
-    print(current_time)
-    opening_time = opening_datetime - timedelta(minutes=15)
-
-    start_hour, start_minute = opening_time.hour, opening_time.minute
-    end_hour, end_minute = closing_time.hour, closing_time.minute
-
-    current_hour, current_minute = current_time.hour, current_time.minute
-
-    if (
-        (start_hour < current_hour < end_hour) or
-        (start_hour == current_hour and start_minute <= current_minute) or
-        (end_hour == current_hour and current_minute <= end_minute)
-    ):
+    if opening_time is None or closing_time is None:
         return True
-    else:
-        return False
+
+    opening_time_with_buffer = (
+        datetime.combine(current_datetime.date(), opening_time)
+        - timedelta(minutes=15)
+    ).time()
+
+    # Обычный график, например 10:00–22:00
+    if opening_time_with_buffer < closing_time:
+        return opening_time_with_buffer <= current_time <= closing_time
+
+    # График через полночь, например 12:00–04:00
+    return current_time >= opening_time_with_buffer or current_time <= closing_time
 
 
 async def check_time(timestamp):
