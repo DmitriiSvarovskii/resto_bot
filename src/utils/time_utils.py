@@ -5,21 +5,35 @@ from src.config import TIMEZONE
 from src.db import store_db
 
 
+from datetime import datetime, timedelta
+
+
 async def is_valid_time_warning(store_id: int):
     data = await store_db.get_store_info(store_id=store_id)
 
     closing_time = data.closing_time
 
-    current_time = datetime.now(TIMEZONE)
+    if closing_time is None:
+        return False
 
-    today = datetime.now().date()
-    closing_datetime = datetime.combine(today, closing_time)
+    current_datetime = datetime.now(TIMEZONE)
 
-    closing_datetime = closing_datetime.astimezone(TIMEZONE)
+    closing_datetime = datetime.combine(
+        current_datetime.date(),
+        closing_time
+    )
 
-    time_until_closing = closing_datetime - current_time
+    closing_datetime = TIMEZONE.localize(closing_datetime)
 
-    return time_until_closing <= timedelta(minutes=30)
+    # Если заведение закрывается после полуночи
+    if closing_datetime < current_datetime:
+        closing_datetime += timedelta(days=1)
+
+    time_until_closing = closing_datetime - current_datetime
+
+    print(f"time_until_closing={time_until_closing}")
+
+    return timedelta(0) <= time_until_closing <= timedelta(minutes=30)
 
 
 async def is_valid_time(store_id: int):
