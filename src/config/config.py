@@ -18,9 +18,6 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     BOT_LINK: str
 
-    ADMINT_CHAT: str
-    SALE_GROUP: str
-
     @property
     def DB_URL(self):
         return (f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@"
