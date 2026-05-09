@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 import os
 import sys
 from logging.config import fileConfig
-# from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from src.db.database import metadata, Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool

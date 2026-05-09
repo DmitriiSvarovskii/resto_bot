@@ -1,20 +1,11 @@
-import asyncio
-import random
-import os
-from aiogram import Bot, types
-from aiogram.filters import Command
-from aiogram.types import FSInputFile
-from aiogram.exceptions import TelegramBadRequest
-import asyncio
-import os
-import random
 import logging
+import asyncio
+import random
+import os
 
-from aiogram.fsm.context import FSMContext
-from aiogram.filters import StateFilter
-from aiogram.fsm.state import default_state
 from aiogram import Bot, types, Router
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 
 from src.db import customer_db, store_db
@@ -144,7 +135,7 @@ async def create_mail_group_auto(bot: Bot):
                 logger.error(f"Файл не найден: {random_file_path}")
                 return
 
-            photo_file = FSInputFile(random_file_path)
+            photo_file = types.FSInputFile(random_file_path)
             logger.debug(f"Photo file prepared: {photo_file}")
 
             await bot.send_photo(

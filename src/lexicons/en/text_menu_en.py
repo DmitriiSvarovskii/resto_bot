@@ -76,7 +76,7 @@ menu_messages_dict: dict[str, str] = {
                              'but you still have time) '
                              'don\'t delay with your choice)',
     'closing_time': 'Oops...((\n\nSorry, we can\'t take orders now.\n'
-                    'We operate from 14:00 to 23:00.\n'
+                    'We operate from 12:00 to 04:00.\n'
                     'We\'ll be happy to serve you during our working hours)',
     'finish_category': 'Sorry, dishes from this category are currently '
                        'unavailable, '
@@ -85,7 +85,7 @@ menu_messages_dict: dict[str, str] = {
     'store_not_active': 'Currently, our establishment is not operational.',
     'non_working_hours': 'Oops...((\n\n'
                          'Sorry, placing an order is not possible.\n'
-                         'We operate from 14:00 to 23:00.\n'
+                         'We operate from 12:00 to 04:00.\n'
                          "We'll be happy to serve you "
                          'during our working hours)',
 }

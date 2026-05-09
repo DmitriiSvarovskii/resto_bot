@@ -85,7 +85,7 @@ main_menu_dict: dict[str, str] = {
     'taste right at home 🏠'
     '\nThe delivery to your table is working 🍕🫶',
     'main_menu': "Welcome to our pizzeria! Experience true Italian flavors "
-                 "from 14:00 to 23:00. Delicate dough, juicy fillings, "
+                 "from 12:00 to 04:00. Delicate dough, juicy fillings, "
                  "and a cozy atmosphere await you!\n\n",
     'store': "Our Menu",
     'delivery': 'Delivery Information 🛵'
