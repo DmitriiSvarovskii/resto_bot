@@ -80,7 +80,7 @@ async def main():
                               minute=execution_time.minute, timezone=TIMEZONE)
 
         scheduler = AsyncIOScheduler(timezone=TIMEZONE)
-        scheduler.add_job(mailing.create_mail_group_auto,
+        scheduler.add_job(mailing.send_mail_group_auto,
                           trigger=trigger, kwargs={'bot': bot})
         scheduler.start()
         logger.info('Scheduler started')

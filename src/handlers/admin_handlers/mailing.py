@@ -91,13 +91,11 @@ async def create_mail_chats(message: types.Message,
         )
 
 
-@router.message(Command('13'))
-async def create_mail_group_auto(message: types.Message, bot: Bot):
+async def send_mail_group_auto(bot: Bot):
     max_retries = 7
-    logger.info("Handler 'create_mail_group_auto' started")
+    logger.info("Function 'send_mail_group_auto' started")
 
     for attempt in range(max_retries):
-        logger.info(f"Attempt {attempt + 1} of {max_retries}")
         try:
             store_info = await store_db.get_store_info(store_id=1)
 
@@ -113,22 +111,9 @@ async def create_mail_group_auto(message: types.Message, bot: Bot):
                 os.path.join(current_dir, '../../static')
             )
 
-            if not os.path.isdir(static_folder):
-                logger.error(
-                    f"Папка static не найдена по пути: {static_folder}")
-                return
-
             file_list = os.listdir(static_folder)
-            if not file_list:
-                logger.warning("В папке static нет файлов для отправки.")
-                return
-
             random_file = random.choice(file_list)
             random_file_path = os.path.join(static_folder, random_file)
-
-            if not os.path.isfile(random_file_path):
-                logger.error(f"Файл не найден: {random_file_path}")
-                return
 
             photo_file = types.FSInputFile(random_file_path)
 
@@ -140,18 +125,19 @@ async def create_mail_group_auto(message: types.Message, bot: Bot):
             )
 
             logger.info("Photo sent successfully.")
-            await message.answer("Рассылка отправлена ✅")
             break
 
         except TelegramBadRequest as e:
             logger.error(f"TelegramBadRequest: {e}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(1)
-            else:
-                logger.critical("Максимальное количество попыток достигнуто.")
-                await message.answer("Не удалось отправить рассылку ❌")
 
         except Exception as e:
-            logger.exception(f"Произошла непредвиденная ошибка: {e}")
-            await message.answer("Произошла ошибка при отправке ❌")
+            logger.exception(f"Unexpected error: {e}")
             break
+
+
+@router.message(Command('13'))
+async def create_mail_group_auto(message: types.Message, bot: Bot):
+    await send_mail_group_auto(bot=bot)
+    await message.answer("Рассылка отправлена ✅")
