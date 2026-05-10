@@ -92,16 +92,14 @@ async def create_mail_chats(message: types.Message,
 
 
 @router.message(Command('13'))
-async def create_mail_group_auto(bot: Bot):
+async def create_mail_group_auto(message: types.Message, bot: Bot):
     max_retries = 7
     logger.info("Handler 'create_mail_group_auto' started")
 
     for attempt in range(max_retries):
         logger.info(f"Attempt {attempt + 1} of {max_retries}")
         try:
-            logger.debug("Fetching store information")
             store_info = await store_db.get_store_info(store_id=1)
-            logger.info(f"Store info retrieved: {store_info}")
 
             text = (
                 'Всем хорошего дня 🔥\n'
@@ -112,8 +110,8 @@ async def create_mail_group_auto(bot: Bot):
 
             current_dir = os.path.dirname(os.path.abspath(__file__))
             static_folder = os.path.abspath(
-                os.path.join(current_dir, '../../static'))
-            logger.debug(f"Static folder path: {static_folder}")
+                os.path.join(current_dir, '../../static')
+            )
 
             if not os.path.isdir(static_folder):
                 logger.error(
@@ -121,22 +119,18 @@ async def create_mail_group_auto(bot: Bot):
                 return
 
             file_list = os.listdir(static_folder)
-            logger.debug(f"Files in static folder: {file_list}")
-
             if not file_list:
                 logger.warning("В папке static нет файлов для отправки.")
                 return
 
             random_file = random.choice(file_list)
-            logger.info(f"Selected file: {random_file}")
-
             random_file_path = os.path.join(static_folder, random_file)
+
             if not os.path.isfile(random_file_path):
                 logger.error(f"Файл не найден: {random_file_path}")
                 return
 
             photo_file = types.FSInputFile(random_file_path)
-            logger.debug(f"Photo file prepared: {photo_file}")
 
             await bot.send_photo(
                 chat_id=store_info.sale_group,
@@ -144,16 +138,20 @@ async def create_mail_group_auto(bot: Bot):
                 caption=text,
                 reply_markup=admin_kb.create_kb_sale_group()
             )
+
             logger.info("Photo sent successfully.")
-            break  # Выход из цикла при успешной отправке
+            await message.answer("Рассылка отправлена ✅")
+            break
+
         except TelegramBadRequest as e:
             logger.error(f"TelegramBadRequest: {e}")
             if attempt < max_retries - 1:
-                logger.info("Retrying after TelegramBadRequest...")
                 await asyncio.sleep(1)
             else:
-                logger.critical(
-                    "Максимальное количество попыток достигнуто. Сообщение не отправлено.")
+                logger.critical("Максимальное количество попыток достигнуто.")
+                await message.answer("Не удалось отправить рассылку ❌")
+
         except Exception as e:
             logger.exception(f"Произошла непредвиденная ошибка: {e}")
+            await message.answer("Произошла ошибка при отправке ❌")
             break
