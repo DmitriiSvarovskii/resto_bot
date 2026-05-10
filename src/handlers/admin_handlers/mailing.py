@@ -99,13 +99,13 @@ async def send_mail_group_auto(bot: Bot):
         try:
             store_info = await store_db.get_store_info(store_id=1)
 
-            text = (
-                'Всем хорошего дня 🔥\n'
-                'Эта кнопка для заказа через приложение Marcello 👇\n'
-                'При заказе через приложение постоянная скидка на все меню 5% 👍\n'
-                'Новая локация + лучший кофе ☕️ и кондиционер 🫶'
-            )
-
+            # text = (
+            #     'Всем хорошего дня 🔥\n'
+            #     'Эта кнопка для заказа через приложение Marcello 👇\n'
+            #     'При заказе через приложение постоянная скидка на все меню 5% 👍\n'
+            #     'Новая локация + лучший кофе ☕️ 🍕 🫶'
+            # )
+            text = store_info.welcome_message
             current_dir = os.path.dirname(os.path.abspath(__file__))
             static_folder = os.path.abspath(
                 os.path.join(current_dir, '../../static')
