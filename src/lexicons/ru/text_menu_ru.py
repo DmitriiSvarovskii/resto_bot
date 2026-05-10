@@ -81,6 +81,17 @@ menu_messages_dict: dict[str, str] = {
 }
 
 
+def create_closing_time_reminder_text(closing_time):
+
+    return (
+
+        f'Внимание, в {closing_time.strftime("%H:%M")} мы закрываемся, '
+
+        'но у вас ещё есть время) не затягивайте с выбором)'
+
+    )
+
+
 def create_non_working_hours_text(
     opening_time: time,
     closing_time: time,

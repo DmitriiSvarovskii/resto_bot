@@ -1,3 +1,5 @@
+from aiogram.exceptions import TelegramBadRequest
+from aiogram import Router, types, F
 from aiogram import Router, F, types
 from aiogram.filters import Command
 
@@ -19,6 +21,23 @@ async def process_pass(
     )
 
 
+router = Router(name=__name__)
+
+
+@router.message(
+    F.new_chat_members |
+    F.left_chat_member |
+    F.group_chat_created |
+    F.supergroup_chat_created |
+    F.channel_chat_created |
+    F.message_auto_delete_timer_changed |
+    F.pinned_message
+)
+async def delete_service_messages(message: types.Message):
+    try:
+        await message.delete()
+    except TelegramBadRequest:
+        pass
 # @router.message()
 # async def send_echo(message: types.Message):
 #     try:

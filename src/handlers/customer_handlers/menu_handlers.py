@@ -22,13 +22,24 @@ async def get_menu_category(
     else:
         text_menu = text_menu_en
 
+    store_info = await store_db.get_store_info(store_id=callback_data.store_id)
+
     if await time_utils.is_valid_time_warning(store_id=callback_data.store_id):
-        await callback.answer(
-            text=text_menu.menu_messages_dict['closing_time_reminder'],
-            show_alert=True
+        store_data = await store_db.get_store_info(
+            store_id=callback_data.store_id
         )
 
-    store_info = await store_db.get_store_info(store_id=callback_data.store_id)
+        if store_data.closing_time:
+            text = text_menu.create_closing_time_reminder_text(
+                store_data.closing_time
+            )
+
+        else:
+            text = text_menu.menu_messages_dict['closing_time_reminder']
+        await callback.answer(
+            text=text,
+            show_alert=True
+        )
 
     if store_info.is_active:
         categories = await category_db.get_all_categories(

@@ -89,3 +89,10 @@ menu_messages_dict: dict[str, str] = {
                          "We'll be happy to serve you "
                          'during our working hours)',
 }
+
+
+def create_closing_time_reminder_text(closing_time):
+    return (
+        f'Attention, we close at {closing_time.strftime("%H:%M")}, '
+        'but you still have time) don\'t delay with your choice)'
+    )
