@@ -43,7 +43,7 @@ def create_main_btn(store_id: int) -> dict[str, dict[str, str]]:
         },
         'group_telegram': {
             'text': 'Наша группа',
-            'url': 'https://t.me/PizzaGoaFood'
+            'url': 'https://t.me/+V7peNNs0XqRlYjll'
         },
         'back': {
             'text': '<<< Назад',
@@ -108,7 +108,7 @@ main_menu_dict: dict[str, str] = {
                'Морджим, Turtle Beach road.\n\n'
                'По всем вопросам пишите или звоните\n'
                '@AyratZiganshin59\n+918149843927\n\n'
-               '<a href="t.me/PizzaGoaFood">Наша группа в телеграм</a>',
+               '<a href="https://t.me/+V7peNNs0XqRlYjll">Наша группа в телеграм</a>',
     'personal_area': 'Добро пожаловать в личный кабинет.\n\n'
                      'Вы можете посмотреть историю своих заказов, '
                      'чтобы посмотреть'

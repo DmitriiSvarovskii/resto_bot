@@ -43,7 +43,7 @@ def create_main_btn(store_id: int) -> dict[str, dict[str, str]]:
         },
         'group_telegram': {
             'text': 'Our group',
-            'url': 'https://t.me/PizzaGoaFood'
+            'url': 'https://t.me/+V7peNNs0XqRlYjll'
         },
         'back': {
             'text': '<<< Back',
