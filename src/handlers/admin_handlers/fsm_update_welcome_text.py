@@ -66,6 +66,7 @@ async def process_welcome_text_sent(
     )
     await admin_handlers.back_admin_menu(
         message=message,
+        store_id=data['store_id'],
     )
 
     await state.clear()
