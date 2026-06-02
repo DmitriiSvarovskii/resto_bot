@@ -106,7 +106,7 @@ main_menu_dict: dict[str, str] = {
                'The most Italian pizza in Goa🍕🍝🔥.\n\n'
                'Morjim, Turtle Beach road.\n\n'
                'For any questions, write or call\n'
-               '@AyratZiganshin59\n+918149843927\n\n'
+               '@POKANEPOZDN0\n+918149843927\n\n'
                '<a href="t.me/PizzaGoaFood">Our telegram group</a>',
     'personal_area': 'Welcome to your personal account.\n\n'
                      'You can view the history of your orders, '

@@ -27,7 +27,7 @@ delivery_fsm_text: dict[str, str] = {
                              'Telegram location sending feature.\n\n'
                              'If you are unable to send your location, click '
                              '"Skip step" and contact our manager for '
-                             'further details @AyratZiganshin59',
+                             'further details @POKANEPOZDN0',
     'error_comment': 'Some error occurred..\n\n'
                      'Please repeat the comment for the courier\n\n'
                      'Or click "Skip step"',
