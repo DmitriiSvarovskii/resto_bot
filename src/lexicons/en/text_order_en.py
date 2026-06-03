@@ -111,7 +111,7 @@ async def generate_order_messages(
         delivery_price = delivery_village.price
 
         delivery_info = (
-            "--------------------\n"
+            # "--------------------\n"
             f"Delivery Charge: {delivery_price} rupees\n"
             f"Total Amount (Order + Delivery): {sale_price + delivery_price} ₹\n"  # noqa: E:501
             "--------------------\n"
