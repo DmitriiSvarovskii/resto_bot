@@ -237,7 +237,7 @@ def func_cart_text(
         message += (
             f'Дополнительная плата за упаковку: {box_price} ₹\n'
             "--------------------\n"
-            f'Итоговая сумма к оплате:: {bill * 0.95 + box_price} ₹\n'
+            f'Итого: {bill * 0.95 + box_price} ₹\n'
         )
     return message
 
@@ -298,7 +298,7 @@ async def new_order_mess_text_order_chat(
         order_details += (
             f'Дополнительная плата за упаковку: {box_price} ₹\n'
             "--------------------\n"
-            f'Итоговая сумма к оплате:: {sale_price} ₹\n'
+            f'Итоговая сумма заказа: {sale_price} ₹\n'
         )
 
     chat_text = (
@@ -314,8 +314,8 @@ async def new_order_mess_text_order_chat(
 
         delivery_info = (
             "--------------------\n"
-            f"Стоимость доставки: {delivery_price} руп.\n"
-            f"Итого (заказ + доставка): {sale_price + delivery_price} ₹\n"
+            f"Доставка: {delivery_price} руп.\n"
+            f"Итогоовая сумма заказа: {sale_price + delivery_price} ₹\n"
             "--------------------\n"
             f"Район доставки: {delivery_village.name}\n"
         )
