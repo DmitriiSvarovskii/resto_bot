@@ -106,7 +106,7 @@ async def generate_order_messages(
 
     order_details += (
         "\n--------------------"
-        f'\nИтоговая сумма к оплате: {sale_price} ₹'
+        f'\nИтого: {sale_price} ₹'
     )
 
     chat_text = (
@@ -122,8 +122,8 @@ async def generate_order_messages(
 
         delivery_info = (
             "--------------------\n"
-            f"Стоимость доставки: {delivery_price} руп.\n"
-            f"Итого (заказ + доставка): {sale_price + delivery_price} ₹\n"
+            f"Доставка: {delivery_price} руп.\n"
+            f"Итоговая сумма заказа: {sale_price + delivery_price} ₹\n"
             "--------------------\n"
             f"Район доставки: {delivery_village.name_rus}\n"
         )
