@@ -95,16 +95,16 @@ async def generate_order_messages(
                 f'Additional Box Packing Charge: {box_price} ₹\n'
                 "--------------------\n"
             )
-    order_details += (
-        f'Total Amount Payable: {sale_price} ₹\n'
-    )
+    # order_details += (
+    #     f'Total Amount Payable: {sale_price} ₹\n'
+    # )
 
     chat_text = (
-        order_header + customer_info + order_details
+        order_header + customer_info
     )
 
     user_text = (
-        order_header + order_details
+        order_header
     )
 
     if data_order.order_type in OrderTypes.DELIVERY.value.values():
@@ -112,7 +112,7 @@ async def generate_order_messages(
 
         delivery_info = (
             # "--------------------\n"
-            f"Delivery Charge: {delivery_price} rupees\n"
+            f"Delivery Charge: {delivery_price} rupees\n\n"
             f"Total Amount (Order + Delivery): {sale_price + delivery_price} ₹\n"  # noqa: E:501
             "--------------------\n"
             f"Delivery Area: {delivery_village.name_en}\n"

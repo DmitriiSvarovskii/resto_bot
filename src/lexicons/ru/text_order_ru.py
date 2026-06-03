@@ -122,8 +122,8 @@ async def generate_order_messages(
 
         delivery_info = (
             # "--------------------\n"
-            f"Доставка: {delivery_price} руп.\n"
-            f"Итоговая сумма заказа: {sale_price + delivery_price} ₹\n"
+            f"\nДоставка: {delivery_price} руп.\n"
+            f"\nИтоговая сумма заказа: {sale_price + delivery_price} ₹\n"
             "--------------------\n"
             f"Район доставки: {delivery_village.name_rus}\n"
         )

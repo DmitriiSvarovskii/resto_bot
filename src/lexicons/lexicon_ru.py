@@ -298,7 +298,7 @@ async def new_order_mess_text_order_chat(
         order_details += (
             f'Дополнительная плата за упаковку: {box_price} ₹\n'
             "--------------------\n"
-            f'Итоговая сумма заказа: {sale_price} ₹\n'
+            f'\nИтоговая сумма заказа: {sale_price} ₹\n'
         )
 
     chat_text = (
