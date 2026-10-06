@@ -75,7 +75,7 @@ async def main():
         logger.info('Dispatcher and router set up')
 
         # Настройка планировщика
-        execution_time = datetime.now(TIMEZONE).replace(hour=9, minute=0)
+        execution_time = datetime.now(TIMEZONE).replace(hour=11, minute=0)
         trigger = CronTrigger(hour=execution_time.hour,
                               minute=execution_time.minute, timezone=TIMEZONE)
 
